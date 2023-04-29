@@ -10,12 +10,13 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { ROOT_PATH } from "@/utils";
 
 const avatarBg = [
-  `/static/background/2.png`,
-  `/static/background/3.png`,
-  `/static/background/4.png`,
-  `/static/background/5.png`,
+  `${ROOT_PATH}/static/background/2.png`,
+  `${ROOT_PATH}/static/background/3.png`,
+  `${ROOT_PATH}/static/background/4.png`,
+  `${ROOT_PATH}/static/background/5.png`,
 ];
 
 const ModalSettingForm: React.FC<{

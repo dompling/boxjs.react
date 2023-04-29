@@ -1,26 +1,27 @@
-import { defineConfig } from '@umijs/max';
-import routes from './routes';
+import { defineConfig } from "@umijs/max";
+import routes from "./routes";
 
 //@ts-ignore
-const path = process.env.NODE_ENV === 'development' ? '/' : './';
+const isDev = process.env.NODE_ENV === "development";
+const path = isDev ? "/" : "./";
 
 export default defineConfig({
   routes,
   hash: true,
   history: {
-    type: 'hash',
+    type: "hash",
   },
-  title: 'BoxJs',
+  title: "BoxJs",
   //打包路径
   // base: path,
   publicPath: path,
   codeSplitting: {
-    jsStrategy: 'granularChunks'
+    jsStrategy: "granularChunks",
   },
   metas: [
     {
-      'http-equiv': 'Permissions-Policy',
-      content: 'interest-cohort=()',
+      "http-equiv": "Permissions-Policy",
+      content: "interest-cohort=()",
     },
   ],
 
@@ -28,12 +29,12 @@ export default defineConfig({
   antd: false,
   request: {},
   initialState: {},
-  npmClient: 'pnpm',
+  npmClient: "pnpm",
   locale: {
     antd: false, // 如果项目依赖中包含 `antd`，则默认为 true
     baseNavigator: false,
-    baseSeparator: '-',
-    default: 'zh-CN',
+    baseSeparator: "-",
+    default: "zh-CN",
     title: false,
     useLocalStorage: true,
   },
@@ -42,27 +43,27 @@ export default defineConfig({
       optimization: {
         minimize: true,
         splitChunks: {
-          chunks: 'async',
+          chunks: "async",
           minSize: 30000,
           minChunks: 1,
-          automaticNameDelimiter: '.',
+          automaticNameDelimiter: ".",
           cacheGroups: {
             mui: {
-              name: 'mui',
-              chunks: 'all',
+              name: "mui",
+              chunks: "all",
               test: /[\\/]node_modules[\\/](@mui)/,
               priority: 10,
             },
             vendors: {
-              name: 'vendors',
-              chunks: 'all',
+              name: "vendors",
+              chunks: "all",
               test: /[\\/]node_modules[\\/](lodash|moment|react|dva|postcss|mapbox-gl)/,
               priority: 10,
             },
             commons: {
-              name: 'commons',
+              name: "commons",
               // 其余同步加载包
-              chunks: 'all',
+              chunks: "all",
               minChunks: 2,
               priority: 1,
               // 这里需要注意下，webpack5会有问题， 需加上这个 enforce: true，
@@ -75,13 +76,16 @@ export default defineConfig({
     });
   },
   analyze: {
-    analyzerMode: 'server',
+    analyzerMode: "server",
     analyzerPort: 8888,
     openAnalyzer: true,
     // generate stats file while ANALYZE_DUMP exist
     generateStatsFile: false,
-    statsFilename: 'stats.json',
-    logLevel: 'info',
-    defaultSizes: 'parsed', // stat  // gzip
+    statsFilename: "stats.json",
+    logLevel: "info",
+    defaultSizes: "parsed", // stat  // gzip
+  },
+  define: {
+    ROOT_PATH: isDev ? "" : "/boxjs.react",
   },
 });
