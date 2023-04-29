@@ -7,3 +7,5 @@
 /src/.umi-test
 /dist
 .swc
+.idea
+.history
