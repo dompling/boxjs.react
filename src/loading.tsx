@@ -5,9 +5,18 @@ export default function () {
     <Stack
       alignItems={"center"}
       justifyContent={"center"}
-      sx={{ p: 0, m: 0, minHeight: "100vh", minWidth: `100vw` }}
+      sx={{
+        p: 0,
+        m: 0,
+        minHeight: "100vh",
+        minWidth: `100vw`,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        zIndex: -1,
+      }}
     >
-      <CircularProgress sx={{ mb: 2 }} />
+      <CircularProgress />
     </Stack>
   );
 }
