@@ -1,6 +1,16 @@
 import { defineConfig } from "@umijs/max";
 
+const path = process.env.NODE_ENV === 'development' ? '/' : './';
+
 export default defineConfig({
+  hash: true,
+  history: {
+    type: 'hash',
+  },
+  title: 'BoxJs',
+  //打包路径
+  base: path,
+  publicPath: path,
   routes: [
     { path: '/', title:"主页",component: 'Home/index' },
     { path: '/app', title: '应用', component: 'App/index' },
