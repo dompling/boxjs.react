@@ -86,6 +86,6 @@ export default defineConfig({
     defaultSizes: "parsed", // stat  // gzip
   },
   define: {
-    ROOT_PATH: isDev ? "" : "/boxjs.react",
+    "process.env.ROOT_PATH": isDev ? "" : "/boxjs.react",
   },
 });
