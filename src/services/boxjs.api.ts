@@ -62,14 +62,17 @@ export function runScript(params: any) {
 export function getScripts(url: string, key: string) {
   return request<Surge.Scripts>(`http://${url}/v1/scripting`, {
     method: "GET",
-    headers: { "X-Key": key, Accept: "*/*" },
+    headers: {
+      "X-Key": key,
+      Accept: "application/json, text/plain, */*",
+    },
   });
 }
 
 export function getModules(url: string, key: string) {
   return request<Surge.Modules>(`http://${url}/v1/modules`, {
     method: "GET",
-    headers: { "X-Key": key, Accept: "*/*" },
+    headers: { "X-Key": key, Accept: "application/json, text/plain, */*" },
   });
 }
 
@@ -81,6 +84,6 @@ export function setModules(
   return request<Surge.Modules>(`http://${url}/v1/modules`, {
     method: "POST",
     data: params,
-    headers: { "X-Key": key, Accept: "*/*" },
+    headers: { "X-Key": key, Accept: "application/json, text/plain, */*" },
   });
 }
