@@ -58,32 +58,30 @@ export function runScript(params: any) {
   });
 }
 
-/**************************************** Surge相关 ****************************************/
-export function getScripts(url: string, key: string) {
-  return request<Surge.Scripts>(`http://${url}/v1/scripting`, {
-    method: "GET",
-    headers: {
-      "X-Key": key,
-      Accept: "application/json, text/plain, */*",
-    },
-  });
-}
-
-export function getModules(url: string, key: string) {
-  return request<Surge.Modules>(`http://${url}/v1/modules`, {
-    method: "GET",
-    headers: { "X-Key": key, Accept: "application/json, text/plain, */*" },
-  });
-}
-
-export function setModules(
-  url: string,
-  key: string,
-  params: Record<string, boolean>
-) {
-  return request<Surge.Modules>(`http://${url}/v1/modules`, {
+export function surgeUrl(params: {
+  url: string;
+  method: "POST" | "GET";
+  body?: any;
+}) {
+  return request<{ output: string; result: any }>("/api/surge", {
     method: "POST",
     data: params,
-    headers: { "X-Key": key, Accept: "application/json, text/plain, */*" },
+  });
+}
+
+/**************************************** Surge相关 ****************************************/
+export function getScripts() {
+  return surgeUrl({ url: `v1/scripting`, method: "GET" });
+}
+
+export function getModules() {
+  return surgeUrl({ url: `v1/modules`, method: "GET" });
+}
+
+export function setModules(params: Record<string, boolean>) {
+  return surgeUrl({
+    url: `v1/scripting`,
+    method: "POST",
+    body: params,
   });
 }

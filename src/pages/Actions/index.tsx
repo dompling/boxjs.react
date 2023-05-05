@@ -1,4 +1,5 @@
 import { IOSSwitch } from "@/components/IOSSwitch";
+import { surgeUrl } from "@/services/boxjs.api";
 import { history, useModel } from "@@/exports";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
@@ -31,8 +32,9 @@ export default function Actions() {
 
   useEffect(() => {
     if (key && url) {
-      fetchScripts.run(url, key);
-      fetchModules.run(url, key);
+      fetchScripts.run();
+      fetchModules.run();
+      surgeUrl({ url: "v1/scripting", method: "GET" });
     }
   }, [key, url]);
 
@@ -95,7 +97,7 @@ export default function Actions() {
                       onChange={(_, checked) => {
                         if (key && url) {
                           fetchUpdateModules
-                            .run(url, key, { [item]: checked })
+                            .run({ [item]: checked })
                             .then(() => fetchModules.run(url, key));
                         }
                       }}
