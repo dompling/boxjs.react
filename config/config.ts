@@ -24,6 +24,29 @@ export default defineConfig({
       "http-equiv": "Permissions-Policy",
       content: "interest-cohort=()",
     },
+    {
+      name: "apple-mobile-web-app-capable",
+      content: "yes",
+    },
+    {
+      name: "apple-mobile-web-app-status-bar-style",
+      content: "black-translucent",
+    },
+    {
+      name: "viewport",
+      content:
+        "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
+    },
+  ],
+  links: [
+    {
+      rel: "Bookmark",
+      href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
+    },
+    {
+      rel: "shortcut icon",
+      href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
+    },
   ],
 
   model: {},
