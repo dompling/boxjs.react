@@ -10,14 +10,12 @@ import { useModel } from "@@/exports";
 import ApiIcon from "@mui/icons-material/Api";
 import BorderBottomIcon from "@mui/icons-material/BorderBottom";
 import BorderTopIcon from "@mui/icons-material/BorderTop";
-import BugReportIcon from "@mui/icons-material/BugReport";
 import CodeIcon from "@mui/icons-material/Code";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import Face5Icon from "@mui/icons-material/Face5";
 import ImageIcon from "@mui/icons-material/Image";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import LightModeIcon from "@mui/icons-material/LightMode";
-import LinkIcon from "@mui/icons-material/Link";
 import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -41,6 +39,7 @@ import {
 } from "@mui/material";
 import QueueAnim from "rc-queue-anim";
 import { useState } from "react";
+import styles from "./index.less";
 
 export default function Page() {
   const { initialState } = useModel("@@initialState");
@@ -267,6 +266,7 @@ export default function Page() {
 
       <Box
         p={4}
+        className={styles.avatar}
         sx={{
           position: "relative",
           background: (theme) =>
