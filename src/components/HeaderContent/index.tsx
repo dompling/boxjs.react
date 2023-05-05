@@ -311,7 +311,7 @@ const HeaderContent: React.FC = () => {
                       }}
                       onClick={() => {
                         setVisible(false);
-                        history.push(`/app/${app.id}`);
+                        history.push(`/app/${app.id}/${app.author}`);
                       }}
                     >
                       <ListItemAvatar>
