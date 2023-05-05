@@ -6,6 +6,8 @@ import ToggleColorMode from "@/components/Theme";
 import { Outlet, useLocation, useModel } from "@@/exports";
 import { Alert, Box, Container, Slide, Snackbar } from "@mui/material";
 
+import styles from "./index.less";
+
 export default function Layout() {
   const location = useLocation();
   const tipState = useModel("alert");
@@ -21,6 +23,7 @@ export default function Layout() {
   let sx: Record<string, any> = {
     pt: 8,
     pb: 16,
+    minHeight: `100vh`,
   };
 
   if (initialState?.boxdata.usercfgs.isWaitToggleSearchBar) {
@@ -71,7 +74,14 @@ export default function Layout() {
           }
         />
       )}
-      <Box sx={{ flexGrow: 1 }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          position: "relative",
+          minHeight: `100vh`,
+        }}
+        className={styles.container}
+      >
         {!["/my"].includes(location.pathname) && <HeaderContent />}
         <BoxJSActions />
         <div
