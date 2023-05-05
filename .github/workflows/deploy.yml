@@ -21,8 +21,9 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: '16.x'
-      - run: npm install # 安装依赖
-      - run: npm run build # 打包
+      - run: npm install -g yarn # 安装依赖
+      - run: yarn install # 安装依赖
+      - run: yarn build # 打包
 
       # 部署到 GitHub pages
       - name: Deploy
