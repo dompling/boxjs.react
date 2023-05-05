@@ -50,7 +50,7 @@ export default defineConfig({
     },
     {
       rel: "apple-touch-icon",
-      size: "60x60",
+      sizes: "60x60",
       href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
     },
   ],
