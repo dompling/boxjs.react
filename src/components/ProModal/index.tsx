@@ -61,11 +61,7 @@ const ProModal: React.FC<
           }}
         >
           {title && typeof title === "string" ? (
-            <DialogTitle
-              key="title"
-              className={styles.header_container}
-              sx={{ fontSize: `1rem`, padding: 1 }}
-            >
+            <DialogTitle key="title" sx={{ fontSize: `1rem`, padding: 1 }}>
               {title}
             </DialogTitle>
           ) : (
