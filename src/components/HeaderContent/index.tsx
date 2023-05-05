@@ -129,7 +129,7 @@ const HeaderContent: React.FC = () => {
           >
             <AppBar position="static">
               <Toolbar>
-                {["/home", "/app", "/sub"].indexOf(location.pathname) === -1 ? (
+                {["/", "/app", "/sub"].indexOf(location.pathname) === -1 ? (
                   <IconButton
                     color="inherit"
                     onClick={() => history.back()}
