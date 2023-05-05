@@ -30,6 +30,7 @@ import {
 import { useDebounce } from "ahooks";
 import QueueAnim from "rc-queue-anim";
 import React, { useState } from "react";
+import styles from "./index.less";
 
 const CusListItem = styled(ListItem)(() => ({
   paddingLeft: 8,
@@ -118,95 +119,92 @@ const HeaderContent: React.FC = () => {
   return (
     <QueueAnim type={["top", "bottom"]} leaveReverse>
       {!boxdata?.usercfgs.isWaitToggleSearchBar ? (
-        <Paper
-          sx={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 99,
-            ml: 2,
-            mr: 2,
-            mt: 1,
-            borderRadius: 7,
-            overflow: "hidden",
-          }}
-          key={"appbar"}
-          elevation={3}
-        >
-          <AppBar position="static">
-            <Toolbar>
-              {params.id ? (
-                <IconButton
-                  color="inherit"
-                  onClick={() => history.back()}
-                  sx={{ position: "relative", left: -10 }}
-                >
-                  <ChevronLeftIcon
-                    sx={{
-                      width: 28,
-                      height: 28,
-                    }}
-                  />
-                </IconButton>
-              ) : (
-                <IconButton
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="open drawer"
-                  sx={{ mr: 2 }}
-                  onClick={handleClick}
-                >
-                  <Box sx={{ position: "relative" }}>
-                    <Avatar
-                      alt="BoxJs"
-                      src={icon?.icons[iconIndex] || config.logo}
+        <Box className={styles.header_container}>
+          <Paper
+            sx={{
+              ml: 2,
+              mr: 2,
+              mt: 1,
+              borderRadius: 7,
+              overflow: "hidden",
+            }}
+            key={"appbar"}
+            elevation={3}
+          >
+            <AppBar position="static">
+              <Toolbar>
+                {params.id ? (
+                  <IconButton
+                    color="inherit"
+                    onClick={() => history.back()}
+                    sx={{ position: "relative", left: -10 }}
+                  >
+                    <ChevronLeftIcon
                       sx={{
                         width: 28,
                         height: 28,
-                        border: 1,
-                        borderColor: "white",
                       }}
                     />
-                    {loading && (
-                      <CircularProgress
-                        size={28}
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="open drawer"
+                    sx={{ mr: 2 }}
+                    onClick={handleClick}
+                  >
+                    <Box sx={{ position: "relative" }}>
+                      <Avatar
+                        alt="BoxJs"
+                        src={icon?.icons[iconIndex] || config.logo}
                         sx={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
+                          width: 28,
+                          height: 28,
+                          border: 1,
+                          borderColor: "white",
                         }}
                       />
-                    )}
-                  </Box>
+                      {loading && (
+                        <CircularProgress
+                          size={28}
+                          sx={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                          }}
+                        />
+                      )}
+                    </Box>
+                  </IconButton>
+                )}
+
+                <Typography
+                  component={"div"}
+                  variant="body1"
+                  color="inherit"
+                  sx={{ flexGrow: 1 }}
+                  onClick={() => {
+                    setVisible(true);
+                  }}
+                >
+                  {boxdata?.syscfgs.boxjs.id} - v{boxdata?.syscfgs.version}
+                </Typography>
+
+                <IconButton
+                  color="inherit"
+                  onClick={() => {
+                    setVisible(true);
+                  }}
+                >
+                  <TroubleshootIcon />
                 </IconButton>
-              )}
-
-              <Typography
-                component={"div"}
-                variant="body1"
-                color="inherit"
-                sx={{ flexGrow: 1 }}
-                onClick={() => {
-                  setVisible(true);
-                }}
-              >
-                {boxdata?.syscfgs.boxjs.id} - v{boxdata?.syscfgs.version}
-              </Typography>
-
-              <IconButton
-                color="inherit"
-                onClick={() => {
-                  setVisible(true);
-                }}
-              >
-                <TroubleshootIcon />
-              </IconButton>
-            </Toolbar>
-          </AppBar>
-          {loading && <LinearProgress />}
-        </Paper>
+              </Toolbar>
+            </AppBar>
+            {loading && <LinearProgress />}
+          </Paper>
+        </Box>
       ) : null}
 
       <ProModal

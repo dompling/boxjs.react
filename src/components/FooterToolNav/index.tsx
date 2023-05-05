@@ -1,8 +1,8 @@
-import config from '@/utils/config';
-import { history, useLocation, useModel } from '@@/exports';
-import HomeIcon from '@mui/icons-material/Home';
-import StorageIcon from '@mui/icons-material/Storage';
-import WebAssetIcon from '@mui/icons-material/WebAsset';
+import config from "@/utils/config";
+import { history, useLocation, useModel } from "@@/exports";
+import HomeIcon from "@mui/icons-material/Home";
+import StorageIcon from "@mui/icons-material/Storage";
+import WebAssetIcon from "@mui/icons-material/WebAsset";
 import {
   Avatar,
   BottomNavigation,
@@ -10,39 +10,40 @@ import {
   Box,
   CircularProgress,
   Paper,
-} from '@mui/material';
-import { BottomNavigationActionProps } from '@mui/material/BottomNavigationAction/BottomNavigationAction';
-import QueueAnim from 'rc-queue-anim';
-import React from 'react';
+} from "@mui/material";
+import { BottomNavigationActionProps } from "@mui/material/BottomNavigationAction/BottomNavigationAction";
+import QueueAnim from "rc-queue-anim";
+import React from "react";
+import styles from "./index.less";
 
 const FooterToolNav: React.FC = () => {
   const location = useLocation();
 
-  const { initialState } = useModel('@@initialState');
-  const { loading } = useModel('api');
+  const { initialState } = useModel("@@initialState");
+  const { loading } = useModel("api");
   const boxdata = initialState?.boxdata;
 
   const bottomNav: Record<string, BottomNavigationActionProps> = {
-    '/': {
+    "/": {
       // label: '主页',
-      value: '/',
+      value: "/",
       icon: <HomeIcon />,
     },
-    '/app': {
+    "/app": {
       // label: '应用',
-      value: '/app',
+      value: "/app",
       icon: <WebAssetIcon />,
     },
-    '/sub': {
+    "/sub": {
       // label: '订阅',
-      value: '/sub',
+      value: "/sub",
       icon: <StorageIcon />,
     },
-    '/my': {
+    "/my": {
       // label: '我的',
-      value: '/my',
+      value: "/my",
       icon: (
-        <Box sx={{ position: 'relative' }}>
+        <Box sx={{ position: "relative" }}>
           <Avatar
             alt="boxJS"
             src={boxdata?.usercfgs.icon || config.logo}
@@ -52,11 +53,11 @@ const FooterToolNav: React.FC = () => {
             <CircularProgress
               size={24}
               sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                marginTop: '-12px',
-                marginLeft: '-12px',
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                marginTop: "-12px",
+                marginLeft: "-12px",
               }}
             />
           )}
@@ -66,62 +67,59 @@ const FooterToolNav: React.FC = () => {
   };
 
   return (
-    <QueueAnim type={['bottom', 'bottom']}>
+    <QueueAnim type={["bottom", "bottom"]}>
       {!initialState?.boxdata.usercfgs.isHidedNaviBottom ? (
-        <Paper
-          key={'paper'}
-          sx={{
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            zIndex: 99,
-            ml: 2,
-            mr: 2,
-            mb: 1,
-            borderRadius: 7,
-            overflow: 'hidden',
-            boxShadow: (theme) =>
-              theme.palette.mode === 'dark'
-                ? `0px 0 3px ${theme.palette.primary.main}`
-                : theme.shadows[3],
-          }}
-        >
-          <BottomNavigation
-            showLabels
-            value={location.pathname}
-            onChange={(_, key) => {
-              history.push(key);
-            }}
+        <Box className={styles.footer_container}>
+          <Paper
+            key={"paper"}
             sx={{
-              '& .Mui-selected': {
-                '&:after': {
-                  width: 0.3,
-                },
-              },
+              mb: 2,
+              mr: 2,
+              ml: 2,
+              borderRadius: 7,
+              overflow: "hidden",
+              boxShadow: (theme) =>
+                theme.palette.mode === "dark"
+                  ? `0px 0 3px ${theme.palette.primary.main}`
+                  : theme.shadows[3],
             }}
           >
-            {Object.keys(bottomNav).map((key) => (
-              <BottomNavigationAction
-                key={key}
-                {...bottomNav[key]}
-                sx={{
-                  '&:after': {
-                    content: `""`,
-                    position: 'absolute',
-                    height: 2,
-                    width: 0,
-                    borderRadius: 1,
-                    background: (theme) => theme.palette.primary.main,
-                    top: 1,
-                    transition: `width 0.3s linear`,
-                    boxShadow: 1,
+            <BottomNavigation
+              showLabels
+              value={location.pathname}
+              onChange={(_, key) => {
+                history.push(key);
+              }}
+              sx={{
+                "& .Mui-selected": {
+                  "&:after": {
+                    width: 0.3,
                   },
-                }}
-              />
-            ))}
-          </BottomNavigation>
-        </Paper>
+                },
+              }}
+            >
+              {Object.keys(bottomNav).map((key) => (
+                <BottomNavigationAction
+                  key={key}
+                  {...bottomNav[key]}
+                  sx={{
+                    "&:after": {
+                      content: `""`,
+                      position: "absolute",
+                      height: 2,
+                      width: 0,
+                      borderRadius: 1,
+                      background: (theme) => theme.palette.primary.main,
+                      top: 1,
+                      transition: `width 0.3s linear`,
+                      boxShadow: 1,
+                    },
+                  }}
+                />
+              ))}
+            </BottomNavigation>
+          </Paper>
+        </Box>
       ) : null}
     </QueueAnim>
   );
