@@ -108,11 +108,22 @@ export const request: RequestConfig = {
   timeout: 50000,
   // other axios options you want
   errorConfig: {
-    errorHandler() {},
-    errorThrower() {},
+    errorHandler(error) {
+      console.log(error);
+      alert(error.message);
+    },
+    errorThrower(res) {
+      console.log(res);
+    },
   },
   requestInterceptors: [
     (url: string, options: any) => {
+      if (!options.headers["x-surge-host"]) {
+        delete options.headers["Content-Type"];
+      } else {
+        options.headers["Content-Type"] = "application/json;charset=UTF-8";
+      }
+
       return {
         url: url.indexOf(`http`) > -1 ? url : `//boxjs.net${url}`,
         options,
