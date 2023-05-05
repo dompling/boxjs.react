@@ -1,8 +1,8 @@
-import ProModal from '@/components/ProModal';
-import { useModel } from '@@/exports';
-import { Stack, TextField } from '@mui/material';
-import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import ProModal from "@/components/ProModal";
+import { useModel } from "@@/exports";
+import { Stack, TextField } from "@mui/material";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 const EditForm: React.FC<{
   open?: boolean;
@@ -11,14 +11,15 @@ const EditForm: React.FC<{
   data?: boxjs.sessions;
   sessionIndex?: number;
 }> = (props) => {
-  const { fetchSave } = useModel('api');
+  const { initialState } = useModel("@@initialState");
+  const { fetchSave } = useModel("api");
   const form = useForm();
 
   useEffect(() => {
     if (props.open) {
       const formValue: Record<string, any> = {};
       props.data?.datas.forEach((item) => {
-        formValue[item.key.replace('.', '*')] = item.val;
+        formValue[item.key.replace(".", "*")] = item.val;
       });
       form.reset({ appName: props.data?.name, ...formValue });
     }
@@ -28,24 +29,32 @@ const EditForm: React.FC<{
     <ProModal
       fullScreen
       open={!!props.open}
-      title={`${props.data?.name || '会话修改'}`}
+      title={`${props.data?.name || "会话修改"}`}
       onClose={() => {
         props.onClose?.();
       }}
       form={form}
       loading={fetchSave.loading}
       onSubmit={({ appName, ...formData }) => {
+        if (!initialState || props.sessionIndex === undefined) return;
         const formValue: { key: string; val: any }[] = [];
 
         Object.keys(formData).forEach((key) => {
-          formValue.push({ key: key.replace('*', '.'), val: formData[key] });
+          formValue.push({ key: key.replace("*", "."), val: formData[key] });
         });
+
+        const sessions = initialState?.boxdata.sessions || [];
+        sessions[props.sessionIndex] = {
+          ...props.data,
+          datas: formValue,
+          name: appName,
+        } as any;
 
         fetchSave
           .run([
             {
               key: `@chavy_boxjs_sessions.${props.sessionIndex}`,
-              val: { ...props.data, datas: formValue, name: appName },
+              val: [...sessions],
             },
           ])
           .then(() => {
@@ -57,13 +66,13 @@ const EditForm: React.FC<{
         <TextField
           fullWidth
           size="small"
-          label={'会话名称'}
+          label={"会话名称"}
           variant="standard"
-          placeholder={'会话名称'}
+          placeholder={"会话名称"}
           InputLabelProps={{
             shrink: true,
           }}
-          {...form.register('appName')}
+          {...form.register("appName")}
         />
         {props.data?.datas.map((item) => {
           return (
@@ -73,11 +82,11 @@ const EditForm: React.FC<{
               key={item.key}
               label={item.key}
               variant="standard"
-              placeholder={'请输入'}
+              placeholder={"请输入"}
               InputLabelProps={{
                 shrink: true,
               }}
-              {...form.register(item.key.replace('.', '*'))}
+              {...form.register(item.key.replace(".", "*"))}
             />
           );
         })}
