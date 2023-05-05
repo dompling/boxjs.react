@@ -45,6 +45,7 @@ export default defineConfig({
     },
     {
       rel: "shortcut icon",
+      type: "image/x-icon",
       href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
     },
   ],
