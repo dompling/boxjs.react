@@ -49,8 +49,9 @@ const ProModal: React.FC<
     <Dialog
       key="Dialog"
       maxWidth="xs"
-      sx={{ "& .MuiDialog-paper": { minWidth: "80%" } }}
       TransitionComponent={Transition}
+      sx={{ "& .MuiDialog-paper": { minWidth: "80%" } }}
+      className={props.fullScreen ? styles.fullScreen : ""}
       {...props}
     >
       {props.open && (
