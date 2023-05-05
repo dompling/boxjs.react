@@ -1,14 +1,14 @@
-import AddSubs from '@/pages/Sub/components/AddSub';
-import { getCommentTime } from '@/utils';
-import config from '@/utils/config';
-import { useModel } from '@@/exports';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import CloudCircleIcon from '@mui/icons-material/CloudCircle';
-import CopyAllIcon from '@mui/icons-material/CopyAll';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import ShareIcon from '@mui/icons-material/Share';
+import AddSubs from "@/pages/Sub/components/AddSub";
+import { getCommentTime } from "@/utils";
+import config from "@/utils/config";
+import { useModel, useSearchParams } from "@@/exports";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import CloudCircleIcon from "@mui/icons-material/CloudCircle";
+import CopyAllIcon from "@mui/icons-material/CopyAll";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import ShareIcon from "@mui/icons-material/Share";
 import {
   Avatar,
   Badge,
@@ -20,71 +20,76 @@ import {
   Typography,
   colors,
   styled,
-} from '@mui/material';
-import $copy from 'copy-to-clipboard';
-import QueueAnim from 'rc-queue-anim';
-import { useState } from 'react';
-import styles from './index.less';
+} from "@mui/material";
+import $copy from "copy-to-clipboard";
+import QueueAnim from "rc-queue-anim";
+import { useEffect, useState } from "react";
+import styles from "./index.less";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
-  '& .MuiBadge-badge': {
-    bottom: '30%',
+  "& .MuiBadge-badge": {
+    bottom: "30%",
     boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    '&::after': {
-      position: 'absolute',
+    "&::after": {
+      position: "absolute",
       top: 0,
       left: 0,
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%',
-      animation: 'ripple 1.2s infinite ease-in-out',
-      border: '1px solid currentColor',
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      animation: "ripple 1.2s infinite ease-in-out",
+      border: "1px solid currentColor",
       content: '""',
     },
   },
-  '& .MuiBadge-colorSuccess': {
+  "& .MuiBadge-colorSuccess": {
     color: colors.green[700],
     background: colors.green[700],
   },
-  '& .MuiBadge-colorError': {
+  "& .MuiBadge-colorError": {
     color: colors.red[700],
     background: colors.red[700],
   },
-  '@keyframes ripple': {
-    '0%': {
-      transform: 'scale(.8)',
+  "@keyframes ripple": {
+    "0%": {
+      transform: "scale(.8)",
       opacity: 1,
     },
-    '100%': {
-      transform: 'scale(1.4)',
+    "100%": {
+      transform: "scale(1.4)",
       opacity: 0,
     },
   },
 }));
 
 const DotBadge = styled(Badge)(() => ({
-  '& .MuiBadge-badge': {
-    color: '#fff',
+  "& .MuiBadge-badge": {
+    color: "#fff",
   },
 }));
 
 export default function Page() {
-  const [open, setOpen] = useState<boolean>();
-  const { initialState } = useModel('@@initialState');
-  const tip = useModel('alert');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [open, setOpen] = useState<boolean>(!!searchParams.get("add"));
+  const { initialState } = useModel("@@initialState");
+  const tip = useModel("alert");
 
-  const { fetchReloadAppSub, fetchSave } = useModel('api');
+  const { fetchReloadAppSub, fetchSave } = useModel("api");
 
   const boxdata = initialState?.boxdata;
   const appsubs = boxdata?.usercfgs.appsubs || [];
   const appSubCaches = boxdata?.appSubCaches || {};
 
+  useEffect(() => {
+    setSearchParams({});
+  }, []);
+
   return (
     <Box sx={{ paddingTop: 2 }}>
       <AddSubs open={open} onClose={() => setOpen(false)} />
-      <Stack direction={'row'} justifyContent={'space-between'}>
+      <Stack direction={"row"} justifyContent={"space-between"}>
         <Typography variant="h5">应用订阅</Typography>
-        <Stack direction={'row'} spacing={2}>
+        <Stack direction={"row"} spacing={2}>
           <IconButton
             color="primary"
             component="label"
@@ -117,7 +122,7 @@ export default function Page() {
       <QueueAnim>
         {appsubs.map((item, index) => {
           const appItem = { ...item, ...appSubCaches[item.url] } || {
-            name: '匿名订阅',
+            name: "匿名订阅",
             repo: item.url,
             apps: [],
           };
@@ -125,7 +130,7 @@ export default function Page() {
           return (
             <Box
               key={item.url}
-              sx={{ marginBottom: 2, boxSizing: 'border-box' }}
+              sx={{ marginBottom: 2, boxSizing: "border-box" }}
             >
               <Paper
                 className={styles.dynamics}
@@ -134,8 +139,8 @@ export default function Page() {
                   width: 1,
                   minHeight: 20,
                   borderRadius: 4,
-                  padding: '20px 20px 12px 20px',
-                  boxSizing: 'border-box',
+                  padding: "20px 20px 12px 20px",
+                  boxSizing: "border-box",
                 }}
               >
                 <Box>
@@ -143,14 +148,14 @@ export default function Page() {
                     <StyledBadge
                       variant="dot"
                       overlap="circular"
-                      color={appItem.id ? 'success' : 'error'}
-                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                      sx={{ position: 'relative' }}
+                      color={appItem.id ? "success" : "error"}
+                      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                      sx={{ position: "relative" }}
                     >
                       <Avatar
                         src={appItem.icon}
                         sx={{
-                          border: '1px solid #e8e8e8',
+                          border: "1px solid #e8e8e8",
                           width: 36,
                           height: 36,
                         }}
@@ -160,14 +165,14 @@ export default function Page() {
                         <CircularProgress
                           size={40}
                           sx={{
-                            position: 'absolute',
+                            position: "absolute",
                             top: -2,
                             left: -2,
                           }}
                         />
                       )}
                     </StyledBadge>
-                    <Stack sx={{ overflow: 'hidden', flex: '1 1' }}>
+                    <Stack sx={{ overflow: "hidden", flex: "1 1" }}>
                       <Stack>
                         <Typography variant="body2" gutterBottom>
                           {appItem.name}
@@ -190,7 +195,7 @@ export default function Page() {
                 </Box>
 
                 <Stack sx={{ marginTop: 1 }}>
-                  <Stack direction="row" alignItems={'center'} spacing={1}>
+                  <Stack direction="row" alignItems={"center"} spacing={1}>
                     <IconButton
                       color="primary"
                       component="label"
@@ -198,8 +203,8 @@ export default function Page() {
                         $copy(item.url);
                         tip.alert({
                           open: true,
-                          message: '复制成功',
-                          type: 'success',
+                          message: "复制成功",
+                          type: "success",
                         });
                       }}
                     >
@@ -212,8 +217,8 @@ export default function Page() {
                         $copy(appItem.repo);
                         tip.alert({
                           open: true,
-                          message: '复制成功',
-                          type: 'success',
+                          message: "复制成功",
+                          type: "success",
                         });
                       }}
                     >
@@ -225,13 +230,13 @@ export default function Page() {
                       onClick={() => {
                         $copy(
                           `${window.location.href}?add=${encodeURIComponent(
-                            item.url,
-                          )}`,
+                            item.url
+                          )}`
                         );
                         tip.alert({
                           open: true,
-                          message: '复制成功',
-                          type: 'success',
+                          message: "复制成功",
+                          type: "success",
                         });
                       }}
                     >
@@ -272,7 +277,7 @@ export default function Page() {
                       variant="overline"
                       sx={{
                         color: colors.grey[500],
-                        marginLeft: 'auto !important',
+                        marginLeft: "auto !important",
                       }}
                     >
                       {getCommentTime(appItem.updateTime)}
