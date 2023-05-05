@@ -361,8 +361,8 @@ export default function Page() {
                   fetchSave
                     .run([
                       {
-                        key: `chavy_boxjs_sessions`,
-                        val: [...initialState?.boxdata.sessions, session],
+                        key: `@chavy_boxjs_sessions.${sessions.length}`,
+                        val: { ...session },
                       },
                     ])
                     .then(() => {
@@ -464,10 +464,8 @@ export default function Page() {
                         fetchSave
                           .run([
                             {
-                              key: `chavy_boxjs_sessions`,
-                              val: initialState.boxdata.sessions.filter(
-                                (_, sIndex) => sIndex !== sessionIndex
-                              ),
+                              key: `@chavy_boxjs_sessions.${sessionIndex}`,
+                              val: null,
                             },
                           ])
                           .then(() => {

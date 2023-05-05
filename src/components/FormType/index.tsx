@@ -476,6 +476,7 @@ const FormList: React.FC<{
                   const val = formValue.filter((_, key) => key !== index);
                   form.resetField(`${index}`);
                   handelChange(val);
+                  setExpanded(false);
                 }}
               >
                 删除
