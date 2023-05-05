@@ -128,10 +128,17 @@ const HeaderContent: React.FC = () => {
             elevation={3}
           >
             <AppBar position="static">
-              <Toolbar>
+              <Toolbar
+                sx={{
+                  background: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? ""
+                      : theme.palette.common.white,
+                }}
+              >
                 {["/", "/app", "/sub"].indexOf(location.pathname) === -1 ? (
                   <IconButton
-                    color="inherit"
+                    color="primary"
                     onClick={() => history.back()}
                     sx={{ position: "relative", left: -10 }}
                   >
@@ -146,10 +153,10 @@ const HeaderContent: React.FC = () => {
                   <IconButton
                     size="large"
                     edge="start"
-                    color="inherit"
-                    aria-label="open drawer"
                     sx={{ mr: 2 }}
+                    color="primary"
                     onClick={handleClick}
+                    aria-label="open drawer"
                   >
                     <Box sx={{ position: "relative" }}>
                       <Avatar
@@ -177,9 +184,9 @@ const HeaderContent: React.FC = () => {
                 )}
 
                 <Typography
-                  component={"div"}
+                  color="primary"
                   variant="body1"
-                  color="inherit"
+                  component={"span"}
                   sx={{ flexGrow: 1 }}
                   onClick={() => {
                     setVisible(true);
@@ -189,7 +196,7 @@ const HeaderContent: React.FC = () => {
                 </Typography>
 
                 <IconButton
-                  color="inherit"
+                  color="primary"
                   onClick={() => {
                     setVisible(true);
                   }}
