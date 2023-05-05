@@ -167,6 +167,7 @@ export default function Page() {
               {
                 type: "select",
                 id: "httpapi",
+                val: usercfgs?.httpapi,
                 label: "HTTP-API (Surge)",
                 onClick: () => handleVisible(`httpapi`, true),
                 icon: <ApiIcon sx={{ color: colors.amber[400] }} />,
