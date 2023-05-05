@@ -35,20 +35,28 @@ const BoxJSActions: React.FC = () => {
   );
 
   const actions = [
-    {
-      icon: <QuestionMarkIcon sx={{ color: colors.amber[400] }} />,
-      name: "Help",
-      onClick: () => {
-        window.open(`https://docs.boxjs.app/`);
-      },
-    },
-    {
-      icon: <RefreshIcon sx={{ color: colors.red[400] }} />,
-      name: "Refresh",
-      onClick: () => {
-        fetchAllData.run();
-      },
-    },
+    ...(!initialState?.boxdata.usercfgs.isHideHelp
+      ? [
+          {
+            icon: <QuestionMarkIcon sx={{ color: colors.amber[400] }} />,
+            name: "Help",
+            onClick: () => {
+              window.open(`https://docs.boxjs.app/`);
+            },
+          },
+        ]
+      : []),
+    ...(!initialState?.boxdata.usercfgs.isHideRefresh
+      ? [
+          {
+            icon: <RefreshIcon sx={{ color: colors.red[400] }} />,
+            name: "Refresh",
+            onClick: () => {
+              fetchAllData.run();
+            },
+          },
+        ]
+      : []),
     {
       icon: <DataObjectIcon sx={{ color: colors.indigo[400] }} />,
       name: "database",
@@ -80,13 +88,17 @@ const BoxJSActions: React.FC = () => {
         ]
       : []),
 
-    {
-      icon: <CodeIcon sx={{ color: colors.orange[400] }} />,
-      name: "Code",
-      onClick: () => {
-        history.push("/code");
-      },
-    },
+    ...(!initialState?.boxdata.usercfgs.isHideCoding
+      ? [
+          {
+            icon: <CodeIcon sx={{ color: colors.orange[400] }} />,
+            name: "Code",
+            onClick: () => {
+              history.push("/code");
+            },
+          },
+        ]
+      : []),
   ];
 
   return (
