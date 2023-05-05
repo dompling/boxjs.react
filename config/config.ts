@@ -48,6 +48,11 @@ export default defineConfig({
       type: "image/x-icon",
       href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
     },
+    {
+      rel: "apple-touch-icon",
+      size: "60x60",
+      href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
+    },
   ],
 
   model: {},
