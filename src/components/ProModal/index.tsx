@@ -1,5 +1,6 @@
-import ProFrom from '@/components/ProForm';
+import ProFrom from "@/components/ProForm";
 import {
+  Box,
   Button,
   CircularProgress,
   Dialog,
@@ -9,16 +10,17 @@ import {
   DialogTitle,
   Slide,
   colors,
-} from '@mui/material';
-import { TransitionProps } from '@mui/material/transitions';
-import React from 'react';
-import { UseFormReturn } from 'react-hook-form';
+} from "@mui/material";
+import { TransitionProps } from "@mui/material/transitions";
+import React from "react";
+import { UseFormReturn } from "react-hook-form";
+import styles from "./index.less";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement;
   },
-  ref: React.Ref<unknown>,
+  ref: React.Ref<unknown>
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -32,7 +34,7 @@ const ProModal: React.FC<
     onSubmit?: (formValue: any) => void;
     form?: UseFormReturn;
     footer?: null | React.ReactNode;
-  } & Omit<DialogProps, 'title'>
+  } & Omit<DialogProps, "title">
 > = ({
   footer,
   loading,
@@ -47,7 +49,7 @@ const ProModal: React.FC<
     <Dialog
       key="Dialog"
       maxWidth="xs"
-      sx={{ '& .MuiDialog-paper': { minWidth: '80%' } }}
+      sx={{ "& .MuiDialog-paper": { minWidth: "80%" } }}
       TransitionComponent={Transition}
       {...props}
     >
@@ -58,12 +60,16 @@ const ProModal: React.FC<
             onSubmit?.(formValue);
           }}
         >
-          {title && typeof title === 'string' ? (
-            <DialogTitle sx={{ fontSize: `1rem`, padding: 1 }} key="title">
+          {title && typeof title === "string" ? (
+            <DialogTitle
+              key="title"
+              className={styles.header_container}
+              sx={{ fontSize: `1rem`, padding: 1 }}
+            >
               {title}
             </DialogTitle>
           ) : (
-            title
+            <Box className={styles.header_container}>{title}</Box>
           )}
           <DialogContent dividers key="content">
             {props.open ? children : null}
@@ -82,7 +88,7 @@ const ProModal: React.FC<
                 >
                   取消
                 </Button>
-                <Button type={'submit'}>
+                <Button type={"submit"}>
                   {loading ? (
                     <CircularProgress color="inherit" size={20} />
                   ) : (
