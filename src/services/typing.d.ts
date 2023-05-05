@@ -242,3 +242,40 @@ declare namespace boxjs {
     addons?: string;
   }
 }
+
+
+declare namespace Surge{
+  export interface Scripts {
+    scripts: Script[]
+  }
+
+  export interface Script {
+    path: string
+    enabled: boolean
+    name: string
+    type: string
+    parameters: Parameters
+  }
+
+  export interface Parameters {
+    pattern?: string
+    "requires-body"?: string
+    type: string
+    "script-path": string
+    timeout?: string
+    "max-size"?: string
+    "script-update-interval"?: string
+    "binary-body-mode"?: string
+    debug?: string
+    cronexp?: string
+    "wake-system"?: string
+  }
+
+
+  export interface Modules {
+    enabled: string[]
+    available: string[]
+  }
+
+
+}

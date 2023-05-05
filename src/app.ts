@@ -1,13 +1,14 @@
-import { getAllData } from '@/services/boxjs.api';
-import { getMediaMode } from '@/utils';
-import { RequestConfig } from '@@/plugin-request/request';
+import { getAllData } from "@/services/boxjs.api";
+import { getMediaMode } from "@/utils";
+import { matchRoutes } from "@@/exports";
+import { RequestConfig } from "@@/plugin-request/request";
 
 type Initial = {
   boxdata: boxjs.data;
   apps: boxjs.App[];
   fetchData: () => Promise<boxjs.data>;
 
-  mode: 'light' | 'dark';
+  mode: "light" | "dark";
   ui: (data: boxjs.data) => UI;
   random: number;
 };
@@ -33,9 +34,9 @@ export async function getInitialState(): Promise<Initial> {
       apps = [...apps, ...boxdata.appSubCaches[item.url].apps];
     }
   });
-  const defaultMode: 'light' | 'dark' =
-    boxdata?.usercfgs.theme !== 'auto'
-      ? boxdata?.usercfgs.theme || 'light'
+  const defaultMode: "light" | "dark" =
+    boxdata?.usercfgs.theme !== "auto"
+      ? boxdata?.usercfgs.theme || "light"
       : getMediaMode();
 
   return {
@@ -46,20 +47,20 @@ export async function getInitialState(): Promise<Initial> {
     fetchData: getAllData,
     ui: (data = boxdata) => {
       const mode =
-        boxdata?.usercfgs.theme !== 'auto'
-          ? boxdata?.usercfgs.theme || 'light'
+        boxdata?.usercfgs.theme !== "auto"
+          ? boxdata?.usercfgs.theme || "light"
           : getMediaMode();
       const theme: UI = {
         iconThemeIdx: 0,
-        isSystemDarkMode: getMediaMode() === 'dark',
+        isSystemDarkMode: getMediaMode() === "dark",
         isTransparentIcons: data.usercfgs.isTransparentIcons,
         defaultIcons: [
-          'https://raw.githubusercontent.com/Orz-3/mini/master/appstore.png',
-          'https://raw.githubusercontent.com/Orz-3/task/master/appstore.png',
+          "https://raw.githubusercontent.com/Orz-3/mini/master/appstore.png",
+          "https://raw.githubusercontent.com/Orz-3/task/master/appstore.png",
         ],
         isWallpaper: !!data.usercfgs.bgimg,
-        bgimgs: data.usercfgs.bgimgs?.split('\n').map((item) => {
-          const [name, url] = item.split(',');
+        bgimgs: data.usercfgs.bgimgs?.split("\n").map((item) => {
+          const [name, url] = item.split(",");
           return { name, url };
         }),
         loadAppBaseInfo: null,
@@ -67,22 +68,22 @@ export async function getInitialState(): Promise<Initial> {
 
       theme.isMutiWallpaper = theme.bgimgs && theme.bgimgs?.length > 2;
 
-      theme.iconThemeIdx = mode === 'dark' && theme.isTransparentIcons ? 0 : 1;
+      theme.iconThemeIdx = mode === "dark" && theme.isTransparentIcons ? 0 : 1;
 
       theme.loadAppBaseInfo = (app: boxjs.App) => {
         // 应用图标
         app.icons = Array.isArray(app.icons) ? app.icons : theme.defaultIcons;
         const isBrokenIcons = app.icons.find((i) =>
-          i.includes('/Orz-3/task/master/'),
+          i.includes("/Orz-3/task/master/")
         );
         if (isBrokenIcons) {
           app.icons[0] = app.icons[0].replace(
-            '/Orz-3/mini/master/',
-            '/Orz-3/mini/master/Alpha/',
+            "/Orz-3/mini/master/",
+            "/Orz-3/mini/master/Alpha/"
           );
           app.icons[1] = app.icons[1].replace(
-            '/Orz-3/task/master/',
-            '/Orz-3/mini/master/Color/',
+            "/Orz-3/task/master/",
+            "/Orz-3/mini/master/Color/"
           );
         }
 
@@ -94,6 +95,15 @@ export async function getInitialState(): Promise<Initial> {
   };
 }
 
+export function onRouteChange({ clientRoutes, location }: any) {
+  window.scrollTo(0, 0);
+  const route = matchRoutes(clientRoutes, location.pathname)?.pop()?.route;
+  if (route) {
+    // @ts-ignore
+    document.title = route.title || "";
+  }
+}
+
 export const request: RequestConfig = {
   timeout: 50000,
   // other axios options you want
@@ -103,7 +113,10 @@ export const request: RequestConfig = {
   },
   requestInterceptors: [
     (url: string, options: any) => {
-      return { url: `//boxjs.net${url}`, options };
+      return {
+        url: url.indexOf(`http`) > -1 ? url : `//boxjs.net${url}`,
+        options,
+      };
     },
   ],
   responseInterceptors: [],

@@ -1,4 +1,5 @@
 import { defineConfig } from "@umijs/max";
+import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 import routes from "./routes";
 
 //@ts-ignore
@@ -39,13 +40,28 @@ export default defineConfig({
     useLocalStorage: true,
   },
   chainWebpack: function (config) {
+    config.plugin("monaco-editor-webpack-plugin").use(MonacoWebpackPlugin, [
+      {
+        languages: ["javascript", "typescript", "css", "html", "json"],
+        features: [
+          "find",
+          "anchorSelect",
+          "codeAction",
+          "codelens",
+          "bracketMatching",
+          "browser",
+          "caretOperations",
+        ],
+      },
+    ]);
+
     config.merge({
       optimization: {
         minimize: true,
         splitChunks: {
           chunks: "async",
           minSize: 30000,
-          minChunks: 1,
+          minChunks: 3,
           automaticNameDelimiter: ".",
           cacheGroups: {
             mui: {
@@ -74,6 +90,8 @@ export default defineConfig({
         },
       },
     });
+
+    return config;
   },
   analyze: {
     analyzerMode: "server",

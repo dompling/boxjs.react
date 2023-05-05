@@ -1,9 +1,8 @@
-import DetailForm from '@/pages/App/Details/components/DetailForm';
-import EditForm from '@/pages/App/Details/components/EditForm';
-import OutPut from '@/pages/App/Details/components/OutPut';
-import { useModel, useParams } from '@@/exports';
-import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
+import DetailForm from "@/pages/App/Details/components/DetailForm";
+import EditForm from "@/pages/App/Details/components/EditForm";
+import { history, useModel, useParams } from "@@/exports";
+import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
   Badge,
   Box,
@@ -20,23 +19,23 @@ import {
   Typography,
   styled,
   tabsClasses,
-} from '@mui/material';
-import $copy from 'copy-to-clipboard';
-import QueueAnim from 'rc-queue-anim';
-import React, { useState } from 'react';
-import { uuid } from 'uuidv4';
+} from "@mui/material";
+import $copy from "copy-to-clipboard";
+import QueueAnim from "rc-queue-anim";
+import React, { useState } from "react";
+import { uuid } from "uuidv4";
 
 const CusBadge = styled(Badge)(({ theme }) => ({
-  right: 'unset',
-  '& .MuiBadge-badge': {
-    transform: 'scale(1) translate(2px, -50%)',
+  right: "unset",
+  "& .MuiBadge-badge": {
+    transform: "scale(1) translate(2px, -50%)",
     color: theme.palette.common.white,
   },
 }));
 
 const CusTypography = styled(Typography)(({}) => ({
-  right: 'unset',
-  '& h4,h1,h2,h3,p': {
+  right: "unset",
+  "& h4,h1,h2,h3,p": {
     padding: 0,
     margin: 0,
   },
@@ -67,12 +66,12 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
 export default function Page() {
-  const { initialState } = useModel('@@initialState');
+  const { initialState } = useModel("@@initialState");
   const params = useParams<{ id: string; name: string }>();
   const id = params?.id;
   const [open, setOpen] =
@@ -80,13 +79,12 @@ export default function Page() {
       Record<string, { open: boolean; data?: boxjs.sessions; val?: any }>
     >();
 
-  const [visible, setVisible] = useState<boolean>();
-  const { fetchSave, fetchRunScript } = useModel('api');
-  const tip = useModel('alert');
+  const { fetchSave, fetchRunScript } = useModel("api");
+  const tip = useModel("alert");
   const datas = initialState?.boxdata.datas;
   const sessions = initialState?.boxdata.sessions || [];
   const app = initialState?.apps.find(
-    (item) => item.id === id && item.author === params.name,
+    (item) => item.id === id && item.author === params.name
   );
 
   const appSession = sessions?.filter((item) => item?.appId === `${id}`);
@@ -107,13 +105,13 @@ export default function Page() {
 
   const curSessionIndex =
     appSession?.findIndex(
-      (item) => item?.id === initialState?.boxdata.curSessions[`${id}`],
+      (item) => item?.id === initialState?.boxdata.curSessions[`${id}`]
     ) || 0;
 
   if (curSessionIndex > -1) curSession = appSession?.[curSessionIndex];
 
   const [tabValue, setTabValue] = React.useState(
-    curSessionIndex > -1 ? curSessionIndex : 0,
+    curSessionIndex > -1 ? curSessionIndex : 0
   );
 
   const handleChange = (newValue: number) => {
@@ -128,7 +126,7 @@ export default function Page() {
   });
 
   const sessionIndex = sessions?.findIndex(
-    (item) => item?.id === curSessionApp?.id,
+    (item) => item?.id === curSessionApp?.id
   );
 
   if (!app) return `No find App`;
@@ -149,31 +147,33 @@ export default function Page() {
           })
         }
       />
-      <OutPut
-        open={visible}
-        onClose={() => setVisible(false)}
-        value={fetchRunScript.data}
-      />
 
       <Stack
-        direction={'row'}
-        justifyContent={app.script ? 'space-between' : 'flex-start'}
-        alignItems={'center'}
+        direction={"row"}
+        justifyContent={app.script ? "space-between" : "flex-start"}
+        alignItems={"center"}
       >
-        <Typography variant="h6" p={2}>
+        <Typography
+          variant="h6"
+          p={2}
+          component={"span"}
+          onClick={() => {
+            let url = app.script || app.scripts?.[0]?.script || "";
+            if (!url) return;
+            history.push("/code", { url });
+          }}
+        >
           {app.name}
         </Typography>
         {app.script && (
-          <Box sx={{ position: 'relative' }}>
+          <Box sx={{ position: "relative" }}>
             <IconButton
               edge="end"
               aria-label={app.name}
               sx={{ mr: 0.5 }}
               onClick={() => {
                 if (!app.script) return;
-                fetchRunScript.run(app.script).then(() => {
-                  setVisible(true);
-                });
+                fetchRunScript.run({ url: app.script, isRemote: true });
               }}
             >
               <PlayCircleFilledIcon color="primary" />
@@ -181,7 +181,7 @@ export default function Page() {
                 <CircularProgress
                   size={24}
                   sx={{
-                    position: 'absolute',
+                    position: "absolute",
                   }}
                 />
               )}
@@ -191,7 +191,7 @@ export default function Page() {
       </Stack>
       <QueueAnim style={{ marginTop: 0 }}>
         {app.descs_html?.length && (
-          <Paper key={'html'} sx={{ padding: 2, mb: 2 }} elevation={3}>
+          <Paper key={"html"} sx={{ padding: 2, mb: 2 }} elevation={3}>
             {app.descs_html.map((item, index) => {
               return (
                 <CusTypography
@@ -212,8 +212,8 @@ export default function Page() {
             <Stack spacing={2}>
               <Stack
                 direction="row"
-                justifyContent={'space-between'}
-                alignItems={'center'}
+                justifyContent={"space-between"}
+                alignItems={"center"}
               >
                 <Typography variant="body2">应用脚本</Typography>
                 <CusBadge
@@ -227,16 +227,17 @@ export default function Page() {
                   return (
                     <ListItem
                       key={item.name}
-                      sx={{ padding: 0, mb: 1 }}
+                      sx={{ padding: 0, mb: 2 }}
                       secondaryAction={
-                        <Box sx={{ position: 'relative' }}>
+                        <Box sx={{ position: "relative" }}>
                           <IconButton
                             edge="end"
                             sx={{ mr: -3.5 }}
                             aria-label={item.name}
                             onClick={() => {
-                              fetchRunScript.run(item.script).then(() => {
-                                setVisible(true);
+                              fetchRunScript.run({
+                                url: item.script,
+                                isRemote: true,
                               });
                             }}
                           >
@@ -245,7 +246,7 @@ export default function Page() {
                               <CircularProgress
                                 size={24}
                                 sx={{
-                                  position: 'absolute',
+                                  position: "absolute",
                                 }}
                               />
                             )}
@@ -253,7 +254,14 @@ export default function Page() {
                         </Box>
                       }
                     >
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{ fontWeight: 500 }}
+                        component={"span"}
+                        onClick={() => {
+                          history.push("/code", { url: item.script });
+                        }}
+                      >
                         {`${index + 1}.${item.name}`}
                       </Typography>
                     </ListItem>
@@ -265,12 +273,12 @@ export default function Page() {
         )}
 
         {app.settings?.length && (
-          <Paper key={'setting'} sx={{ mb: 2 }} elevation={3}>
+          <Paper key={"setting"} sx={{ mb: 2 }} elevation={3}>
             <Stack spacing={2}>
               <Stack
                 direction="row"
-                justifyContent={'space-between'}
-                alignItems={'center'}
+                justifyContent={"space-between"}
+                alignItems={"center"}
                 p={2}
               >
                 <Typography variant="body2">应用设置</Typography>
@@ -280,8 +288,8 @@ export default function Page() {
                   sx={{ color: (theme) => theme.palette.common.white }}
                 />
               </Stack>
-              <QueueAnim type={['top', 'bottom']} leaveReverse>
-                {!fetchSave.fetches['chavy_boxjs_cur_sessions']?.loading ? (
+              <QueueAnim type={["top", "bottom"]} leaveReverse>
+                {!fetchSave.fetches["chavy_boxjs_cur_sessions"]?.loading ? (
                   <DetailForm formConfig={app.settings} />
                 ) : null}
               </QueueAnim>
@@ -290,12 +298,12 @@ export default function Page() {
         )}
 
         {app?.keys?.length !== 0 ? (
-          <Paper key={'curSessionItem'} elevation={3} sx={{ mb: 2 }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider', p: 2 }}>
-              <Stack direction={'row'} spacing={2}>
+          <Paper key={"curSessionItem"} elevation={3} sx={{ mb: 2 }}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider", p: 2 }}>
+              <Stack direction={"row"} spacing={2}>
                 <Typography>当前会话</Typography>
                 {curSession.name ? (
-                  <Typography color={'primary'}>#{curSession.name}</Typography>
+                  <Typography color={"primary"}>#{curSession.name}</Typography>
                 ) : null}
               </Stack>
             </Box>
@@ -307,17 +315,17 @@ export default function Page() {
                       <ListItemText
                         primary={item.key}
                         primaryTypographyProps={{
-                          variant: 'caption',
-                          sx: { fontWeight: 'bold' },
+                          variant: "caption",
+                          sx: { fontWeight: "bold" },
                         }}
                         secondary={
                           <Typography
                             color="grey"
                             variant="caption"
                             noWrap
-                            component={'div'}
+                            component={"div"}
                           >
-                            {item.val || '无数据'}
+                            {item.val || "无数据"}
                           </Typography>
                         }
                       />
@@ -330,9 +338,9 @@ export default function Page() {
               p={1}
               sx={{
                 borderTop: 1,
-                borderColor: 'divider',
-                display: 'flex',
-                justifyContent: 'flex-end',
+                borderColor: "divider",
+                display: "flex",
+                justifyContent: "flex-end",
               }}
             >
               <Button
@@ -370,7 +378,7 @@ export default function Page() {
 
         {appSession?.length !== 0 && app?.keys?.length !== 0 ? (
           <Paper elevation={3}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Tabs
                 value={tabValue}
                 scrollButtons
@@ -379,7 +387,7 @@ export default function Page() {
                 aria-label="scrollable force tabs example"
                 sx={{
                   [`& .${tabsClasses.scrollButtons}`]: {
-                    '&.Mui-disabled': { opacity: 0.3 },
+                    "&.Mui-disabled": { opacity: 0.3 },
                   },
                 }}
                 onChange={(_: any, value: any) => handleChange(value)}
@@ -391,14 +399,14 @@ export default function Page() {
                       label={
                         <Stack
                           spacing={1}
-                          direction={'row'}
-                          alignItems={'center'}
+                          direction={"row"}
+                          alignItems={"center"}
                         >
                           {curSessionIndex === index ? (
                             <StarBorderIcon sx={{ width: 16, height: 16 }} />
                           ) : null}
                           <Typography>
-                            {!isNoneSession ? `${index + 1} # ` : ''}
+                            {!isNoneSession ? `${index + 1} # ` : ""}
                             {item.name}
                           </Typography>
                         </Stack>
@@ -419,17 +427,17 @@ export default function Page() {
                           <ListItemText
                             primary={`${item.key}`}
                             primaryTypographyProps={{
-                              variant: 'caption',
-                              sx: { fontWeight: 'bold' },
+                              variant: "caption",
+                              sx: { fontWeight: "bold" },
                             }}
                             secondary={
                               <Typography
                                 color="grey"
                                 variant="caption"
                                 noWrap
-                                component={'div'}
+                                component={"div"}
                               >
-                                {item.val || '无数据'}
+                                {item.val || "无数据"}
                               </Typography>
                             }
                           />
@@ -440,10 +448,10 @@ export default function Page() {
                 </TabPanel>
               );
             })}
-            <Box p={1} sx={{ borderTop: 1, borderColor: 'divider' }}>
+            <Box p={1} sx={{ borderTop: 1, borderColor: "divider" }}>
               <Stack
-                direction={'row'}
-                alignItems={'center'}
+                direction={"row"}
+                alignItems={"center"}
                 justifyContent="flex-end"
               >
                 {!isNoneSession && (
@@ -509,8 +517,8 @@ export default function Page() {
                     $copy(JSON.stringify(curAppValues));
                     tip.alert({
                       open: true,
-                      message: '复制成功',
-                      type: 'success',
+                      message: "复制成功",
+                      type: "success",
                     });
                   }}
                 >

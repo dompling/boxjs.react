@@ -41,7 +41,6 @@ import {
 } from "@mui/material";
 import QueueAnim from "rc-queue-anim";
 import { useState } from "react";
-import { ROOT_PATH } from "@/utils";
 
 export default function Page() {
   const { initialState } = useModel("@@initialState");
@@ -281,7 +280,7 @@ export default function Page() {
                 : `, url(${
                     usercfgs?.iconBg ||
                     usercfgs?.iconCusBg ||
-                    `${ROOT_PATH}/static/background/3.png`
+                    `./static/background/3.png`
                   }) no-repeat center`
             } `,
           backgroundSize: "100% 100%",

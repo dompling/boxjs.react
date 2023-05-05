@@ -1,14 +1,20 @@
 import {
   addAppSub,
   getAllData,
+  getDataKey,
+  getModules,
+  getScripts,
   reloadAppSub,
   runScript,
+  saveData,
   saveUserCfgs,
-} from '@/services/boxjs.api';
-import { useModel, useRequest } from '@@/exports';
+  setModules,
+} from "@/services/boxjs.api";
+import { useModel, useRequest } from "@@/exports";
 
 export default function useAPI() {
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const { initialState, setInitialState } = useModel("@@initialState");
+  const log = useModel("log");
   const update = (response: boxjs.data) => {
     if (!initialState) return;
 
@@ -21,9 +27,9 @@ export default function useAPI() {
     manual: true,
     formatResult: (res) => res,
     fetchKey: (params) =>
-      JSON.stringify(params).indexOf('chavy_boxjs_cur_sessions') > -1
-        ? 'chavy_boxjs_cur_sessions'
-        : 'all',
+      JSON.stringify(params).indexOf("chavy_boxjs_cur_sessions") > -1
+        ? "chavy_boxjs_cur_sessions"
+        : "all",
     onSuccess: (response: boxjs.data) => {
       update(response);
     },
@@ -32,7 +38,7 @@ export default function useAPI() {
   const fetchReloadAppSub = useRequest(reloadAppSub, {
     manual: true,
     formatResult: (res) => res,
-    fetchKey: (params) => params?.id || 'all',
+    fetchKey: (params) => params?.id || "all",
     onSuccess: (response: boxjs.data) => {
       update(response);
     },
@@ -57,19 +63,58 @@ export default function useAPI() {
   const fetchRunScript = useRequest(runScript, {
     manual: true,
     formatResult: (res) => res,
-    fetchKey: (url) => url,
+    fetchKey: (params) => params.url,
+    onSuccess: () => {
+      log.setVisible(true);
+      fetchAllData.run();
+    },
+  });
+
+  const fetchDataKey = useRequest(getDataKey, {
+    manual: true,
+    formatResult: (res) => res,
+    fetchKey: (key) => key,
+  });
+
+  const fetchSaveData = useRequest(saveData, {
+    manual: true,
+    formatResult: (res) => res,
     onSuccess: () => {
       fetchAllData.run();
     },
   });
 
+  const fetchScripts = useRequest(getScripts, {
+    manual: true,
+    formatResult: (res) => res,
+  });
+
+  const fetchModules = useRequest(getModules, {
+    manual: true,
+    formatResult: (res) => res,
+  });
+
+  const fetchUpdateModules = useRequest(setModules, {
+    manual: true,
+  });
+
   return {
+    fetchUpdateModules,
+    fetchSaveData,
     fetchSave,
+    fetchDataKey,
     fetchAllData,
     fetchAddAppSub,
     fetchRunScript,
     fetchReloadAppSub,
+    fetchScripts,
+    fetchModules,
     loading:
+      fetchUpdateModules.loading ||
+      fetchModules.loading ||
+      fetchScripts.loading ||
+      fetchSaveData.loading ||
+      fetchDataKey.loading ||
       fetchSave.loading ||
       fetchReloadAppSub.loading ||
       fetchAddAppSub.loading ||

@@ -1,9 +1,9 @@
-import { IOSSwitch } from '@/components/IOSSwitch';
-import styles from '@/pages/App/Details/index.less';
-import { useModel } from '@@/exports';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { IOSSwitch } from "@/components/IOSSwitch";
+import styles from "@/pages/App/Details/index.less";
+import { useModel } from "@@/exports";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
   AccordionDetails,
@@ -26,29 +26,29 @@ import {
   TextField,
   Typography,
   useFormControl,
-} from '@mui/material';
-import $copy from 'copy-to-clipboard';
-import lodash from 'lodash';
-import QueueAnim from 'rc-queue-anim';
+} from "@mui/material";
+import $copy from "copy-to-clipboard";
+import lodash from "lodash";
+import QueueAnim from "rc-queue-anim";
 import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
   useState,
-} from 'react';
-import { ChromePicker } from 'react-color';
-import { FieldValue, useForm } from 'react-hook-form';
+} from "react";
+import { ChromePicker } from "react-color";
+import { FieldValue, useForm } from "react-hook-form";
 
 function CusFormHelperText({ text, ...props }: any) {
   const { focused } = useFormControl() || {};
   const helperText = React.useMemo(() => {
     if (focused) return text;
 
-    return '';
+    return "";
   }, [focused]);
 
   return (
-    <QueueAnim type={['top', 'bottom']} leaveReverse style={{ minHeight: 25 }}>
+    <QueueAnim type={["top", "bottom"]} leaveReverse style={{ minHeight: 25 }}>
       {focused ? (
         <FormHelperText key={text} {...props}>
           {helperText}
@@ -87,14 +87,14 @@ const FormPickerColor: React.FC<{
 const renderFormItem = (
   data: boxjs.Setting,
   value?: Record<string, string | null>,
-  register?: FieldValue<any>,
+  register?: FieldValue<any>
 ) => {
   const formItemProps = register(data.formName);
-  data.name = (data.disabled ? '🈲手动填写-' : '') + data.name;
+  data.name = (data.disabled ? "🈲手动填写-" : "") + data.name;
 
   return (
     <>
-      {(data.type === 'text' || !data.type) && (
+      {(data.type === "text" || !data.type) && (
         <FormControl size="small" sx={{ width: 1 }} variant="standard">
           <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
           <Input
@@ -109,7 +109,7 @@ const renderFormItem = (
         </FormControl>
       )}
 
-      {data.type === 'textarea' && !data.child && (
+      {data.type === "textarea" && !data.child && (
         <TextField
           fullWidth
           multiline
@@ -131,8 +131,8 @@ const renderFormItem = (
           <InputLabel
             htmlFor={data.id}
             sx={{
-              position: 'unset',
-              transform: 'unset',
+              position: "unset",
+              transform: "unset",
               mb: 2,
             }}
           >
@@ -142,13 +142,13 @@ const renderFormItem = (
           <FormList
             setting={data}
             {...formItemProps}
-            itemValue={value?.[data.id] || '[]'}
+            itemValue={value?.[data.id] || "[]"}
           />
           <CusFormHelperText text={data.desc} />
         </FormControl>
       )}
 
-      {data.type === 'boolean' && (
+      {data.type === "boolean" && (
         <Stack>
           <FormControlLabel
             label={data.name}
@@ -165,13 +165,13 @@ const renderFormItem = (
         </Stack>
       )}
 
-      {data.type === 'checkboxes' && (
+      {data.type === "checkboxes" && (
         <FormControl component="fieldset" variant="standard">
           <FormLabel component="legend">{data.name}</FormLabel>
           <FormGroup>
             {data.items?.map((checkbox) => {
               const checkboxValue = value?.[data.id]
-                ?.split(',')
+                ?.split(",")
                 .includes(checkbox.key);
 
               return (
@@ -194,7 +194,7 @@ const renderFormItem = (
         </FormControl>
       )}
 
-      {data.type === 'number' && (
+      {data.type === "number" && (
         <FormControl size="small" sx={{ width: 1 }} variant="standard">
           <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
           <Input
@@ -210,7 +210,7 @@ const renderFormItem = (
         </FormControl>
       )}
 
-      {data.type === 'radios' && (
+      {data.type === "radios" && (
         <FormControl component="fieldset" variant="standard">
           <FormLabel component="legend">{data.name}</FormLabel>
           <RadioGroup {...formItemProps} defaultValue={value?.[data.id]}>
@@ -229,13 +229,13 @@ const renderFormItem = (
         </FormControl>
       )}
 
-      {data.type === 'colorpicker' && (
+      {data.type === "colorpicker" && (
         <FormControl size="small" sx={{ width: 1 }} variant="standard">
           <InputLabel
             htmlFor={data.id}
             sx={{
-              position: 'unset',
-              transform: 'unset',
+              position: "unset",
+              transform: "unset",
               mb: 2,
             }}
           >
@@ -264,9 +264,9 @@ const FormList: React.FC<{
 
   const form = useForm({ defaultValues: data });
   const formDrawer = useForm();
-  const tip = useModel('alert');
+  const tip = useModel("alert");
 
-  const [drawerTitle, setTitle] = useState<string>('');
+  const [drawerTitle, setTitle] = useState<string>("");
   const [loadMore, setLoadMore] = useState<boolean>(false);
   const [formValue, setValue] = useState<Record<string, any>[]>([]);
   const [expanded, setExpanded] = useState<string | false>(false);
@@ -298,8 +298,8 @@ const FormList: React.FC<{
   });
 
   useEffect(() => {
-    setValue([...data]);
-  }, [data]);
+    setValue(data);
+  }, []);
 
   let maxKeys = 0,
     formItems: string[] = [];
@@ -324,7 +324,7 @@ const FormList: React.FC<{
 
   formItems = lodash.uniq(formItems);
   const formValues = formValue.filter((_, index) =>
-    !loadMore ? index < 4 : true,
+    !loadMore ? index < 4 : true
   );
 
   const handelDrawerClose = () => {
@@ -334,22 +334,22 @@ const FormList: React.FC<{
 
   return (
     <>
-      <Drawer anchor={'bottom'} open={open} onClose={() => handelDrawerClose()}>
+      <Drawer anchor={"bottom"} open={open} onClose={() => handelDrawerClose()}>
         <Box
           sx={{
             pt: 1,
             pb: 1,
             borderBottom: 1,
-            borderColor: 'divider',
+            borderColor: "divider",
             boxShadow: (theme) => theme.shadows[2],
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             width: `100%`,
-            bgcolor: 'inherit',
+            bgcolor: "inherit",
             zIndex: 99,
           }}
         >
-          <Stack direction={'row'} alignItems={'center'}>
+          <Stack direction={"row"} alignItems={"center"}>
             <IconButton color="inherit" onClick={() => setOpen(false)}>
               <ChevronLeftIcon />
             </IconButton>
@@ -361,15 +361,15 @@ const FormList: React.FC<{
               color="primary"
               onClick={() => {
                 const val = formDrawer.getValues();
-                if (val['*JSON*']) {
+                if (val["*JSON*"]) {
                   try {
-                    handelChange(JSON.parse(val['*JSON*']));
+                    handelChange(JSON.parse(val["*JSON*"]));
                     return handelDrawerClose();
                   } catch (e) {
                     return tip.alert({
                       open: true,
-                      message: 'JSON 格式错误',
-                      type: 'error',
+                      message: "JSON 格式错误",
+                      type: "error",
                     });
                   }
                 }
@@ -382,12 +382,12 @@ const FormList: React.FC<{
           </Stack>
         </Box>
         <Stack sx={{ pt: 8, pl: 2, pr: 2, height: `100vh` }}>
-          {formItems && drawerTitle === '新增' ? (
+          {formItems && drawerTitle === "新增" ? (
             formItems?.map((settingKey) => {
               let settingItem: boxjs.Setting = child[settingKey] || {
                 id: settingKey,
                 name: settingKey,
-                type: 'text',
+                type: "text",
               };
 
               return (
@@ -398,7 +398,7 @@ const FormList: React.FC<{
                       formName: `${settingItem?.id}`,
                     },
                     {},
-                    formDrawer.register,
+                    formDrawer.register
                   )}
                 </React.Fragment>
               );
@@ -410,7 +410,7 @@ const FormList: React.FC<{
               size="small"
               minRows={10}
               variant="standard"
-              placeholder={'请输入 JSON 数组'}
+              placeholder={"请输入 JSON 数组"}
               helperText={
                 <pre>{` JSON 格式数组示例值\n${JSON.stringify(
                   [
@@ -418,10 +418,10 @@ const FormList: React.FC<{
                     { key: 2, val: 2 },
                   ],
                   null,
-                  ` `,
+                  ` `
                 )}`}</pre>
               }
-              {...formDrawer.register('*JSON*')}
+              {...formDrawer.register("*JSON*")}
             />
           )}
         </Stack>
@@ -444,7 +444,7 @@ const FormList: React.FC<{
               expandIcon={<ExpandMoreIcon />}
               aria-controls={`${id}-content`}
             >
-              <Typography variant="body2">{title?.join('-')}</Typography>
+              <Typography variant="body2">{title?.join("-")}</Typography>
             </AccordionSummary>
             <AccordionDetails>
               {expanded === id &&
@@ -452,7 +452,7 @@ const FormList: React.FC<{
                   let settingItem: boxjs.Setting = child[settingKey] || {
                     id: settingKey,
                     name: settingKey,
-                    type: 'text',
+                    type: "text",
                   };
                   return (
                     <React.Fragment key={settingItem.id}>
@@ -462,7 +462,7 @@ const FormList: React.FC<{
                           formName: `[${index}].${settingItem?.id}`,
                         },
                         item,
-                        form.register,
+                        form.register
                       )}
                     </React.Fragment>
                   );
@@ -470,7 +470,7 @@ const FormList: React.FC<{
               <Button
                 size="small"
                 color="error"
-                sx={{ width: '100%' }}
+                sx={{ width: "100%" }}
                 variant="contained"
                 onClick={() => {
                   const val = formValue.filter((_, key) => key !== index);
@@ -494,13 +494,13 @@ const FormList: React.FC<{
         >
           <AccordionSummary>
             <Typography
-              color={'primary'}
+              color={"primary"}
               variant="body2"
               sx={{
                 width: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               {loadMore ? (
@@ -521,8 +521,8 @@ const FormList: React.FC<{
           <Stack
             spacing={1}
             sx={{ width: 1 }}
-            direction={'row'}
-            alignItems={'center'}
+            direction={"row"}
+            alignItems={"center"}
             justifyContent="center"
           >
             <Button
@@ -537,7 +537,7 @@ const FormList: React.FC<{
               color="primary"
               onClick={() => {
                 formDrawer.reset();
-                setTitle('新增');
+                setTitle("新增");
                 setOpen(true);
               }}
             >
@@ -555,8 +555,8 @@ const FormList: React.FC<{
                 $copy(JSON.stringify(formData));
                 tip.alert({
                   open: true,
-                  message: '复制成功',
-                  type: 'success',
+                  message: "复制成功",
+                  type: "success",
                 });
               }}
             >
@@ -566,7 +566,7 @@ const FormList: React.FC<{
               color="info"
               onClick={() => {
                 formDrawer.reset();
-                setTitle('导入');
+                setTitle("导入");
                 setOpen(true);
               }}
             >
@@ -590,9 +590,9 @@ function FormType({
 }) {
   if (!setting) return null;
   return renderFormItem(
-    { ...setting, formName: setting.id.replace('.', '*') },
+    { ...setting, formName: setting.id.replace(".", "*") },
     itemValue,
-    register,
+    register
   );
 }
 

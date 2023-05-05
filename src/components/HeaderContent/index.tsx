@@ -1,11 +1,11 @@
-import ProModal from '@/components/ProModal';
-import config from '@/utils/config';
-import { history, useModel, useParams } from '@@/exports';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import SearchIcon from '@mui/icons-material/Search';
-import StarIcon from '@mui/icons-material/Star';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
+import ProModal from "@/components/ProModal";
+import config from "@/utils/config";
+import { history, useModel, useParams } from "@@/exports";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import SearchIcon from "@mui/icons-material/Search";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
 import {
   AppBar,
   Avatar,
@@ -26,69 +26,69 @@ import {
   Typography,
   alpha,
   styled,
-} from '@mui/material';
-import { useDebounce } from 'ahooks';
-import QueueAnim from 'rc-queue-anim';
-import React, { useState } from 'react';
+} from "@mui/material";
+import { useDebounce } from "ahooks";
+import QueueAnim from "rc-queue-anim";
+import React, { useState } from "react";
 
 const CusListItem = styled(ListItem)(() => ({
   paddingLeft: 8,
 }));
 
 const ListItemTextDesc = styled(ListItemText)(() => ({
-  '& .MuiListItemText-secondary': {
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
+  "& .MuiListItemText-secondary": {
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
   },
 }));
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
+  "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
   marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(1),
-    width: 'auto',
+    width: "auto",
   },
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
+  color: "inherit",
   width: `100%`,
-  '& .MuiInputBase-input': {
+  "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
       },
     },
   },
 }));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
+const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 }));
 
 const HeaderContent: React.FC = () => {
-  const { initialState } = useModel('@@initialState');
-  const { loading, fetchSave } = useModel('api');
+  const { initialState, setInitialState } = useModel("@@initialState");
+  const { loading, fetchSave } = useModel("api");
   const params = useParams<{ id: string }>();
 
   const [keyword, setKeyword] = useState<string>();
@@ -109,18 +109,18 @@ const HeaderContent: React.FC = () => {
   const boxdata = initialState?.boxdata;
 
   const icon = boxdata?.syscfgs.envs?.find(
-    (item) => item.id === boxdata?.syscfgs.env,
+    (item) => item.id === boxdata?.syscfgs.env
   );
 
   const UI = initialState?.ui?.(initialState?.boxdata);
   const iconIndex = UI?.iconThemeIdx !== undefined ? UI?.iconThemeIdx : 1;
 
   return (
-    <QueueAnim type={['top', 'bottom']} leaveReverse>
+    <QueueAnim type={["top", "bottom"]} leaveReverse>
       {!boxdata?.usercfgs.isWaitToggleSearchBar ? (
         <Paper
           sx={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
             right: 0,
@@ -129,9 +129,9 @@ const HeaderContent: React.FC = () => {
             mr: 2,
             mt: 1,
             borderRadius: 7,
-            overflow: 'hidden',
+            overflow: "hidden",
           }}
-          key={'appbar'}
+          key={"appbar"}
           elevation={3}
         >
           <AppBar position="static">
@@ -140,7 +140,7 @@ const HeaderContent: React.FC = () => {
                 <IconButton
                   color="inherit"
                   onClick={() => history.back()}
-                  sx={{ position: 'relative', left: -10 }}
+                  sx={{ position: "relative", left: -10 }}
                 >
                   <ChevronLeftIcon
                     sx={{
@@ -158,7 +158,7 @@ const HeaderContent: React.FC = () => {
                   sx={{ mr: 2 }}
                   onClick={handleClick}
                 >
-                  <Box sx={{ position: 'relative' }}>
+                  <Box sx={{ position: "relative" }}>
                     <Avatar
                       alt="BoxJs"
                       src={icon?.icons[iconIndex] || config.logo}
@@ -166,18 +166,16 @@ const HeaderContent: React.FC = () => {
                         width: 28,
                         height: 28,
                         border: 1,
-                        borderColor: 'white',
+                        borderColor: "white",
                       }}
                     />
                     {loading && (
                       <CircularProgress
-                        size={24}
+                        size={28}
                         sx={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          marginTop: '-12px',
-                          marginLeft: '-12px',
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
                         }}
                       />
                     )}
@@ -186,7 +184,7 @@ const HeaderContent: React.FC = () => {
               )}
 
               <Typography
-                component={'div'}
+                component={"div"}
                 variant="body1"
                 color="inherit"
                 sx={{ flexGrow: 1 }}
@@ -218,7 +216,7 @@ const HeaderContent: React.FC = () => {
         footer={null}
         onClose={() => setVisible(false)}
         title={
-          <AppBar position="static" sx={{ position: 'fixed', zIndex: 99 }}>
+          <AppBar position="static" sx={{ position: "fixed", zIndex: 99 }}>
             <Toolbar sx={{ pl: 0 }}>
               <IconButton color="inherit" onClick={() => setVisible(false)}>
                 <ChevronLeftIcon />
@@ -230,7 +228,7 @@ const HeaderContent: React.FC = () => {
                 </SearchIconWrapper>
                 <StyledInputBase
                   placeholder="请输入"
-                  inputProps={{ 'aria-label': 'search' }}
+                  inputProps={{ "aria-label": "search" }}
                   onChange={(value) => {
                     setKeyword(value.target.value);
                   }}
@@ -244,12 +242,12 @@ const HeaderContent: React.FC = () => {
           {initialState?.apps
             .filter((app) => {
               return (
-                (app.name || app.id).indexOf(`${debouncedKeyword || ''}`) !== -1
+                (app.name || app.id).indexOf(`${debouncedKeyword || ""}`) !== -1
               );
             })
             .map((app, index) => {
               const isFav = initialState?.boxdata?.usercfgs.favapps.find(
-                (fav) => fav === app.id,
+                (fav) => fav === app.id
               );
               UI?.loadAppBaseInfo(app);
               return (
@@ -265,7 +263,7 @@ const HeaderContent: React.FC = () => {
                           onClick={() => {
                             const isRun =
                               initialState?.boxdata.usercfgs.favapps.find(
-                                (item) => item === app.id,
+                                (item) => item === app.id
                               );
                             if (isRun) return;
                             const usercfgs = initialState?.boxdata.usercfgs;
@@ -286,7 +284,7 @@ const HeaderContent: React.FC = () => {
                           onClick={() => {
                             const isRun =
                               initialState?.boxdata.usercfgs.favapps.find(
-                                (item) => item === app.id,
+                                (item) => item === app.id
                               );
                             if (!isRun) return;
                             const usercfgs = initialState?.boxdata.usercfgs;
@@ -295,7 +293,7 @@ const HeaderContent: React.FC = () => {
                               val: JSON.stringify({
                                 ...usercfgs,
                                 favapps: usercfgs?.favapps?.filter(
-                                  (item) => item !== app.id,
+                                  (item) => item !== app.id
                                 ),
                               }),
                             });
@@ -309,7 +307,7 @@ const HeaderContent: React.FC = () => {
                     <ListItemButton
                       sx={{
                         padding: 0,
-                        pr: '0 !important',
+                        pr: "0 !important",
                       }}
                       onClick={() => {
                         setVisible(false);
@@ -346,34 +344,42 @@ const HeaderContent: React.FC = () => {
         PaperProps={{
           elevation: 0,
           sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             mt: 1.5,
-            '& .MuiAvatar-root': {
+            "& .MuiAvatar-root": {
               width: 32,
               height: 32,
               ml: -0.5,
               mr: 1,
             },
-            '&:before': {
+            "&:before": {
               content: '""',
-              display: 'block',
-              position: 'absolute',
+              display: "block",
+              position: "absolute",
               top: 0,
               left: 24,
               width: 10,
               height: 10,
-              transform: 'translateY(-50%) rotate(45deg)',
+              transform: "translateY(-50%) rotate(45deg)",
               zIndex: 0,
             },
           },
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         {boxdata?.syscfgs.envs.map((item) => {
           return (
-            <MenuItem key={item.id}>
+            <MenuItem
+              key={item.id}
+              onClick={(event) => {
+                if (!initialState) return;
+                initialState.boxdata.syscfgs.env = item.id;
+                setInitialState({ ...initialState });
+                handleClose();
+              }}
+            >
               <Avatar alt={item.id} src={item.icons[iconIndex]} />
               {item.id}
             </MenuItem>

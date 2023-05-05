@@ -13,10 +13,10 @@ import { useForm } from 'react-hook-form';
 import { ROOT_PATH } from "@/utils";
 
 const avatarBg = [
-  `${ROOT_PATH}/static/background/2.png`,
-  `${ROOT_PATH}/static/background/3.png`,
-  `${ROOT_PATH}/static/background/4.png`,
-  `${ROOT_PATH}/static/background/5.png`,
+  `./static/background/2.png`,
+  `./static/background/3.png`,
+  `./static/background/4.png`,
+  `./static/background/5.png`,
 ];
 
 const ModalSettingForm: React.FC<{
@@ -28,7 +28,7 @@ const ModalSettingForm: React.FC<{
 
   const usercfgs = initialState?.boxdata?.usercfgs;
   const [iconBg, setBg] = useState<string>(
-    usercfgs?.iconBg || `/static/background/3.png`,
+    usercfgs?.iconBg || `./static/background/3.png`,
   );
 
   const formRef = useForm();

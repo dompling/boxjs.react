@@ -20,10 +20,12 @@
     "copy-to-clipboard": "^3.3.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
+    "monaco-editor": "^0.38.0",
     "rc-queue-anim": "^2.0.0",
     "react-color": "^2.19.3",
     "react-draggable": "^4.4.5",
     "react-hook-form": "^7.43.9",
+    "react-monaco-editor": "^0.52.0",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
@@ -32,6 +34,7 @@
     "@types/react-dom": "^18.0.11",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
+    "monaco-editor-webpack-plugin": "^7.0.1",
     "prettier": "^2.8.7",
     "prettier-plugin-organize-imports": "^3.2.2",
     "prettier-plugin-packagejson": "^2.4.3",
