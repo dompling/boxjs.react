@@ -1,10 +1,12 @@
 
 .footer_container {
-  padding-bottom: calc(constant(safe-area-inset-bottom) / 2) !important;
-  padding-bottom: calc(env(safe-area-inset-bottom) / 2) !important;
+  padding-bottom: calc(12px + constant(safe-area-inset-bottom) / 2) !important;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom) / 2) !important;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 99;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }

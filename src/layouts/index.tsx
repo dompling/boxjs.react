@@ -20,20 +20,6 @@ export default function Layout() {
   };
 
   const bgimg = initialState?.boxdata.usercfgs.bgimg;
-  let sx: Record<string, any> = {
-    pt: 8,
-    pb: 16,
-  };
-
-  if (initialState?.boxdata.usercfgs.isWaitToggleSearchBar) {
-    sx.pt = 2;
-  }
-
-  if (["/my"].includes(location.pathname)) {
-    sx.pt = 0;
-    sx.pl = 0;
-    sx.pr = 0;
-  }
 
   return (
     <ToggleColorMode>
@@ -43,36 +29,6 @@ export default function Layout() {
         onClose={() => log.setVisible(false)}
       />
 
-      {tipState.options?.type ? (
-        <Snackbar
-          autoHideDuration={3000}
-          key={tipState.options.key}
-          onClose={() => onClose()}
-          open={tipState.options?.open}
-          anchorOrigin={{ vertical: "top", horizontal: "left" }}
-          TransitionComponent={(props) => <Slide {...props} direction="down" />}
-        >
-          <Alert
-            sx={{ width: "100%" }}
-            onClose={() => onClose()}
-            severity={tipState.options?.type}
-          >
-            {tipState.options?.message}
-          </Alert>
-        </Snackbar>
-      ) : (
-        <Snackbar
-          key={tipState.options.key}
-          autoHideDuration={1000}
-          onClose={() => onClose()}
-          open={tipState.options?.open}
-          anchorOrigin={{ vertical: "top", horizontal: "left" }}
-          TransitionComponent={(props) => <Slide {...props} direction="down" />}
-          message={
-            tipState.options?.type ? undefined : tipState.options?.message
-          }
-        />
-      )}
       <Box className={styles.container}>
         {!["/my"].includes(location.pathname) && <HeaderContent />}
         <BoxJSActions />
@@ -91,8 +47,50 @@ export default function Layout() {
             backgroundImage: `linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${bgimg}?_=${initialState?.random})`,
           }}
         />
-        <Container fixed sx={sx}>
+        <Container
+          fixed
+          maxWidth={false}
+          className={`${styles.content} ${
+            styles[location.pathname.replace("/", "")]
+          }`}
+        >
           <Outlet />
+          {tipState.options?.type ? (
+            <Snackbar
+              className={styles.alert}
+              // autoHideDuration={3000}
+              key={tipState.options.key}
+              onClose={() => onClose()}
+              open={tipState.options?.open}
+              anchorOrigin={{ vertical: "top", horizontal: "left" }}
+              TransitionComponent={(props) => (
+                <Slide {...props} direction="down" />
+              )}
+            >
+              <Alert
+                sx={{ width: "100%" }}
+                onClose={() => onClose()}
+                severity={tipState.options?.type}
+              >
+                {tipState.options?.message}
+              </Alert>
+            </Snackbar>
+          ) : (
+            <Snackbar
+              className={styles.alert}
+              key={tipState.options.key}
+              autoHideDuration={1000}
+              onClose={() => onClose()}
+              open={tipState.options?.open}
+              anchorOrigin={{ vertical: "top", horizontal: "left" }}
+              TransitionComponent={(props) => (
+                <Slide {...props} direction="down" />
+              )}
+              message={
+                tipState.options?.type ? undefined : tipState.options?.message
+              }
+            />
+          )}
         </Container>
 
         <FooterToolNav />

@@ -1,10 +1,12 @@
 
 .header_container {
-  padding-top: constant(safe-area-inset-top) !important;
-  padding-top: env(safe-area-inset-top) !important;
+  padding-top: calc(8px + constant(safe-area-inset-top)) !important;
+  padding-top: calc(8px + env(safe-area-inset-top)) !important;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 99;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }

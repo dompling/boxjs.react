@@ -73,9 +73,6 @@ const FooterToolNav: React.FC = () => {
           <Paper
             key={"paper"}
             sx={{
-              mb: 2,
-              mr: 2,
-              ml: 2,
               borderRadius: 7,
               overflow: "hidden",
               boxShadow: (theme) =>

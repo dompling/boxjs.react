@@ -1,7 +1,27 @@
 
 .container {
-  margin-top: constant(safe-area-inset-top) !important;
-  margin-top: env(safe-area-inset-top) !important;
-  margin-bottom: constant(safe-area-inset-bottom) !important;
-  margin-bottom: env(safe-area-inset-bottom) !important;
+  .content {
+    min-height: 100vh;
+    overflow-x: hidden;
+    max-width: unset !important;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: calc(4rem + constant(safe-area-inset-top));
+    padding-top: calc(4rem + env(safe-area-inset-top));
+    padding-bottom: calc(4rem + constant(safe-area-inset-top));
+    padding-bottom: calc(4rem + env(safe-area-inset-top));
+  }
+
+  .my {
+    padding-top: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .alert {
+    left: 1.5rem !important;
+    right: 1.5rem !important;
+  }
 }
+
+

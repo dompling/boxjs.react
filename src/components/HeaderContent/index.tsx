@@ -122,9 +122,6 @@ const HeaderContent: React.FC = () => {
         <Box className={styles.header_container}>
           <Paper
             sx={{
-              ml: 2,
-              mr: 2,
-              mt: 1,
               borderRadius: 7,
               overflow: "hidden",
             }}
