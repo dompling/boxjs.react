@@ -1,6 +1,6 @@
 import ProModal from "@/components/ProModal";
 import config from "@/utils/config";
-import { history, useModel, useParams } from "@@/exports";
+import { history, useLocation, useModel } from "@@/exports";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import SearchIcon from "@mui/icons-material/Search";
 import StarIcon from "@mui/icons-material/Star";
@@ -90,8 +90,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 const HeaderContent: React.FC = () => {
   const { initialState, setInitialState } = useModel("@@initialState");
   const { loading, fetchSave } = useModel("api");
-  const params = useParams<{ id: string }>();
-
+  const location = useLocation();
   const [keyword, setKeyword] = useState<string>();
   const [visible, setVisible] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -130,7 +129,7 @@ const HeaderContent: React.FC = () => {
           >
             <AppBar position="static">
               <Toolbar>
-                {params.id ? (
+                {["/home", "/app", "/sub"].indexOf(location.pathname) === -1 ? (
                   <IconButton
                     color="inherit"
                     onClick={() => history.back()}

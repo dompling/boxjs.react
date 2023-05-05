@@ -350,7 +350,7 @@ export default function Page() {
           />
         </Stack>
         <IconButton
-          sx={{ position: "absolute", top: 10, right: 10 }}
+          className={styles.settings}
           onClick={() => {
             handleVisible("setting", true);
           }}
