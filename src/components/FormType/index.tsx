@@ -210,6 +210,31 @@ const renderFormItem = (
         </FormControl>
       )}
 
+      {[
+        "text",
+        "textarea",
+        "select",
+        "boolean",
+        "radios",
+        "checkboxes",
+        "colorpicker",
+        "number",
+      ].indexOf(data.type) === -1 && (
+        <FormControl size="small" sx={{ width: 1 }} variant="standard">
+          <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
+          <Input
+            id={data.id}
+            size="small"
+            type={data.type}
+            {...formItemProps}
+            disabled={data.disabled}
+            placeholder={data.placeholder}
+            defaultValue={value?.[data.id]}
+          />
+          <CusFormHelperText text={data.desc} />
+        </FormControl>
+      )}
+
       {data.type === "radios" && (
         <FormControl component="fieldset" variant="standard">
           <FormLabel component="legend">{data.name}</FormLabel>

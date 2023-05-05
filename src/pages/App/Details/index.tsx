@@ -189,346 +189,344 @@ export default function Page() {
           </Box>
         )}
       </Stack>
-      <QueueAnim style={{ marginTop: 0 }}>
-        {app.descs_html?.length && (
-          <Paper key={"html"} sx={{ padding: 2, mb: 2 }} elevation={3}>
-            {app.descs_html.map((item, index) => {
-              return (
-                <CusTypography
-                  color="grey"
-                  display="block"
-                  variant="caption"
-                  sx={{ mb: 0 }}
-                  key={`html-${index}`}
-                  dangerouslySetInnerHTML={{ __html: item }}
-                />
-              );
-            })}
-          </Paper>
-        )}
+      {app.descs_html?.length && (
+        <Paper key={"html"} sx={{ padding: 2, mb: 2 }} elevation={3}>
+          {app.descs_html.map((item, index) => {
+            return (
+              <CusTypography
+                color="grey"
+                display="block"
+                variant="caption"
+                sx={{ mb: 0 }}
+                key={`html-${index}`}
+                dangerouslySetInnerHTML={{ __html: item }}
+              />
+            );
+          })}
+        </Paper>
+      )}
 
-        {app.scripts?.length && (
-          <Paper key="scripts" sx={{ padding: 2, mb: 2 }} elevation={3}>
-            <Stack spacing={2}>
-              <Stack
-                direction="row"
-                justifyContent={"space-between"}
-                alignItems={"center"}
-              >
-                <Typography variant="body2">应用脚本</Typography>
-                <CusBadge
-                  color="primary"
-                  badgeContent={app.scripts?.length}
-                  sx={{ color: (theme) => theme.palette.common.white }}
-                />
-              </Stack>
-              <List disablePadding>
-                {app.scripts.map((item, index) => {
-                  return (
-                    <ListItem
-                      key={item.name}
-                      sx={{ padding: 0, mb: 2 }}
-                      secondaryAction={
-                        <Box sx={{ position: "relative" }}>
-                          <IconButton
-                            edge="end"
-                            sx={{ mr: -3.5 }}
-                            aria-label={item.name}
-                            onClick={() => {
-                              fetchRunScript.run({
-                                url: item.script,
-                                isRemote: true,
-                              });
-                            }}
-                          >
-                            <PlayCircleFilledIcon />
-                            {fetchRunScript.fetches[item.script]?.loading && (
-                              <CircularProgress
-                                size={24}
-                                sx={{
-                                  position: "absolute",
-                                }}
-                              />
-                            )}
-                          </IconButton>
-                        </Box>
-                      }
+      {app.scripts?.length && (
+        <Paper key="scripts" sx={{ padding: 2, mb: 2 }} elevation={3}>
+          <Stack spacing={2}>
+            <Stack
+              direction="row"
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
+              <Typography variant="body2">应用脚本</Typography>
+              <CusBadge
+                color="primary"
+                badgeContent={app.scripts?.length}
+                sx={{ color: (theme) => theme.palette.common.white }}
+              />
+            </Stack>
+            <List disablePadding>
+              {app.scripts.map((item, index) => {
+                return (
+                  <ListItem
+                    key={item.name}
+                    sx={{ padding: 0, mb: 2 }}
+                    secondaryAction={
+                      <Box sx={{ position: "relative" }}>
+                        <IconButton
+                          edge="end"
+                          sx={{ mr: -3.5 }}
+                          aria-label={item.name}
+                          onClick={() => {
+                            fetchRunScript.run({
+                              url: item.script,
+                              isRemote: true,
+                            });
+                          }}
+                        >
+                          <PlayCircleFilledIcon />
+                          {fetchRunScript.fetches[item.script]?.loading && (
+                            <CircularProgress
+                              size={24}
+                              sx={{
+                                position: "absolute",
+                              }}
+                            />
+                          )}
+                        </IconButton>
+                      </Box>
+                    }
+                  >
+                    <Typography
+                      variant="body2"
+                      sx={{ fontWeight: 500 }}
+                      component={"span"}
+                      onClick={() => {
+                        history.push("/code", { url: item.script });
+                      }}
                     >
-                      <Typography
-                        variant="body2"
-                        sx={{ fontWeight: 500 }}
-                        component={"span"}
-                        onClick={() => {
-                          history.push("/code", { url: item.script });
-                        }}
-                      >
-                        {`${index + 1}.${item.name}`}
-                      </Typography>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </Stack>
-          </Paper>
-        )}
+                      {`${index + 1}.${item.name}`}
+                    </Typography>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </Stack>
+        </Paper>
+      )}
 
-        {app.settings?.length && (
-          <Paper key={"setting"} sx={{ mb: 2 }} elevation={3}>
-            <Stack spacing={2}>
-              <Stack
-                direction="row"
-                justifyContent={"space-between"}
-                alignItems={"center"}
-                p={2}
-              >
-                <Typography variant="body2">应用设置</Typography>
-                <CusBadge
-                  color="primary"
-                  badgeContent={app.settings?.length}
-                  sx={{ color: (theme) => theme.palette.common.white }}
-                />
-              </Stack>
-              <QueueAnim type={["top", "bottom"]} leaveReverse>
-                {!fetchSave.fetches["chavy_boxjs_cur_sessions"]?.loading ? (
-                  <DetailForm formConfig={app.settings} />
-                ) : null}
-              </QueueAnim>
+      {app.settings?.length && (
+        <Paper key={"setting"} sx={{ mb: 2 }} elevation={3}>
+          <Stack spacing={2}>
+            <Stack
+              direction="row"
+              justifyContent={"space-between"}
+              alignItems={"center"}
+              p={2}
+            >
+              <Typography variant="body2">应用设置</Typography>
+              <CusBadge
+                color="primary"
+                badgeContent={app.settings?.length}
+                sx={{ color: (theme) => theme.palette.common.white }}
+              />
             </Stack>
-          </Paper>
-        )}
+            <QueueAnim type={["top", "bottom"]} leaveReverse>
+              {!fetchSave.fetches["chavy_boxjs_cur_sessions"]?.loading ? (
+                <DetailForm formConfig={app.settings} />
+              ) : null}
+            </QueueAnim>
+          </Stack>
+        </Paper>
+      )}
 
-        {app?.keys?.length !== 0 ? (
-          <Paper key={"curSessionItem"} elevation={3} sx={{ mb: 2 }}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider", p: 2 }}>
-              <Stack direction={"row"} spacing={2}>
-                <Typography>当前会话</Typography>
-                {curSession.name ? (
-                  <Typography color={"primary"}>#{curSession.name}</Typography>
-                ) : null}
-              </Stack>
-            </Box>
-            <Box sx={{ p: 2 }}>
-              <List disablePadding>
-                {curSession?.datas.map((item: any) => {
-                  return (
-                    <ListItem sx={{ p: 0 }} key={item.key}>
-                      <ListItemText
-                        primary={item.key}
-                        primaryTypographyProps={{
-                          variant: "caption",
-                          sx: { fontWeight: "bold" },
-                        }}
-                        secondary={
-                          <Typography
-                            color="grey"
-                            variant="caption"
-                            noWrap
-                            component={"div"}
-                          >
-                            {item.val || "无数据"}
-                          </Typography>
-                        }
-                      />
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </Box>
-            <Box
-              p={1}
-              sx={{
-                borderTop: 1,
-                borderColor: "divider",
-                display: "flex",
-                justifyContent: "flex-end",
+      {app?.keys?.length !== 0 ? (
+        <Paper key={"curSessionItem"} elevation={3} sx={{ mb: 2 }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider", p: 2 }}>
+            <Stack direction={"row"} spacing={2}>
+              <Typography>当前会话</Typography>
+              {curSession.name ? (
+                <Typography color={"primary"}>#{curSession.name}</Typography>
+              ) : null}
+            </Stack>
+          </Box>
+          <Box sx={{ p: 2 }}>
+            <List disablePadding>
+              {curSession?.datas.map((item: any) => {
+                return (
+                  <ListItem sx={{ p: 0 }} key={item.key}>
+                    <ListItemText
+                      primary={item.key}
+                      primaryTypographyProps={{
+                        variant: "caption",
+                        sx: { fontWeight: "bold" },
+                      }}
+                      secondary={
+                        <Typography
+                          color="grey"
+                          variant="caption"
+                          noWrap
+                          component={"div"}
+                        >
+                          {item.val || "无数据"}
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                );
+              })}
+            </List>
+          </Box>
+          <Box
+            p={1}
+            sx={{
+              borderTop: 1,
+              borderColor: "divider",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Button
+              color="error"
+              onClick={() => {
+                if (!appSession) return;
+                let session = { ...curSession };
+
+                if (isNoneSession) {
+                  session.name = `会话 1`;
+                } else {
+                  session = { ...curSessionApp };
+                  session.name = `会话 ${appSession.length + 1}`;
+                }
+
+                session.id = uuid();
+                if (!initialState) return;
+                fetchSave
+                  .run([
+                    {
+                      key: `@chavy_boxjs_sessions.${sessions.length}`,
+                      val: { ...session },
+                    },
+                  ])
+                  .then(() => {
+                    setTabValue(appSession.length);
+                  });
               }}
             >
-              <Button
-                color="error"
-                onClick={() => {
-                  if (!appSession) return;
-                  let session = { ...curSession };
+              克隆
+            </Button>
+          </Box>
+        </Paper>
+      ) : null}
 
-                  if (isNoneSession) {
-                    session.name = `会话 1`;
-                  } else {
-                    session = { ...curSessionApp };
-                    session.name = `会话 ${appSession.length + 1}`;
-                  }
+      {appSession?.length !== 0 && app?.keys?.length !== 0 ? (
+        <Paper elevation={3}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={tabValue}
+              scrollButtons
+              variant="scrollable"
+              allowScrollButtonsMobile
+              aria-label="scrollable force tabs example"
+              sx={{
+                [`& .${tabsClasses.scrollButtons}`]: {
+                  "&.Mui-disabled": { opacity: 0.3 },
+                },
+              }}
+              onChange={(_: any, value: any) => handleChange(value)}
+            >
+              {appSession?.map((item, index) => {
+                return (
+                  <Tab
+                    key={item.id}
+                    label={
+                      <Stack
+                        spacing={1}
+                        direction={"row"}
+                        alignItems={"center"}
+                      >
+                        {curSessionIndex === index ? (
+                          <StarBorderIcon sx={{ width: 16, height: 16 }} />
+                        ) : null}
+                        <Typography>
+                          {!isNoneSession ? `${index + 1} # ` : ""}
+                          {item.name}
+                        </Typography>
+                      </Stack>
+                    }
+                    {...a11yProps(index)}
+                  />
+                );
+              })}
+            </Tabs>
+          </Box>
+          {appSession?.map((session, index) => {
+            return (
+              <TabPanel value={index} key={session.id} index={tabValue}>
+                <List disablePadding>
+                  {session?.datas.map((item) => {
+                    return (
+                      <ListItem sx={{ p: 0 }} key={item.key}>
+                        <ListItemText
+                          primary={`${item.key}`}
+                          primaryTypographyProps={{
+                            variant: "caption",
+                            sx: { fontWeight: "bold" },
+                          }}
+                          secondary={
+                            <Typography
+                              color="grey"
+                              variant="caption"
+                              noWrap
+                              component={"div"}
+                            >
+                              {item.val || "无数据"}
+                            </Typography>
+                          }
+                        />
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              </TabPanel>
+            );
+          })}
+          <Box p={1} sx={{ borderTop: 1, borderColor: "divider" }}>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent="flex-end"
+            >
+              {!isNoneSession && (
+                <>
+                  <Button
+                    color="error"
+                    onClick={() => {
+                      if (!initialState) return;
 
-                  session.id = uuid();
-                  if (!initialState) return;
-                  fetchSave
-                    .run([
-                      {
-                        key: `@chavy_boxjs_sessions.${sessions.length}`,
-                        val: { ...session },
-                      },
-                    ])
-                    .then(() => {
-                      setTabValue(appSession.length);
-                    });
-                }}
-              >
-                克隆
-              </Button>
-            </Box>
-          </Paper>
-        ) : null}
-
-        {appSession?.length !== 0 && app?.keys?.length !== 0 ? (
-          <Paper elevation={3}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs
-                value={tabValue}
-                scrollButtons
-                variant="scrollable"
-                allowScrollButtonsMobile
-                aria-label="scrollable force tabs example"
-                sx={{
-                  [`& .${tabsClasses.scrollButtons}`]: {
-                    "&.Mui-disabled": { opacity: 0.3 },
-                  },
-                }}
-                onChange={(_: any, value: any) => handleChange(value)}
-              >
-                {appSession?.map((item, index) => {
-                  return (
-                    <Tab
-                      key={item.id}
-                      label={
-                        <Stack
-                          spacing={1}
-                          direction={"row"}
-                          alignItems={"center"}
-                        >
-                          {curSessionIndex === index ? (
-                            <StarBorderIcon sx={{ width: 16, height: 16 }} />
-                          ) : null}
-                          <Typography>
-                            {!isNoneSession ? `${index + 1} # ` : ""}
-                            {item.name}
-                          </Typography>
-                        </Stack>
-                      }
-                      {...a11yProps(index)}
-                    />
-                  );
-                })}
-              </Tabs>
-            </Box>
-            {appSession?.map((session, index) => {
-              return (
-                <TabPanel value={index} key={session.id} index={tabValue}>
-                  <List disablePadding>
-                    {session?.datas.map((item) => {
-                      return (
-                        <ListItem sx={{ p: 0 }} key={item.key}>
-                          <ListItemText
-                            primary={`${item.key}`}
-                            primaryTypographyProps={{
-                              variant: "caption",
-                              sx: { fontWeight: "bold" },
-                            }}
-                            secondary={
-                              <Typography
-                                color="grey"
-                                variant="caption"
-                                noWrap
-                                component={"div"}
-                              >
-                                {item.val || "无数据"}
-                              </Typography>
-                            }
-                          />
-                        </ListItem>
-                      );
-                    })}
-                  </List>
-                </TabPanel>
-              );
-            })}
-            <Box p={1} sx={{ borderTop: 1, borderColor: "divider" }}>
-              <Stack
-                direction={"row"}
-                alignItems={"center"}
-                justifyContent="flex-end"
-              >
-                {!isNoneSession && (
-                  <>
-                    <Button
-                      color="error"
-                      onClick={() => {
-                        if (!initialState) return;
-
-                        fetchSave
-                          .run([
-                            {
-                              key: `@chavy_boxjs_sessions.${sessionIndex}`,
-                              val: null,
-                            },
-                          ])
-                          .then(() => {
-                            setTabValue(0);
-                          });
-                      }}
-                    >
-                      删除
-                    </Button>
-
-                    <Button
-                      color="warning"
-                      onClick={() => {
-                        setOpen({
-                          update: {
-                            open: true,
-                            data: curSessionApp,
-                            val: curAppValues,
-                          },
-                        });
-                      }}
-                    >
-                      修改
-                    </Button>
-
-                    <Button
-                      color="primary"
-                      onClick={() => {
-                        if (!initialState || !id) return;
-                        fetchSave.run([
+                      fetchSave
+                        .run([
                           {
-                            key: `chavy_boxjs_cur_sessions`,
-                            val: JSON.stringify({
-                              ...initialState?.boxdata.curSessions,
-                              [id]: curSessionApp.id,
-                            }),
+                            key: `@chavy_boxjs_sessions.${sessionIndex}`,
+                            val: null,
                           },
-                          ...curSessionApp.datas,
-                        ]);
-                      }}
-                    >
-                      应用
-                    </Button>
-                  </>
-                )}
-                <Button
-                  color="success"
-                  onClick={() => {
-                    $copy(JSON.stringify(curAppValues));
-                    tip.alert({
-                      open: true,
-                      message: "复制成功",
-                      type: "success",
-                    });
-                  }}
-                >
-                  复制
-                </Button>
-              </Stack>
-            </Box>
-          </Paper>
-        ) : null}
-      </QueueAnim>
+                        ])
+                        .then(() => {
+                          setTabValue(0);
+                        });
+                    }}
+                  >
+                    删除
+                  </Button>
+
+                  <Button
+                    color="warning"
+                    onClick={() => {
+                      setOpen({
+                        update: {
+                          open: true,
+                          data: curSessionApp,
+                          val: curAppValues,
+                        },
+                      });
+                    }}
+                  >
+                    修改
+                  </Button>
+
+                  <Button
+                    color="primary"
+                    onClick={() => {
+                      if (!initialState || !id) return;
+                      fetchSave.run([
+                        {
+                          key: `chavy_boxjs_cur_sessions`,
+                          val: JSON.stringify({
+                            ...initialState?.boxdata.curSessions,
+                            [id]: curSessionApp.id,
+                          }),
+                        },
+                        ...curSessionApp.datas,
+                      ]);
+                    }}
+                  >
+                    应用
+                  </Button>
+                </>
+              )}
+              <Button
+                color="success"
+                onClick={() => {
+                  $copy(JSON.stringify(curAppValues));
+                  tip.alert({
+                    open: true,
+                    message: "复制成功",
+                    type: "success",
+                  });
+                }}
+              >
+                复制
+              </Button>
+            </Stack>
+          </Box>
+        </Paper>
+      ) : null}
     </Stack>
   );
 }
