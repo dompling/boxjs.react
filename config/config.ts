@@ -39,19 +39,12 @@ export default defineConfig({
     title: false,
     useLocalStorage: true,
   },
+  esbuildMinifyIIFE: true,
   chainWebpack: function (config) {
     config.plugin("monaco-editor-webpack-plugin").use(MonacoWebpackPlugin, [
       {
-        languages: ["javascript", "typescript", "css", "html", "json"],
-        features: [
-          "find",
-          "anchorSelect",
-          "codeAction",
-          "codelens",
-          "bracketMatching",
-          "browser",
-          "caretOperations",
-        ],
+        languages: ["javascript", "typescript"],
+        features: ["codeAction", "codelens"],
       },
     ]);
 
