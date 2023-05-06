@@ -5,7 +5,9 @@ import OutPut from "@/components/OutPutLog";
 import ToggleColorMode from "@/components/Theme";
 import { Outlet, useLocation, useModel } from "@@/exports";
 import { Alert, Box, Container, Slide, Snackbar } from "@mui/material";
+import VConsole from "vconsole";
 
+import { useEffect } from "react";
 import styles from "./index.less";
 
 export default function Layout() {
@@ -20,6 +22,15 @@ export default function Layout() {
   };
 
   const bgimg = initialState?.boxdata.usercfgs.bgimg;
+
+  useEffect(() => {
+    let vConsole: any;
+    if (initialState?.boxdata?.usercfgs.isVConsole) {
+      vConsole = new VConsole({ theme: initialState?.mode });
+    } else if (vConsole) {
+      vConsole?.destroy?.();
+    }
+  }, [initialState?.boxdata?.usercfgs.isVConsole]);
 
   return (
     <ToggleColorMode>

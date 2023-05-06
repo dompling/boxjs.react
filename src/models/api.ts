@@ -20,7 +20,15 @@ export default function useAPI() {
 
     let boxdata = initialState.boxdata;
     if (response.usercfgs) boxdata = response;
-    setInitialState({ ...initialState, boxdata });
+
+    let apps: boxjs.App[] = [...boxdata.sysapps];
+    boxdata.usercfgs.appsubs.forEach((item) => {
+      if (boxdata.appSubCaches[item.url]) {
+        apps = [...apps, ...boxdata.appSubCaches[item.url].apps];
+      }
+    });
+
+    setInitialState({ ...initialState, boxdata, apps });
   };
 
   const fetchSave = useRequest(saveUserCfgs, {

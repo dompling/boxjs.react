@@ -10,6 +10,7 @@ import { useModel } from "@@/exports";
 import ApiIcon from "@mui/icons-material/Api";
 import BorderBottomIcon from "@mui/icons-material/BorderBottom";
 import BorderTopIcon from "@mui/icons-material/BorderTop";
+import BugReportIcon from "@mui/icons-material/BugReport";
 import CodeIcon from "@mui/icons-material/Code";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import Face5Icon from "@mui/icons-material/Face5";
@@ -180,12 +181,12 @@ export default function Page() {
           id: "isMute",
           icon: <VolumeOffIcon sx={{ color: colors.indigo[400] }} />,
         },
-        // {
-        //   type: "switch",
-        //   label: "调试模式",
-        //   id: "isDebugWeb",
-        //   icon: <BugReportIcon sx={{ color: colors.pink[400] }} />,
-        // },
+        {
+          type: "switch",
+          label: "网页控制台",
+          id: "isVConsole",
+          icon: <BugReportIcon sx={{ color: colors.pink[400] }} />,
+        },
         // {
         //   type: "select",
         //   label: "调试网址",

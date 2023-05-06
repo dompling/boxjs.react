@@ -83,6 +83,7 @@ export default function Page() {
   const tip = useModel("alert");
   const datas = initialState?.boxdata.datas;
   const sessions = initialState?.boxdata.sessions || [];
+
   const app = initialState?.apps.find(
     (item) => item.id === id && item.author === params.name
   );
