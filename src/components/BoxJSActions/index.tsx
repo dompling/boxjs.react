@@ -2,6 +2,7 @@ import config from "@/utils/config";
 import { history, useModel } from "@@/exports";
 import CodeIcon from "@mui/icons-material/Code";
 import DataObjectIcon from "@mui/icons-material/DataObject";
+import LinkOffIcon from "@mui/icons-material/LinkOff";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import {
@@ -132,7 +133,9 @@ const BoxJSActions: React.FC = () => {
             alt="BoxJS"
             src={boxjs?.icons[iconIndex]}
             sx={{ width: 1, height: 1 }}
-          />
+          >
+            <LinkOffIcon color="error" />
+          </Avatar>
         }
       >
         {actions.map((action) => (

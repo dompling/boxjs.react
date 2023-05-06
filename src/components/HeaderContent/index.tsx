@@ -192,7 +192,9 @@ const HeaderContent: React.FC = () => {
                     setVisible(true);
                   }}
                 >
-                  {boxdata?.syscfgs.boxjs.id} - v{boxdata?.syscfgs.version}
+                  {boxdata
+                    ? `${boxdata?.syscfgs.boxjs.id} - v${boxdata?.syscfgs.version}`
+                    : "网络连接失败"}
                 </Typography>
 
                 <IconButton
