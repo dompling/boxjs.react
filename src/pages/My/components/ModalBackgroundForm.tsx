@@ -15,8 +15,7 @@ const ModalBackgroundForm: React.FC<{
 
   const formRef = useForm();
 
-  const images = initialState?.boxdata.usercfgs.bgimgs
-    .split(`\n`)
+  const images = initialState?.boxdata?.usercfgs?.bgimgs?.split(`\n`)
     .map((item) => {
       const [label, val] = item.split(',');
       return { label, val };
