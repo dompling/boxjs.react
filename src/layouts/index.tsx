@@ -12,7 +12,6 @@ import styles from "./index.less";
 
 let vConsole: any;
 
-
 export default function Layout() {
   const location = useLocation();
   const tipState = useModel("alert");
@@ -24,8 +23,27 @@ export default function Layout() {
     tipState.alert({});
   };
 
-  const bgimg = initialState?.boxdata.usercfgs.bgimg;
+  let bgimg = initialState?.boxdata.usercfgs.bgimg;
+  const bgimgs = initialState?.boxdata.usercfgs.bgimgs
+    .split(`\n`)
+    .map((item) => {
+      const [name = "", url = ""] = item.split(",");
+      return { name, url };
+    });
 
+  if (bgimg === "跟随系统") {
+    const hasdark = bgimgs?.find(
+      (bgimg) => bgimg.name == "暗黑" || bgimg.name == "dark"
+    );
+    const haslight = bgimgs?.find(
+      (bgimg) => bgimg.name == "明亮" || bgimg.name == "light"
+    );
+    const darkbgimg = hasdark ? hasdark.url : ``;
+    const lightbgimg = haslight ? haslight.url : ``;
+
+    initialState?.mode === "dark" ? (bgimg = darkbgimg) : (bgimg = lightbgimg);
+  }
+  console.log(bgimg);
 
   useEffect(() => {
     console.log(vConsole);
