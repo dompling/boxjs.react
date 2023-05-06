@@ -27,7 +27,7 @@ export default function Layout() {
   const bgimgs = initialState?.boxdata?.usercfgs?.bgimgs
     ?.split(`\n`)
     ?.map((item) => {
-      const [name = "", url = ""] = item.split(",");
+      const [name = "", url = ""] = item?.split(",") || [];
       return { name, url };
     });
 

@@ -1,25 +1,25 @@
-import ProModal from '@/components/ProModal';
-import config from '@/utils/config';
-import { useModel } from '@@/exports';
-import { MenuItem, Select, TextField } from '@mui/material';
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import ProModal from "@/components/ProModal";
+import config from "@/utils/config";
+import { useModel } from "@@/exports";
+import { MenuItem, Select, TextField } from "@mui/material";
+import React from "react";
+import { useForm } from "react-hook-form";
 
 const ModalHttpApiForm: React.FC<{
   open?: boolean;
   value?: string;
   onClose: () => void;
 }> = (props) => {
-  const { initialState } = useModel('@@initialState');
-  const { fetchSave } = useModel('api');
+  const { initialState } = useModel("@@initialState");
+  const { fetchSave } = useModel("api");
 
   const formRef = useForm();
 
-  const httpapis = initialState?.boxdata.usercfgs.httpapis.split(`\n`);
+  const httpapis = initialState?.boxdata?.usercfgs?.httpapis?.split(`\n`) || [];
 
   return (
     <ProModal
-      title={'HTTP-API (Surge)'}
+      title={"HTTP-API (Surge)"}
       open={!!props.open}
       onClose={() => {
         props.onClose();
@@ -49,7 +49,7 @@ const ModalHttpApiForm: React.FC<{
           id="demo-select-small"
           defaultValue={props.value}
           labelId="demo-select-small-label"
-          {...formRef.register('httpapi')}
+          {...formRef.register("httpapi")}
         >
           {httpapis?.map((item, index) => {
             return (
@@ -66,12 +66,12 @@ const ModalHttpApiForm: React.FC<{
           minRows={6}
           size="small"
           variant="standard"
-          placeholder={'请输入'}
+          placeholder={"请输入"}
           InputLabelProps={{
             shrink: true,
           }}
           defaultValue={props.value}
-          {...formRef.register('httpapi')}
+          {...formRef.register("httpapi")}
         />
       )}
     </ProModal>
