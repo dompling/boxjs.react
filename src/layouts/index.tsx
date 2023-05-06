@@ -10,6 +10,9 @@ import VConsole from "vconsole";
 import { useEffect } from "react";
 import styles from "./index.less";
 
+let vConsole: any;
+
+
 export default function Layout() {
   const location = useLocation();
   const tipState = useModel("alert");
@@ -23,11 +26,12 @@ export default function Layout() {
 
   const bgimg = initialState?.boxdata.usercfgs.bgimg;
 
+
   useEffect(() => {
-    let vConsole: any;
+    console.log(vConsole);
     if (initialState?.boxdata?.usercfgs.isVConsole) {
       vConsole = new VConsole({ theme: initialState?.mode });
-    } else if (vConsole) {
+    } else if (!initialState?.boxdata?.usercfgs.isVConsole && vConsole) {
       vConsole?.destroy?.();
     }
   }, [initialState?.boxdata?.usercfgs.isVConsole]);
