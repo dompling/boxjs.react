@@ -23,10 +23,10 @@ export default function Layout() {
     tipState.alert({});
   };
 
-  let bgimg = initialState?.boxdata.usercfgs.bgimg;
-  const bgimgs = initialState?.boxdata.usercfgs.bgimgs
-    .split(`\n`)
-    .map((item) => {
+  let bgimg = initialState?.boxdata?.usercfgs?.bgimg;
+  const bgimgs = initialState?.boxdata?.usercfgs?.bgimgs
+    ?.split(`\n`)
+    ?.map((item) => {
       const [name = "", url = ""] = item.split(",");
       return { name, url };
     });
@@ -44,9 +44,7 @@ export default function Layout() {
     initialState?.mode === "dark" ? (bgimg = darkbgimg) : (bgimg = lightbgimg);
   }
 
-
   useEffect(() => {
-    console.log(vConsole);
     if (initialState?.boxdata?.usercfgs.isVConsole) {
       vConsole = new VConsole({ theme: initialState?.mode });
     } else if (!initialState?.boxdata?.usercfgs.isVConsole && vConsole) {
