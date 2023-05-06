@@ -43,7 +43,7 @@ export default function Layout() {
 
     initialState?.mode === "dark" ? (bgimg = darkbgimg) : (bgimg = lightbgimg);
   }
-  console.log(bgimg);
+
 
   useEffect(() => {
     console.log(vConsole);
