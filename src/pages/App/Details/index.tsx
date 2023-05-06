@@ -21,7 +21,6 @@ import {
   tabsClasses,
 } from "@mui/material";
 import $copy from "copy-to-clipboard";
-import QueueAnim from "rc-queue-anim";
 import React, { useState } from "react";
 import { uuid } from "uuidv4";
 
@@ -288,11 +287,9 @@ export default function Page() {
                 sx={{ color: (theme) => theme.palette.common.white }}
               />
             </Stack>
-            <QueueAnim type={["top", "bottom"]} leaveReverse>
-              {!fetchSave.fetches["chavy_boxjs_cur_sessions"]?.loading ? (
-                <DetailForm formConfig={app.settings} />
-              ) : null}
-            </QueueAnim>
+            {!fetchSave.fetches["chavy_boxjs_cur_sessions"]?.loading ? (
+              <DetailForm formConfig={app.settings} />
+            ) : null}
           </Stack>
         </Paper>
       )}
@@ -325,7 +322,9 @@ export default function Page() {
                           noWrap
                           component={"div"}
                         >
-                          {item.val || "无数据"}
+                          {(typeof item.val === "object"
+                            ? JSON.stringify(item.val)
+                            : item.val) || "无数据"}
                         </Typography>
                       }
                     />
@@ -374,7 +373,9 @@ export default function Page() {
             </Button>
           </Box>
         </Paper>
-      ) : null}
+      ) : (
+        <></>
+      )}
 
       {appSession?.length !== 0 && app?.keys?.length !== 0 ? (
         <Paper elevation={3}>
@@ -437,7 +438,9 @@ export default function Page() {
                               noWrap
                               component={"div"}
                             >
-                              {item.val || "无数据"}
+                              {(typeof item.val === "object"
+                                ? JSON.stringify(item.val)
+                                : item.val) || "无数据"}
                             </Typography>
                           }
                         />
@@ -527,7 +530,9 @@ export default function Page() {
             </Stack>
           </Box>
         </Paper>
-      ) : null}
+      ) : (
+        <></>
+      )}
     </Stack>
   );
 }

@@ -89,7 +89,8 @@ const renderFormItem = (
   value?: Record<string, string | null>,
   register?: FieldValue<any>
 ) => {
-  const formItemProps = register(data.formName);
+  const defaultValue = value?.[data.id];
+  const formItemProps = { ...register(data.formName), defaultValue };
   data.name = (data.disabled ? "🈲手动填写-" : "") + data.name;
 
   return (
@@ -102,7 +103,6 @@ const renderFormItem = (
             size="small"
             disabled={data.disabled}
             placeholder={data.placeholder}
-            defaultValue={value?.[data.id]}
             {...formItemProps}
           />
           <CusFormHelperText text={data.desc} />
@@ -121,7 +121,6 @@ const renderFormItem = (
           helperText={data.desc}
           disabled={data.disabled}
           placeholder={data.placeholder}
-          defaultValue={value?.[data.id]}
           {...formItemProps}
         />
       )}
@@ -157,7 +156,7 @@ const renderFormItem = (
               <IOSSwitch
                 sx={{ m: 1 }}
                 disabled={data.disabled}
-                defaultChecked={value?.[data.id] === `true`}
+                defaultChecked={defaultValue === "true" || !!defaultValue}
               />
             }
           />
@@ -170,9 +169,10 @@ const renderFormItem = (
           <FormLabel component="legend">{data.name}</FormLabel>
           <FormGroup>
             {data.items?.map((checkbox) => {
-              const checkboxValue = value?.[data.id]
-                ?.split(",")
-                .includes(checkbox.key);
+              const checkboxValue =
+                typeof defaultValue === "string"
+                  ? defaultValue?.split?.(",")
+                  : defaultValue;
 
               return (
                 <FormControlLabel
@@ -181,7 +181,7 @@ const renderFormItem = (
                   control={
                     <Checkbox
                       disabled={data.disabled}
-                      defaultChecked={checkboxValue}
+                      defaultChecked={checkboxValue?.includes(checkbox.key)}
                     />
                   }
                   value={checkbox.key}
@@ -204,7 +204,6 @@ const renderFormItem = (
             {...formItemProps}
             disabled={data.disabled}
             placeholder={data.placeholder}
-            defaultValue={value?.[data.id]}
           />
           <CusFormHelperText text={data.desc} />
         </FormControl>
@@ -229,7 +228,6 @@ const renderFormItem = (
             {...formItemProps}
             disabled={data.disabled}
             placeholder={data.placeholder}
-            defaultValue={value?.[data.id]}
           />
           <CusFormHelperText text={data.desc} />
         </FormControl>
@@ -238,7 +236,7 @@ const renderFormItem = (
       {data.type === "radios" && (
         <FormControl component="fieldset" variant="standard">
           <FormLabel component="legend">{data.name}</FormLabel>
-          <RadioGroup {...formItemProps} defaultValue={value?.[data.id]}>
+          <RadioGroup {...formItemProps}>
             {data.items?.map((radio) => {
               return (
                 <FormControlLabel
@@ -266,7 +264,7 @@ const renderFormItem = (
           >
             {data.name}
           </InputLabel>
-          <FormPickerColor {...formItemProps} defaultValue={value?.[data.id]} />
+          <FormPickerColor {...formItemProps} />
           <CusFormHelperText text={data.desc} />
         </FormControl>
       )}
