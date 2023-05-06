@@ -20,8 +20,10 @@ import {
   IconButton,
   Input,
   InputLabel,
+  MenuItem,
   Radio,
   RadioGroup,
+  Select,
   Stack,
   TextField,
   Typography,
@@ -91,8 +93,8 @@ const renderFormItem = (
 ) => {
   const defaultValue = value?.[data.id];
   const formItemProps = { ...register(data.formName), defaultValue };
-  data.name = (data.disabled ? "🈲手动填写-" : "") + data.name;
-
+  data.name = (data.disabled ? "🈲 手动填写-" : "") + data.name;
+  console.log(data);
   return (
     <>
       {(data.type === "text" || !data.type) && (
@@ -212,7 +214,7 @@ const renderFormItem = (
       {[
         "text",
         "textarea",
-        "select",
+        "selects",
         "boolean",
         "radios",
         "checkboxes",
@@ -251,7 +253,26 @@ const renderFormItem = (
           <FormHelperText sx={{ minHeight: 20 }}>{data.desc}</FormHelperText>
         </FormControl>
       )}
-
+      {data.type === "selects" && (
+        <FormControl sx={{ m: 1 }} variant="standard">
+          <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
+          <Select
+            placeholder="请选择"
+            sx={{ width: `100%` }}
+            MenuProps={{ sx: { maxHeight: 300 } }}
+            {...formItemProps}
+          >
+            {data.items?.map((item, index) => {
+              return (
+                <MenuItem key={`${item.key}_${index}`} value={item.key}>
+                  {item.label}
+                </MenuItem>
+              );
+            })}
+          </Select>
+          <CusFormHelperText text={data.desc} />
+        </FormControl>
+      )}
       {data.type === "colorpicker" && (
         <FormControl size="small" sx={{ width: 1 }} variant="standard">
           <InputLabel

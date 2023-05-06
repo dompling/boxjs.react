@@ -209,7 +209,7 @@ declare namespace boxjs {
     type:
       | 'text'
       | 'textarea'
-      | 'select'
+      | 'selects'
       | 'boolean'
       | 'radios'
       | 'checkboxes'
