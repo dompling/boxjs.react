@@ -63,7 +63,7 @@ export function surgeUrl(params: {
   method: "POST" | "GET";
   body?: any;
 }) {
-  return request<{ output: string; result: any }>("/api/surge", {
+  return request("/api/surge", {
     method: "POST",
     data: params,
   });

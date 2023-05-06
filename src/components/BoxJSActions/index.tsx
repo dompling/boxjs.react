@@ -27,15 +27,17 @@ const BoxJSActions: React.FC = () => {
   const { initialState } = useModel("@@initialState");
   const { fetchAllData } = useModel("api");
   const boxjs = initialState?.boxdata.syscfgs.boxjs;
+  const usercfgs = initialState?.boxdata?.usercfgs;
+
   const UI = initialState?.ui?.(initialState?.boxdata);
   const iconIndex = UI?.iconThemeIdx !== undefined ? UI?.iconThemeIdx : 1;
-  if (initialState?.boxdata.usercfgs.isHideBoxIcon) return null;
+  if (usercfgs?.isHideBoxIcon) return null;
   const icon = initialState?.boxdata?.syscfgs.envs?.find(
     (item) => item.id === initialState?.boxdata?.syscfgs.env
   );
 
   const actions = [
-    ...(!initialState?.boxdata.usercfgs.isHideHelp
+    ...(!usercfgs?.isHideHelp
       ? [
           {
             icon: <QuestionMarkIcon sx={{ color: colors.amber[400] }} />,
@@ -46,7 +48,7 @@ const BoxJSActions: React.FC = () => {
           },
         ]
       : []),
-    ...(!initialState?.boxdata.usercfgs.isHideRefresh
+    ...(!usercfgs?.isHideRefresh
       ? [
           {
             icon: <RefreshIcon sx={{ color: colors.red[400] }} />,
@@ -88,7 +90,7 @@ const BoxJSActions: React.FC = () => {
         ]
       : []),
 
-    ...(!initialState?.boxdata.usercfgs.isHideCoding
+    ...(!usercfgs?.isHideCoding
       ? [
           {
             icon: <CodeIcon sx={{ color: colors.orange[400] }} />,

@@ -1,5 +1,4 @@
 import { IOSSwitch } from "@/components/IOSSwitch";
-import { surgeUrl } from "@/services/boxjs.api";
 import { history, useModel } from "@@/exports";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
@@ -20,7 +19,6 @@ export default function Actions() {
   const { fetchScripts, fetchUpdateModules, fetchModules, fetchRunScript } =
     useModel("api");
   const { initialState } = useModel("@@initialState");
-  const [key, url] = initialState?.boxdata.usercfgs.httpapi?.split("@") || [];
 
   let timeoutCount: Record<string, any> = {};
   let timeout: Record<string, any> = {};
@@ -31,15 +29,12 @@ export default function Actions() {
   });
 
   useEffect(() => {
-    if (key && url) {
-      fetchScripts.run();
-      fetchModules.run();
-      surgeUrl({ url: "v1/scripting", method: "GET" });
-    }
-  }, [key, url]);
+    fetchScripts.run();
+    fetchModules.run();
+  }, []);
 
   const category: Record<string, Surge.Script[]> = {};
-  fetchScripts.data?.scripts.forEach((item) => {
+  fetchScripts.data?.scripts?.forEach((item: any) => {
     if (!category[item.type]) category[item.type] = [];
     category[item.type].push(item);
   });
@@ -56,7 +51,7 @@ export default function Actions() {
             <Typography>Modules</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {fetchModules.data?.available.map((item, index) => {
+            {fetchModules.data?.available?.map((item: any, index: number) => {
               return (
                 <Paper
                   elevation={3}
@@ -95,11 +90,9 @@ export default function Actions() {
                         fetchModules.data?.enabled?.indexOf?.(item) > -1
                       }
                       onChange={(_, checked) => {
-                        if (key && url) {
-                          fetchUpdateModules
-                            .run({ [item]: checked })
-                            .then(() => fetchModules.run(url, key));
-                        }
+                        fetchUpdateModules
+                          .run({ [item]: checked })
+                          .then(() => fetchModules.run());
                       }}
                     />
                   </Stack>

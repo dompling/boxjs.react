@@ -220,6 +220,7 @@ export default function Page() {
                           message: "复制成功",
                           type: "success",
                         });
+                        window.open(appItem.repo);
                       }}
                     >
                       <GitHubIcon />
