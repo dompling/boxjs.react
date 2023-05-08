@@ -219,7 +219,11 @@ const HeaderContent: React.FC = () => {
         footer={null}
         onClose={() => setVisible(false)}
         title={
-          <AppBar className={styles.app_bar} position="static" sx={{ position: "fixed", zIndex: 99 }}>
+          <AppBar
+            position="static"
+            className={styles.app_bar}
+            sx={{ position: "fixed", top: 0, zIndex: 99 }}
+          >
             <Toolbar sx={{ pl: 0 }}>
               <IconButton color="inherit" onClick={() => setVisible(false)}>
                 <ChevronLeftIcon />
