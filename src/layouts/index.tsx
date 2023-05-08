@@ -89,7 +89,7 @@ export default function Layout() {
           {tipState.options?.type ? (
             <Snackbar
               className={styles.alert}
-              // autoHideDuration={3000}
+              autoHideDuration={2000}
               key={tipState.options.key}
               onClose={() => onClose()}
               open={tipState.options?.open}
