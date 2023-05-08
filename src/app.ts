@@ -11,6 +11,7 @@ type Initial = {
   mode: "light" | "dark";
   ui: (data: boxjs.data) => UI;
   random: number;
+  isMobile: boolean;
 };
 
 export interface UI {
@@ -42,6 +43,9 @@ export async function getInitialState(): Promise<Initial> {
   return {
     boxdata,
     apps,
+    isMobile: !!navigator.userAgent.match(
+      /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+    ),
     random: Math.random(),
     mode: defaultMode,
     fetchData: getAllData,
