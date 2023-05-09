@@ -45,6 +45,9 @@ export default function Layout() {
   }
 
   useEffect(() => {
+    document.oncontextmenu = function () {
+      return false;
+    };
     if (initialState?.boxdata?.usercfgs.isVConsole) {
       vConsole = new VConsole({ theme: initialState?.mode });
     } else if (!initialState?.boxdata?.usercfgs.isVConsole && vConsole) {

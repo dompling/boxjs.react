@@ -36,23 +36,34 @@ interface DItem {
 
 const GridItem: React.FC<{
   script: string | null;
+  index: number;
   item?: boxjs.App;
   data?: (boxjs.App | undefined)[];
   moveCard: (id: string, to: number) => void;
   findCard: (id: string) => { index: number };
-}> = ({ item, script, moveCard, findCard, data }) => {
+}> = ({ item, script, moveCard, findCard, data, ...props }) => {
   const id = `${item?.id}_${item?.author}`;
   const { initialState } = useModel("@@initialState");
   const { fetchRunScript, fetchSave } = useModel("api");
 
   const originalIndex = findCard(id).index;
-  const [{ isDragging }, drag] = useDrag(
+  const [{ isDragging, offset }, drag] = useDrag(
     () => ({
       type: "grid",
       item: { id, originalIndex },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-      }),
+
+      collect: (monitor) => {
+        const clientOffset = monitor.getSourceClientOffset();
+        let offset = { x: 0, y: 0 };
+        if (clientOffset) {
+          offset.x = clientOffset.x;
+          offset.y = clientOffset.y;
+        }
+        return {
+          offset,
+          isDragging: monitor.isDragging(),
+        };
+      },
       end: (item, monitor) => {
         const { id: droppedId, originalIndex } = item;
         const didDrop = monitor.didDrop();
@@ -81,43 +92,105 @@ const GridItem: React.FC<{
     [findCard, moveCard]
   );
 
-  const opacity = isDragging ? (initialState?.isMobile ? 0.5 : 0) : 1;
+  const opacity = isDragging ? 0 : 1;
 
   return (
-    <Grid
-      item
-      xs={3}
-      md={2}
-      style={{ opacity, transform: "translate(0,0)" }}
-      key={`${item?.id}/${item?.author}/${item?.name}`}
-      ref={(node) => drag(drop(node))}
-    >
-      <Item
-        onClick={() => {
-          const timeKey = `${item?.id}/${item?.author}`;
-          if (timeoutCount[timeKey] === undefined) timeoutCount[timeKey] = 0;
-          timeoutCount[timeKey] += 1;
-
-          timeout[timeKey] = setTimeout(() => {
-            if (timeout[timeKey] !== undefined) clearTimeout(timeout[timeKey]);
-            console.log(timeoutCount[timeKey]);
-            if (timeoutCount[timeKey] === 2) {
-              timeoutCount[timeKey] = 0;
-
-              if (!script) return history.push(`/app/${timeKey}`);
-              fetchRunScript.run({ url: script, isRemote: true });
-            } else if (timeoutCount[timeKey] === 1) {
-              history.push(`/app/${timeKey}`);
-            }
-            timeoutCount = {};
-          }, 200);
-        }}
+    <>
+      <Grid
+        item
+        xs={3}
+        md={2}
+        key={`${item?.id}/${item?.author}/${item?.name}`}
+        style={{ opacity, transform: `translate(0,0)` }}
       >
-        <Stack spacing={1} justifyContent={"center"} alignItems={"center"}>
+        <Item
+          ref={(node) => drag(drop(node))}
+          onClick={() => {
+            const timeKey = `${item?.id}/${item?.author}`;
+            if (timeoutCount[timeKey] === undefined) timeoutCount[timeKey] = 0;
+            timeoutCount[timeKey] += 1;
+
+            timeout[timeKey] = setTimeout(() => {
+              if (timeout[timeKey] !== undefined)
+                clearTimeout(timeout[timeKey]);
+              console.log(timeoutCount[timeKey]);
+              if (timeoutCount[timeKey] === 2) {
+                timeoutCount[timeKey] = 0;
+
+                if (!script) return history.push(`/app/${timeKey}`);
+                fetchRunScript.run({ url: script, isRemote: true });
+              } else if (timeoutCount[timeKey] === 1) {
+                history.push(`/app/${timeKey}`);
+              }
+              timeoutCount = {};
+            }, 200);
+          }}
+        >
+          <Stack spacing={1} justifyContent={"center"} alignItems={"center"}>
+            <Box
+              sx={{
+                width: 50,
+                height: 50,
+                borderRadius: 2,
+                overflow: "hidden",
+                position: "relative",
+                boxShadow: (theme) => theme.shadows[4],
+              }}
+            >
+              <Avatar
+                variant="square"
+                alt={item?.name}
+                src={item?.icon}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+              {fetchRunScript.fetches[`${script}`]?.loading && (
+                <LinearProgress
+                  sx={{
+                    position: "absolute",
+                    bottom: 0,
+                    width: "100%",
+                  }}
+                />
+              )}
+            </Box>
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: 10,
+                color: initialState?.boxdata.usercfgs.bgimg ? "#fff" : "unset",
+                width: `100%`,
+                fontWeight: "bold",
+                textShadow: initialState?.boxdata.usercfgs.bgimg
+                  ? "black 0.1em 0.1em 0.2em"
+                  : "unset",
+              }}
+              noWrap
+            >
+              {item?.name}
+            </Typography>
+          </Stack>
+        </Item>
+      </Grid>
+      {isDragging && initialState?.isMobile && (
+        <Stack
+          sx={{
+            zIndex: 5,
+            opacity: 0.5,
+            position: "fixed",
+            left: offset?.x,
+            top: offset?.y,
+          }}
+          spacing={1}
+          justifyContent={"center"}
+          alignItems={"center"}
+        >
           <Box
             sx={{
-              width: 50,
-              height: 50,
+              width: 40,
+              height: 40,
               borderRadius: 2,
               overflow: "hidden",
               position: "relative",
@@ -133,34 +206,10 @@ const GridItem: React.FC<{
                 height: "100%",
               }}
             />
-            {fetchRunScript.fetches[`${script}`]?.loading && (
-              <LinearProgress
-                sx={{
-                  position: "absolute",
-                  bottom: 0,
-                  width: "100%",
-                }}
-              />
-            )}
           </Box>
-          <Typography
-            variant="body2"
-            sx={{
-              fontSize: 10,
-              color: initialState?.boxdata.usercfgs.bgimg ? "#fff" : "unset",
-              width: `100%`,
-              fontWeight: "bold",
-              textShadow: initialState?.boxdata.usercfgs.bgimg
-                ? "black 0.1em 0.1em 0.2em"
-                : "unset",
-            }}
-            noWrap
-          >
-            {item?.name}
-          </Typography>
         </Stack>
-      </Item>
-    </Grid>
+      )}
+    </>
   );
 };
 
@@ -209,37 +258,40 @@ function Page() {
   const UI = initialState?.ui(initialState.boxdata);
 
   return (
-    <Box pt={4}>
-      <Grid ref={drop} container spacing={4}>
-        {cards?.map((item) => {
-          UI?.loadAppBaseInfo(item);
-          let script: any = null;
-          if (item?.script) {
-            script = item?.script;
-          } else if (item?.scripts && item?.scripts[0].script) {
-            script = item?.scripts[0].script;
-          }
-          return (
-            <DropItem
-              item={item}
-              data={cards}
-              script={script}
-              findCard={findCard}
-              moveCard={moveCard}
-              key={`${item?.id}-${item?.author}`}
-            />
-          );
-        })}
-      </Grid>
-    </Box>
+    <Grid ref={drop} container spacing={4}>
+      {cards?.map((item, index) => {
+        UI?.loadAppBaseInfo(item);
+        let script: any = null;
+        if (item?.script) {
+          script = item?.script;
+        } else if (item?.scripts && item?.scripts[0].script) {
+          script = item?.scripts[0].script;
+        }
+        return (
+          <DropItem
+            item={item}
+            data={cards}
+            script={script}
+            findCard={findCard}
+            moveCard={moveCard}
+            index={index}
+            key={`${item?.id}-${item?.author}`}
+          />
+        );
+      })}
+    </Grid>
   );
 }
 
 export default function Home() {
   const { initialState } = useModel("@@initialState");
   return (
-    <DndProvider backend={initialState?.isMobile ? TouchBackend : HTML5Backend}>
-      <Page />
-    </DndProvider>
+    <Box pt={4} component={"div"}>
+      <DndProvider
+        backend={initialState?.isMobile ? TouchBackend : HTML5Backend}
+      >
+        <Page />
+      </DndProvider>
+    </Box>
   );
 }

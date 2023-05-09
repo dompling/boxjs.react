@@ -2,3 +2,77 @@
 .title {
   background: rgb(121, 222, 242);
 }
+
+
+.isDragging {
+  animation: upAnimation 1.2s steps(5) infinite;
+  animation-fill-mode: both;
+}
+
+
+.isDraggingTow {
+  animation: upAnimationTow 1.2s steps(5) infinite;
+  animation-fill-mode: both;
+}
+
+
+@keyframes upAnimationTow {
+
+  0% {
+    transform: rotate(0deg);
+  }
+  5% {
+    transform: rotate(-1deg);
+
+  }
+  25% {
+    transform: rotate(3deg);
+
+  }
+  45% {
+    transform: rotate(-5.5deg);
+  }
+  55% {
+    transform: rotate(7deg);
+  }
+  65% {
+    transform: rotate(-2deg);
+  }
+  80% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+
+}
+
+
+@keyframes upAnimation {
+
+  0% {
+    transform: rotate(0deg);
+  }
+  5% {
+    transform: rotate(-5.5deg);
+  }
+  25% {
+    transform: rotate(7deg);
+  }
+  45% {
+    transform: rotate(-2deg);
+  }
+  55% {
+    transform: rotate(3deg);
+  }
+  65% {
+    transform: rotate(-1deg);
+  }
+  80% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+
+}
