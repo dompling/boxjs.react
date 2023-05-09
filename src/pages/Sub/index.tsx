@@ -168,7 +168,7 @@ export default function Page() {
                             position: "absolute",
                             top: "50%",
                             left: "50%",
-                            marginTop: "-20px",
+                            marginTop: "-23px",
                             marginLeft: "-20px",
                           }}
                         />
