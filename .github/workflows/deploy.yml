@@ -7,22 +7,27 @@ on:
       - README.md
 
 jobs:
-  git-po-helper:
-    needs: gh-pages
-    if: needs.gh-pages.outputs.enabled == 'yes'
+  check-branch:
     runs-on: ubuntu-latest
     steps:
       # 删除缓存的远程分支
-      - name: Del Branch
+      - name: Check if branch exists
         uses: actions/checkout@v2
         with:
+          ref: refs/heads/gh-pages
+          fetch-depth: 0
           token: ${{ secrets.DEPLOY }} # secret 名
       - run: |
-             git config --global user.email "${{ secrets.MY_USER_EMAIL }}"
-             git config --global user.name "${{ secrets.MY_USER_NAME }}"
-             git push origin --delete gh-pages
+            if [ -z "$(git rev-parse --verify gh-pages)" ]; then
+              echo "Branch not exists and Run build."  
+            else
+              git config --global user.email "${{ secrets.MY_USER_EMAIL }}"
+              git config --global user.name "${{ secrets.MY_USER_NAME }}"
+              git push origin --delete gh-pages
+            fi
 
   deploy:
+    if: github.repository == 'dompling/boxjs.react'
     runs-on: ubuntu-latest
     steps:
 
