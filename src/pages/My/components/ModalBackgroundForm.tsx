@@ -1,29 +1,30 @@
-import ProModal from '@/components/ProModal';
-import config from '@/utils/config';
-import { useModel } from '@@/exports';
-import { MenuItem, Select, TextField } from '@mui/material';
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import ProModal from "@/components/ProModal";
+import config from "@/utils/config";
+import { useModel } from "@@/exports";
+import { MenuItem, Select, TextField } from "@mui/material";
+import React from "react";
+import { useForm } from "react-hook-form";
 
 const ModalBackgroundForm: React.FC<{
   open?: boolean;
   value?: string;
   onClose: () => void;
 }> = (props) => {
-  const { initialState } = useModel('@@initialState');
-  const { fetchSave } = useModel('api');
+  const { initialState } = useModel("@@initialState");
+  const { fetchSave } = useModel("api");
 
   const formRef = useForm();
 
-  const images = initialState?.boxdata?.usercfgs?.bgimgs?.split(`\n`)
-    .map((item) => {
-      const [label, val] = item.split(',');
+  const images = initialState?.boxdata?.usercfgs?.bgimgs
+    ?.split(`\n`)
+    .map((item, index) => {
+      const [label, val = index] = item.split(",");
       return { label, val };
     });
 
   return (
     <ProModal
-      title={'背景图片'}
+      title={"背景图片"}
       open={!!props.open}
       onClose={() => {
         props.onClose();
@@ -38,7 +39,7 @@ const ModalBackgroundForm: React.FC<{
               key: config.userCfgs,
               val: JSON.stringify({
                 ...initialState.boxdata.usercfgs,
-                ...formValue,
+                bgimg: formValue.bgimg,
               }),
             },
           ])
@@ -53,7 +54,7 @@ const ModalBackgroundForm: React.FC<{
           id="demo-select-small"
           defaultValue={props.value}
           labelId="demo-select-small-label"
-          {...formRef.register('bgimg')}
+          {...formRef.register("bgimg")}
         >
           {images?.map((item, index) => {
             return (
@@ -70,12 +71,12 @@ const ModalBackgroundForm: React.FC<{
           minRows={6}
           size="small"
           variant="standard"
-          placeholder={'请输入图片在线链接'}
+          placeholder={"请输入图片在线链接"}
           InputLabelProps={{
             shrink: true,
           }}
           defaultValue={props.value}
-          {...formRef.register('bgimg')}
+          {...formRef.register("bgimg")}
         />
       )}
     </ProModal>

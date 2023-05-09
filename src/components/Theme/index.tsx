@@ -1,22 +1,22 @@
-import { ColorModeContext,getMediaMode } from '@/utils';
-import { useModel } from '@@/exports';
-import { CssBaseline,ThemeProvider,colors,createTheme } from '@mui/material';
-import React from 'react';
+import { ColorModeContext, getMediaMode } from "@/utils";
+import { useModel } from "@@/exports";
+import { CssBaseline, ThemeProvider, colors, createTheme } from "@mui/material";
+import React from "react";
 
 const ToggleColorMode: React.FC<{ children: React.ReactNode }> = (props) => {
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const { initialState, setInitialState } = useModel("@@initialState");
   const boxdata = initialState?.boxdata;
   const mode = initialState?.mode;
 
   const colorMode = React.useMemo(
     () => ({
-      toggleColorMode: (type: 'light' | 'dark' | 'auto') => {
-        let mediaMode: 'light' | 'dark' = getMediaMode();
-        const modeValue = type === 'auto' ? mediaMode : type;
+      toggleColorMode: (type: "light" | "dark" | "auto") => {
+        let mediaMode: "light" | "dark" = getMediaMode();
+        const modeValue = type === "auto" ? mediaMode : type;
         if (initialState) setInitialState({ ...initialState, mode: modeValue });
       },
     }),
-    [],
+    [initialState]
   );
 
   const color_light_primary =
@@ -30,18 +30,13 @@ const ToggleColorMode: React.FC<{ children: React.ReactNode }> = (props) => {
         palette: {
           mode,
           primary: {
-            main: mode === 'light' ? color_light_primary : color_dark_primary,
+            main: mode === "light" ? color_light_primary : color_dark_primary,
             light: color_light_primary,
             dark: color_dark_primary,
           },
-          // secondary: {
-          //   main: mode === 'light' ? color_light_primary : color_dark_primary,
-          //   light: color_light_primary,
-          //   dark: color_dark_primary,
-          // },
         },
       }),
-    [mode, color_light_primary, color_dark_primary],
+    [mode, color_light_primary, color_dark_primary]
   );
 
   return (

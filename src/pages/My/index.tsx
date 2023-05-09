@@ -56,6 +56,15 @@ export default function Page() {
 
   const { fetchSave } = useModel("api");
 
+  const images = initialState?.boxdata?.usercfgs?.bgimgs
+    ?.split(`\n`)
+    .map((item, index) => {
+      const [label, val = index] = item.split(",");
+      return { label, val };
+    });
+
+  const bgimg = images?.find((item) => item.val === usercfgs?.bgimg)?.label;
+
   const settings = [
     {
       label: "主题设置",
@@ -87,10 +96,10 @@ export default function Page() {
         },
 
         {
+          id: "bgimg",
           label: "背景图片",
           type: "select",
-          id: "bgimg",
-          val: usercfgs?.bgimg,
+          val: bgimg === undefined ? usercfgs?.bgimg : bgimg,
           onClick: () => handleVisible(`bgimg`, true),
           icon: <PhotoCameraBackIcon sx={{ color: colors.blue[400] }} />,
         },
