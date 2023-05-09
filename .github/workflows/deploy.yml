@@ -7,19 +7,24 @@ on:
       - README.md
 
 jobs:
+  git-po-helper:
+    needs: gh-pages
+    if: needs.gh-pages.outputs.enabled == 'yes'
+    runs-on: ubuntu-latest
+    steps:
+      # 删除缓存的远程分支
+      - name: Del Branch
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.DEPLOY }} # secret 名
+      - run: |
+             git config --global user.email "${{ secrets.MY_USER_EMAIL }}"
+             git config --global user.name "${{ secrets.MY_USER_NAME }}"
+             git push origin --delete gh-pages
+
   deploy:
     runs-on: ubuntu-latest
     steps:
-
-      # 删除缓存的远程分支
-#      - name: Del Branch
-#        uses: actions/checkout@v2
-#        with:
-#          token: ${{ secrets.DEPLOY }} # secret 名
-#      - run: |
-#             git config --global user.email "${{ secrets.MY_USER_EMAIL }}"
-#             git config --global user.name "${{ secrets.MY_USER_NAME }}"
-#             git push origin --delete gh-pages
 
       # 下载源码
       # 这一步就是检出你的仓库并下载里面的代码到runner中,actions/checkout@v2是官方自己造的轮子，直接拿来用就行
