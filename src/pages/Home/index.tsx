@@ -88,7 +88,7 @@ const GridItem: React.FC<{
       item
       xs={3}
       md={2}
-      style={{ opacity }}
+      style={{ opacity, transform: "translate(0,0)" }}
       key={`${item?.id}/${item?.author}/${item?.name}`}
       ref={(node) => drag(drop(node))}
     >

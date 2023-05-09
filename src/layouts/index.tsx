@@ -58,6 +58,7 @@ export default function Layout() {
         {!["/my"].includes(location.pathname) && <HeaderContent />}
         <BoxJSActions />
         <div
+          draggable={false}
           style={{
             position: "fixed",
             top: 0,
