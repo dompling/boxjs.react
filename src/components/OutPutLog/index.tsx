@@ -1,7 +1,26 @@
-import ProModal from '@/components/ProModal';
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import { IconButton, Stack, Typography } from '@mui/material';
-import React from 'react';
+import {
+  Box,
+  SwipeableDrawer,
+  Typography,
+  colors,
+  styled,
+} from "@mui/material";
+import React from "react";
+
+const StyledBox = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "light" ? "#fff" : colors.grey[800],
+}));
+
+const Puller = styled(Box)(({ theme }) => ({
+  width: 30,
+  height: 6,
+  backgroundColor: theme.palette.primary.main,
+  borderRadius: 3,
+  position: "absolute",
+  top: 8,
+  left: "calc(50% - 15px)",
+  boxShadow: theme.shadows[1],
+}));
 
 const OutPut: React.FC<{
   open?: boolean;
@@ -9,42 +28,62 @@ const OutPut: React.FC<{
   onClose: () => void;
 }> = (props) => {
   return (
-    <ProModal
-      fullScreen
-      footer={null}
-      open={!!props.open}
-      title={
-        <Stack
-          direction={'row'}
-          alignItems={'center'}
-          sx={{ width: 1, p: 1 }}
-          justifyContent={'space-between'}
+    <div>
+      <SwipeableDrawer
+        anchor="bottom"
+        swipeAreaWidth={0}
+        open={props.open || false}
+        container={() => window.document.body}
+        onClose={() => props.onClose()}
+        onOpen={() => props.onClose()}
+        disableSwipeToOpen={false}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          "& .MuiDrawer-paperAnchorBottom": {
+            maxHeight: `60%`,
+            minHeight: `30%`,
+            borderTopLeftRadius: 8,
+            borderTopRightRadius: 8,
+            overflow: "hidden",
+          },
+        }}
+      >
+        <StyledBox
+          sx={{
+            position: "absolute",
+            top: 0,
+            visibility: "visible",
+            right: 0,
+            left: 0,
+            boxShadow: (theme) => theme.shadows[1],
+          }}
         >
-          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-            执行结果
+          <Puller onClick={() => props.onClose()} />
+          <Typography sx={{ p: 2, color: "text.secondary" }}>
+            运行结果
           </Typography>
-          <IconButton onClick={() => props.onClose?.()}>
-            <KeyboardDoubleArrowDownIcon />
-          </IconButton>
-        </Stack>
-      }
-      onClose={() => {
-        props.onClose?.();
-      }}
-    >
-      {props.value?.output ? (
-        <Typography
-          variant="caption"
-          color={'grey'}
-          component={'p'}
-          sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+        </StyledBox>
+        <StyledBox
+          sx={{
+            px: 2,
+            pb: 2,
+            mt: 7,
+            overflow: "auto",
+          }}
         >
-          {props.value?.output}
-        </Typography>
-      ) : (
-        JSON.stringify(props.value || '')
-      )}
-    </ProModal>
+          <Typography
+            variant="caption"
+            color={"grey"}
+            component={"p"}
+            sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", pt: 2 }}
+          >
+            {props.value?.output || JSON.stringify(props.value || "暂无结果")}
+          </Typography>
+        </StyledBox>
+      </SwipeableDrawer>
+    </div>
   );
 };
 

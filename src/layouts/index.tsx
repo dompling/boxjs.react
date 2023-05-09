@@ -54,12 +54,6 @@ export default function Layout() {
 
   return (
     <ToggleColorMode>
-      <OutPut
-        open={log.visible}
-        value={fetchRunScript.data}
-        onClose={() => log.setVisible(false)}
-      />
-
       <Box className={styles.container}>
         {!["/my"].includes(location.pathname) && <HeaderContent />}
         <BoxJSActions />
@@ -126,6 +120,11 @@ export default function Layout() {
 
         <FooterToolNav />
       </Box>
+      <OutPut
+        open={log.visible}
+        value={fetchRunScript.data}
+        onClose={() => log.setVisible(false)}
+      />
     </ToggleColorMode>
   );
 }
