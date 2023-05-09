@@ -182,6 +182,10 @@ export default function Page() {
                   size={24}
                   sx={{
                     position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    marginTop: "-12px",
+                    marginLeft: "-12px",
                   }}
                 />
               )}
@@ -228,29 +232,31 @@ export default function Page() {
                     key={item.name}
                     sx={{ padding: 0, mb: 2 }}
                     secondaryAction={
-                      <Box sx={{ position: "relative" }}>
-                        <IconButton
-                          edge="end"
-                          sx={{ mr: -3.5 }}
-                          aria-label={item.name}
-                          onClick={() => {
-                            fetchRunScript.run({
-                              url: item.script,
-                              isRemote: true,
-                            });
-                          }}
-                        >
-                          <PlayCircleFilledIcon />
-                          {fetchRunScript.fetches[item.script]?.loading && (
-                            <CircularProgress
-                              size={24}
-                              sx={{
-                                position: "absolute",
-                              }}
-                            />
-                          )}
-                        </IconButton>
-                      </Box>
+                      <IconButton
+                        edge="end"
+                        sx={{ mr: -3.5, position: "relative" }}
+                        aria-label={item.name}
+                        onClick={() => {
+                          fetchRunScript.run({
+                            url: item.script,
+                            isRemote: true,
+                          });
+                        }}
+                      >
+                        <PlayCircleFilledIcon />
+                        {fetchRunScript.fetches[item.script]?.loading && (
+                          <CircularProgress
+                            size={24}
+                            sx={{
+                              position: "absolute",
+                              top: "50%",
+                              left: "50%",
+                              marginTop: "-12px",
+                              marginLeft: "-12px",
+                            }}
+                          />
+                        )}
+                      </IconButton>
                     }
                   >
                     <Typography

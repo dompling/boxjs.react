@@ -174,8 +174,10 @@ const HeaderContent: React.FC = () => {
                           size={28}
                           sx={{
                             position: "absolute",
-                            top: 0,
-                            left: 0,
+                            top: "50%",
+                            left: "50%",
+                            marginTop: "-14px",
+                            marginLeft: "-14px",
                           }}
                         />
                       )}

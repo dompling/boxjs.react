@@ -166,8 +166,10 @@ export default function Page() {
                           size={40}
                           sx={{
                             position: "absolute",
-                            top: -2,
-                            left: -2,
+                            top: "50%",
+                            left: "50%",
+                            marginTop: "-20px",
+                            marginLeft: "-20px",
                           }}
                         />
                       )}
