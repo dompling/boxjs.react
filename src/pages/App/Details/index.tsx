@@ -304,7 +304,14 @@ export default function Page() {
 
       {app?.keys?.length !== 0 ? (
         <Paper key={"curSessionItem"} elevation={3} sx={{ mb: 2 }}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider", p: 2 }}>
+          <Box
+            sx={{
+              borderBottom: 1,
+              borderColor: "divider",
+              px: 2,
+              py: 1,
+            }}
+          >
             <Stack direction={"row"} spacing={2}>
               <Typography>当前会话</Typography>
               {curSession.name ? (
