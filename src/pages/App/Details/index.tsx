@@ -35,6 +35,8 @@ const CusBadge = styled(Badge)(({ theme }) => ({
 
 const CusTypography = styled(Typography)(({}) => ({
   right: "unset",
+  whiteSpace: "pre-wrap",
+  wordBreak: "break-word",
   "& h4,h1,h2,h3,p": {
     padding: 0,
     margin: 0,
