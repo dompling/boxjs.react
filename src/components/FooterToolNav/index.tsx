@@ -67,7 +67,7 @@ const FooterToolNav: React.FC = () => {
   };
 
   return (
-    <QueueAnim type={["bottom", "bottom"]}>
+    <QueueAnim type={["bottom", "bottom"]} appear={!!initialState?.boxdata.usercfgs.isAnimate}>
       {!initialState?.boxdata.usercfgs.isHidedNaviBottom ? (
         <Box className={styles.footer_container}>
           <Paper

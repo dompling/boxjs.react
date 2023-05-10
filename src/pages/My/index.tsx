@@ -8,6 +8,7 @@ import ModalThemeForm from "@/pages/My/components/ModalThemeForm";
 import config from "@/utils/config";
 import { useModel } from "@@/exports";
 import ApiIcon from "@mui/icons-material/Api";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import BorderBottomIcon from "@mui/icons-material/BorderBottom";
 import BorderTopIcon from "@mui/icons-material/BorderTop";
 import BugReportIcon from "@mui/icons-material/BugReport";
@@ -196,6 +197,13 @@ export default function Page() {
           id: "isVConsole",
           icon: <BugReportIcon sx={{ color: colors.pink[400] }} />,
         },
+        {
+          type: "switch",
+          label: "动画",
+          id: "isAnimate",
+          icon: <AutoAwesomeIcon sx={{ color: colors.cyan[400] }} />,
+        },
+
         // {
         //   type: "select",
         //   label: "调试网址",
@@ -373,7 +381,7 @@ export default function Page() {
         <Stack spacing={2}>
           {settings.map((setting, index) => {
             return (
-              <QueueAnim key={`group-${index}`}>
+              <QueueAnim key={`group-${index}`} appear={!!initialState?.boxdata.usercfgs.isAnimate}>
                 <Typography
                   variant="body2"
                   key={`title-${index}`}

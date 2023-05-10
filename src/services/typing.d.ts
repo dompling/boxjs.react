@@ -121,6 +121,7 @@ declare namespace boxjs {
   }
 
   export interface usercfgs {
+    isAnimate:boolean;
     favapps: string[];
     appsubs: Appsub[];
     viewkeys: string[];

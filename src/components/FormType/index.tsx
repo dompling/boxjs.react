@@ -54,7 +54,7 @@ function CusFormHelperText({ text, ...props }: any) {
   }, [focused]);
 
   return (
-    <QueueAnim type={["top", "bottom"]} leaveReverse style={{ minHeight: 25 }}>
+    <QueueAnim  type={["top", "bottom"]} leaveReverse style={{ minHeight: 25 }}>
       {focused ? (
         <FormHelperText key={text} {...props}>
           {helperText}

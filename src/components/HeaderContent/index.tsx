@@ -116,7 +116,7 @@ const HeaderContent: React.FC = () => {
   const iconIndex = UI?.iconThemeIdx !== undefined ? UI?.iconThemeIdx : 1;
 
   return (
-    <QueueAnim type={["top", "bottom"]} leaveReverse>
+    <QueueAnim appear={!!initialState?.boxdata.usercfgs.isAnimate} type={["top", "bottom"]} leaveReverse>
       {!boxdata?.usercfgs.isWaitToggleSearchBar ? (
         <Box className={styles.header_container}>
           <Paper

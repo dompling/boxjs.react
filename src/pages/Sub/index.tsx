@@ -119,7 +119,7 @@ export default function Page() {
           </IconButton>
         </Stack>
       </Stack>
-      <QueueAnim>
+      <QueueAnim appear={!!initialState?.boxdata.usercfgs.isAnimate}>
         {appsubs.map((item, index) => {
           const appItem = { ...item, ...appSubCaches[item.url] } || {
             name: "匿名订阅",
