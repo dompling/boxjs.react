@@ -55,7 +55,7 @@ const BoxJSActions: React.FC = () => {
             icon: <RefreshIcon sx={{ color: colors.red[400] }} />,
             name: "Refresh",
             onClick: () => {
-              fetchAllData.run();
+              window.location.reload();
             },
           },
         ]
