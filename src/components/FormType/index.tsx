@@ -1,5 +1,4 @@
 import { IOSSwitch } from "@/components/IOSSwitch";
-import styles from "@/pages/App/Details/index.less";
 import { useModel } from "@@/exports";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -14,7 +13,6 @@ import {
   Drawer,
   FormControl,
   FormControlLabel,
-  FormGroup,
   FormHelperText,
   FormLabel,
   IconButton,
@@ -39,7 +37,13 @@ import React, {
   useState,
 } from "react";
 import { ChromePicker } from "react-color";
-import { FieldValue, useForm } from "react-hook-form";
+import {
+  Controller,
+  UseFormReturn,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
+import styles from "./index.less";
 
 function CusFormHelperText({ text, ...props }: any) {
   const { focused } = useFormControl() || {};
@@ -61,18 +65,23 @@ function CusFormHelperText({ text, ...props }: any) {
 }
 
 const FormPickerColor: React.FC<{
-  defaultValue?: string | null;
   name?: string;
+  value?: string;
+  defaultValue?: string | null;
   onChange?: (value: any) => void;
-}> = forwardRef(({ defaultValue, name, onChange }, ref) => {
-  const [value, setValue] = useState<string | null | undefined>(defaultValue);
+}> = forwardRef(({ value, defaultValue, name, onChange }, ref) => {
+  const [data, setValue] = useState<string | null | undefined>(defaultValue);
 
   const pickerProps: { color?: any } = {};
-  if (value) pickerProps.color = value;
+  pickerProps.color = data;
 
   useImperativeHandle(ref, () => {
     return { value };
   });
+
+  useEffect(() => {
+    setValue(value);
+  }, [value]);
 
   return (
     <ChromePicker
@@ -86,44 +95,56 @@ const FormPickerColor: React.FC<{
   );
 });
 
-const renderFormItem = (
-  data: boxjs.Setting,
-  value?: Record<string, string | null>,
-  register?: FieldValue<any>
-) => {
-  const defaultValue = value?.[data.id];
-  const formItemProps = { ...register(data.formName), defaultValue };
+const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
   data.name = (data.disabled ? "🈲 手动填写-" : "") + data.name;
-  console.log(data);
+  const formName = data.id.replaceAll(".", "~");
+  const formItemProps = {
+    name: data.formName || formName,
+    control: form?.control,
+  };
+
   return (
     <>
-      {(data.type === "text" || !data.type) && (
+      {(["text", "number"].includes(data.type) || !data.type) && (
         <FormControl size="small" sx={{ width: 1 }} variant="standard">
           <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
-          <Input
-            id={data.id}
-            size="small"
-            disabled={data.disabled}
-            placeholder={data.placeholder}
+          <Controller
             {...formItemProps}
+            render={({ field }) => {
+              return (
+                <Input
+                  id={data.id}
+                  size="small"
+                  type={data.type}
+                  disabled={data.disabled}
+                  placeholder={data.placeholder}
+                  {...field}
+                />
+              );
+            }}
           />
           <CusFormHelperText text={data.desc} />
         </FormControl>
       )}
 
       {data.type === "textarea" && !data.child && (
-        <TextField
-          fullWidth
-          multiline
-          id={data.id}
-          size="small"
-          label={data.name}
-          variant="standard"
-          rows={6 || data.rows}
-          helperText={data.desc}
-          disabled={data.disabled}
-          placeholder={data.placeholder}
+        <Controller
           {...formItemProps}
+          render={({ field }) => (
+            <TextField
+              fullWidth
+              multiline
+              id={data.id}
+              size="small"
+              label={data.name}
+              variant="standard"
+              rows={6 || data.rows}
+              helperText={data.desc}
+              disabled={data.disabled}
+              placeholder={data.placeholder}
+              {...field}
+            />
+          )}
         />
       )}
 
@@ -140,27 +161,30 @@ const renderFormItem = (
             {data.name}
           </InputLabel>
           {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
-          <FormList
-            setting={data}
-            {...formItemProps}
-            itemValue={value?.[data.id] || "[]"}
-          />
+          <FormList name={formItemProps.name} form={form} setting={data} />
           <CusFormHelperText text={data.desc} />
         </FormControl>
       )}
 
       {data.type === "boolean" && (
         <Stack>
-          <FormControlLabel
-            label={data.name}
+          <Controller
             {...formItemProps}
-            control={
-              <IOSSwitch
-                sx={{ m: 1 }}
-                disabled={data.disabled}
-                defaultChecked={defaultValue === "true" || !!defaultValue}
+            render={({ field }) => (
+              <FormControlLabel
+                label={data.name}
+                control={
+                  <IOSSwitch
+                    sx={{ m: 1 }}
+                    disabled={data.disabled}
+                    checked={
+                      field.value === "true" || field.value ? true : false
+                    }
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                }
               />
-            }
+            )}
           />
           <FormHelperText sx={{ minHeight: 20 }}>{data.desc}</FormHelperText>
         </Stack>
@@ -169,45 +193,46 @@ const renderFormItem = (
       {data.type === "checkboxes" && (
         <FormControl component="fieldset" variant="standard">
           <FormLabel component="legend">{data.name}</FormLabel>
-          <FormGroup>
-            {data.items?.map((checkbox) => {
-              const checkboxValue =
-                typeof defaultValue === "string"
-                  ? defaultValue?.split?.(",")
-                  : defaultValue;
 
-              return (
-                <FormControlLabel
-                  key={checkbox.key}
-                  {...formItemProps}
-                  control={
-                    <Checkbox
-                      disabled={data.disabled}
-                      defaultChecked={checkboxValue?.includes(checkbox.key)}
-                    />
-                  }
-                  value={checkbox.key}
-                  label={checkbox.label}
-                />
-              );
-            })}
-          </FormGroup>
-          <FormHelperText sx={{ minHeight: 20 }}>{data.desc}</FormHelperText>
-        </FormControl>
-      )}
-
-      {data.type === "number" && (
-        <FormControl size="small" sx={{ width: 1 }} variant="standard">
-          <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
-          <Input
-            id={data.id}
-            size="small"
-            type="number"
+          <Controller
             {...formItemProps}
-            disabled={data.disabled}
-            placeholder={data.placeholder}
+            render={({ field }) => {
+              const isStr = typeof field.value === "string";
+              const fieldValue = isStr ? field.value.split(",") : field.value;
+              return (
+                <>
+                  {data.items?.map((checkbox) => {
+                    return (
+                      <FormControlLabel
+                        key={checkbox.key}
+                        control={
+                          <Checkbox
+                            checked={fieldValue.includes(checkbox.key)}
+                            onChange={(e) => {
+                              let newValue: string[] = fieldValue;
+                              if (e.target.checked) {
+                                newValue.push(checkbox.key);
+                              } else {
+                                newValue = newValue.filter(
+                                  (f) => f != checkbox.key
+                                );
+                              }
+                              field.onChange(
+                                isStr ? newValue.join(",") : newValue
+                              );
+                            }}
+                          />
+                        }
+                        label={checkbox.label}
+                        disabled={data.disabled}
+                      />
+                    );
+                  })}
+                </>
+              );
+            }}
           />
-          <CusFormHelperText text={data.desc} />
+          <FormHelperText sx={{ minHeight: 20 }}>{data.desc}</FormHelperText>
         </FormControl>
       )}
 
@@ -223,13 +248,18 @@ const renderFormItem = (
       ].indexOf(data.type) === -1 && (
         <FormControl size="small" sx={{ width: 1 }} variant="standard">
           <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
-          <Input
-            id={data.id}
-            size="small"
-            type={data.type}
+          <Controller
             {...formItemProps}
-            disabled={data.disabled}
-            placeholder={data.placeholder}
+            render={({ field }) => (
+              <Input
+                id={data.id}
+                size="small"
+                type={data.type}
+                disabled={data.disabled}
+                placeholder={data.placeholder}
+                {...field}
+              />
+            )}
           />
           <CusFormHelperText text={data.desc} />
         </FormControl>
@@ -238,41 +268,54 @@ const renderFormItem = (
       {data.type === "radios" && (
         <FormControl component="fieldset" variant="standard">
           <FormLabel component="legend">{data.name}</FormLabel>
-          <RadioGroup {...formItemProps}>
-            {data.items?.map((radio) => {
-              return (
-                <FormControlLabel
-                  key={radio.key}
-                  value={radio.key}
-                  label={radio.label}
-                  control={<Radio disabled={data.disabled} />}
-                />
-              );
-            })}
-          </RadioGroup>
+          <Controller
+            {...formItemProps}
+            render={({ field }) => (
+              <RadioGroup {...field}>
+                {data.items?.map((radio) => {
+                  return (
+                    <FormControlLabel
+                      key={radio.key}
+                      value={radio.key}
+                      label={radio.label}
+                      control={<Radio />}
+                      disabled={data.disabled}
+                    />
+                  );
+                })}
+              </RadioGroup>
+            )}
+          />
           <FormHelperText sx={{ minHeight: 20 }}>{data.desc}</FormHelperText>
         </FormControl>
       )}
+
       {data.type === "selects" && (
         <FormControl sx={{ m: 1 }} variant="standard">
           <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
-          <Select
-            placeholder="请选择"
-            sx={{ width: `100%` }}
-            MenuProps={{ sx: { maxHeight: 300 } }}
+          <Controller
             {...formItemProps}
-          >
-            {data.items?.map((item, index) => {
-              return (
-                <MenuItem key={`${item.key}_${index}`} value={item.key}>
-                  {item.label}
-                </MenuItem>
-              );
-            })}
-          </Select>
+            render={({ field }) => (
+              <Select
+                placeholder="请选择"
+                sx={{ width: `100%` }}
+                MenuProps={{ sx: { maxHeight: 300 } }}
+                {...field}
+              >
+                {data.items?.map((item, index) => {
+                  return (
+                    <MenuItem key={`${item.key}_${index}`} value={item.key}>
+                      {item.label}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            )}
+          />
           <CusFormHelperText text={data.desc} />
         </FormControl>
       )}
+
       {data.type === "colorpicker" && (
         <FormControl size="small" sx={{ width: 1 }} variant="standard">
           <InputLabel
@@ -285,7 +328,18 @@ const renderFormItem = (
           >
             {data.name}
           </InputLabel>
-          <FormPickerColor {...formItemProps} />
+          <Controller
+            {...formItemProps}
+            render={({ field }) => {
+              return (
+                <FormPickerColor
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value)}
+                />
+              );
+            }}
+          />
+
           <CusFormHelperText text={data.desc} />
         </FormControl>
       )}
@@ -294,60 +348,32 @@ const renderFormItem = (
 };
 
 const FormList: React.FC<{
-  name?: string;
-  itemValue: string;
+  name: string;
+  form?: UseFormReturn<any>;
   setting?: boxjs.Setting;
-  onChange?: (value: any) => void;
-}> = forwardRef(({ setting, itemValue, onChange, ...props }, ref) => {
-  let data: Record<string, any>[] = [];
-  try {
-    data = JSON.parse(itemValue);
-  } catch (e) {
-    console.log(e);
-  }
+}> = ({ setting, form, name }) => {
+  const { fields, append, remove } = useFieldArray({
+    name: name,
+    control: form?.control,
+  });
 
-  const form = useForm({ defaultValues: data });
   const formDrawer = useForm();
   const tip = useModel("alert");
 
   const [drawerTitle, setTitle] = useState<string>("");
   const [loadMore, setLoadMore] = useState<boolean>(false);
-  const [formValue, setValue] = useState<Record<string, any>[]>([]);
+
   const [expanded, setExpanded] = useState<string | false>(false);
   const [open, setOpen] = useState<boolean>(false);
+
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
 
-  const handelChange = (val: any[]) => {
-    setValue(val);
-    onChange?.({
-      target: { name: props.name, value: JSON.stringify(val) },
-    });
-  };
-
-  form.watch((response: any) => {
-    const formData = [...formValue];
-    Object.keys(response).forEach((key) => {
-      formData[parseInt(key)] = response[key];
-    });
-    onChange?.({
-      target: { name: props.name, value: JSON.stringify(formData) },
-    });
-  });
-
-  useImperativeHandle(ref, () => {
-    return { value: formValue };
-  });
-
-  useEffect(() => {
-    setValue(data);
-  }, []);
-
   let maxKeys = 0,
     formItems: string[] = [];
-  formValue.forEach((item: any) => {
+  fields.forEach(({ id, ...item }: any) => {
     const keyItem = Object.keys(item);
     const keys = keyItem.length;
     if (keys > maxKeys) {
@@ -367,7 +393,7 @@ const FormList: React.FC<{
   ];
 
   formItems = lodash.uniq(formItems);
-  const formValues = formValue.filter((_, index) =>
+  const formValues = fields.filter((_, index) =>
     !loadMore ? index < 4 : true
   );
 
@@ -380,6 +406,7 @@ const FormList: React.FC<{
     <>
       <Drawer anchor={"bottom"} open={open} onClose={() => handelDrawerClose()}>
         <Box
+          className={styles.add}
           sx={{
             pt: 1,
             pb: 1,
@@ -407,7 +434,7 @@ const FormList: React.FC<{
                 const val = formDrawer.getValues();
                 if (val["*JSON*"]) {
                   try {
-                    handelChange(JSON.parse(val["*JSON*"]));
+                    form?.setValue(name, JSON.parse(val["*JSON*"]));
                     return handelDrawerClose();
                   } catch (e) {
                     return tip.alert({
@@ -417,7 +444,7 @@ const FormList: React.FC<{
                     });
                   }
                 }
-                handelChange([...formValue, formDrawer.getValues()]);
+                append(formDrawer.getValues());
                 handelDrawerClose();
               }}
             >
@@ -427,23 +454,15 @@ const FormList: React.FC<{
         </Box>
         <Stack sx={{ pt: 8, pl: 2, pr: 2, height: `100vh` }}>
           {formItems && drawerTitle === "新增" ? (
-            formItems?.map((settingKey) => {
+            formItems?.map((settingKey, index) => {
               let settingItem: boxjs.Setting = child[settingKey] || {
-                id: settingKey,
+                id: `[${index}].${settingKey}`,
                 name: settingKey,
                 type: "text",
               };
-
               return (
                 <React.Fragment key={settingItem.id}>
-                  {renderFormItem(
-                    {
-                      ...settingItem,
-                      formName: `${settingItem?.id}`,
-                    },
-                    {},
-                    formDrawer.register
-                  )}
+                  {renderFormItem(settingItem, formDrawer)}
                 </React.Fragment>
               );
             })
@@ -475,7 +494,7 @@ const FormList: React.FC<{
           ? setting?.primary.map((tit) => item[tit] || index + 1)
           : [setting?.name, index + 1];
         const id = `${setting?.id}-${index}`;
-        if (!loadMore && index > 4 && data.length > 5) return null;
+        if (!loadMore && index > 4) return null;
 
         return (
           <Accordion
@@ -494,19 +513,19 @@ const FormList: React.FC<{
               {expanded === id &&
                 formItems?.map((settingKey) => {
                   let settingItem: boxjs.Setting = child[settingKey] || {
+                    type: "text",
                     id: settingKey,
                     name: settingKey,
-                    type: "text",
                   };
+
                   return (
                     <React.Fragment key={settingItem.id}>
                       {renderFormItem(
                         {
                           ...settingItem,
-                          formName: `[${index}].${settingItem?.id}`,
+                          formName: `${name}.${index}.${settingKey}`,
                         },
-                        item,
-                        form.register
+                        form
                       )}
                     </React.Fragment>
                   );
@@ -517,9 +536,7 @@ const FormList: React.FC<{
                 sx={{ width: "100%" }}
                 variant="contained"
                 onClick={() => {
-                  const val = formValue.filter((_, key) => key !== index);
-                  form.resetField(`${index}`);
-                  handelChange(val);
+                  remove(index);
                   setExpanded(false);
                 }}
               >
@@ -530,7 +547,7 @@ const FormList: React.FC<{
         );
       })}
 
-      {formValue.length > 5 && (
+      {fields.length > 5 && (
         <Accordion
           expanded={false}
           onClick={() => {
@@ -573,7 +590,7 @@ const FormList: React.FC<{
             <Button
               color="error"
               onClick={() => {
-                handelChange([]);
+                form?.setValue(name, []);
               }}
             >
               清空
@@ -591,13 +608,7 @@ const FormList: React.FC<{
             <Button
               color="warning"
               onClick={() => {
-                const formData = [...formValue];
-                const response: any = form.getValues();
-                Object.keys(response).forEach((key) => {
-                  formData[parseInt(key)] = response[key];
-                });
-
-                $copy(JSON.stringify(formData));
+                $copy(JSON.stringify(fields));
                 tip.alert({
                   open: true,
                   message: "复制成功",
@@ -622,23 +633,18 @@ const FormList: React.FC<{
       </Accordion>
     </>
   );
-});
+};
 
 function FormType({
+  form,
   setting,
-  itemValue,
-  register,
 }: {
-  register?: FieldValue<any>;
+  form?: UseFormReturn<any>;
   setting?: boxjs.Setting;
   itemValue?: Record<string, string | null>;
 }) {
   if (!setting) return null;
-  return renderFormItem(
-    { ...setting, formName: setting.id.replace(".", "*") },
-    itemValue,
-    register
-  );
+  return renderFormItem({ ...setting }, form);
 }
 
 export default FormType;

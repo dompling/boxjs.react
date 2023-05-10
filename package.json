@@ -29,7 +29,7 @@
     "react-dnd-touch-backend": "^16.0.1",
     "react-hook-form": "^7.43.9",
     "react-monaco-editor": "^0.52.0",
-    "uuidv4": "^6.2.13",
+    "react-uuid": "^2.0.0",
     "vconsole": "^3.15.0"
   },
   "devDependencies": {

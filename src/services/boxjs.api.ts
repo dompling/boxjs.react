@@ -1,5 +1,5 @@
 import { request } from "@umijs/max";
-import { uuid } from "uuidv4";
+import uuid from "react-uuid";
 
 export const getAllData = () => {
   return request<boxjs.data>("/query/boxdata").then((response: any) => {

@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import $copy from "copy-to-clipboard";
 import React, { useState } from "react";
-import { uuid } from "uuidv4";
+import uuid from "react-uuid";
 
 const CusBadge = styled(Badge)(({ theme }) => ({
   right: "unset",
@@ -109,7 +109,8 @@ export default function Page() {
       (item) => item?.id === initialState?.boxdata.curSessions[`${id}`]
     ) || 0;
 
-  if (curSessionIndex > -1) curSession = appSession?.[curSessionIndex];
+  if (curSessionIndex > -1)
+    curSession.name = appSession?.[curSessionIndex].name;
 
   const [tabValue, setTabValue] = React.useState(
     curSessionIndex > -1 ? curSessionIndex : 0
@@ -372,22 +373,17 @@ export default function Page() {
                 if (isNoneSession) {
                   session.name = `会话 1`;
                 } else {
-                  session = { ...curSessionApp };
                   session.name = `会话 ${appSession.length + 1}`;
                 }
 
                 session.id = uuid();
                 if (!initialState) return;
-                fetchSave
-                  .run([
-                    {
-                      key: `@chavy_boxjs_sessions.${sessions.length}`,
-                      val: { ...session },
-                    },
-                  ])
-                  .then(() => {
-                    setTabValue(appSession.length);
-                  });
+                fetchSave.run([
+                  {
+                    key: `@chavy_boxjs_sessions.${sessions.length}`,
+                    val: { ...session },
+                  },
+                ]);
               }}
             >
               克隆

@@ -2,7 +2,7 @@ import FormType from "@/components/FormType";
 import ProForm from "@/components/ProForm";
 import { useModel } from "@@/exports";
 import { Button, Divider, Stack } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
@@ -10,13 +10,34 @@ const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
 }) => {
   const { initialState } = useModel("@@initialState");
   const { fetchSave } = useModel("api");
-  const defaultValues: any = {};
+  let defaultValues: any = {};
   formConfig.forEach((setting) => {
-    defaultValues[setting.id.replace(".", "*")] =
-      initialState?.boxdata.datas[setting.id];
+    const dataVal = initialState?.boxdata.datas[setting.id];
+    try {
+      defaultValues[setting.id.replaceAll(".", "~")] = setting.child
+        ? JSON.parse(`${initialState?.boxdata.datas[setting.id] || []}`)
+        : dataVal;
+    } catch (e) {
+      console.log(e);
+    }
   });
 
   const form = useForm({ defaultValues });
+
+  useEffect(() => {
+    defaultValues = {};
+    formConfig.forEach((setting) => {
+      const dataVal = initialState?.boxdata.datas[setting.id];
+      try {
+        defaultValues[setting.id.replaceAll(".", "~")] = setting.child
+          ? JSON.parse(`${initialState?.boxdata.datas[setting.id] || []}`)
+          : dataVal;
+      } catch (e) {
+        console.log(e);
+      }
+    });
+    form.reset(defaultValues);
+  }, [initialState?.boxdata]);
 
   return (
     <ProForm
@@ -24,33 +45,18 @@ const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
       noValidate
       onSubmit={(formData) => {
         const formValue: { key: string; val: any }[] = [];
-
         Object.keys(formData).forEach((key) => {
-          const id = key.replace("*", ".");
+          const id = key.replaceAll("~", ".");
           const initialValue = initialState?.boxdata.datas[id];
           let val: any = formData[key];
-          if (
-            typeof formData[key] === "object" &&
-            typeof initialValue === "string"
-          ) {
+          if (typeof val === "object" && typeof initialValue === "string") {
             try {
-              const data: any[] = JSON.parse(
-                initialState?.boxdata.datas[id] || "[]"
-              );
-              formData[key].forEach((item: any, index: number) => {
-                data[index] = item;
-              });
-              val = JSON.stringify(data);
+              val = JSON.stringify(val, null, ` `);
             } catch (e) {
               val = formData[key].join(",");
             }
           } else if (typeof formData[key] === "boolean") {
             val = `${formData[key]}`;
-          } else if (
-            formData[key] === undefined &&
-            initialState?.boxdata.datas[id]
-          ) {
-            val = initialValue;
           }
           formValue.push({ key: id, val });
         });
@@ -62,9 +68,9 @@ const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
         {formConfig.map((setting) => {
           return (
             <FormType
+              form={form}
               key={setting.id}
               setting={setting}
-              register={form.register}
               itemValue={initialState?.boxdata.datas}
             />
           );
