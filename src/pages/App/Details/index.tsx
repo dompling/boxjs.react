@@ -24,6 +24,7 @@ import {
 import $copy from "copy-to-clipboard";
 import React, { useState } from "react";
 import uuid from "react-uuid";
+import { colorText } from "@/utils";
 
 const CusBadge = styled(Badge)(({ theme }) => ({
   right: "unset",
@@ -128,7 +129,7 @@ export default function Page() {
   curSessionApp?.datas.forEach((item) => {
     curAppValues[item.key] = item.val;
   });
-
+  const usercfgs = initialState?.boxdata.usercfgs;
   const sessionIndex = sessions?.findIndex(
     (item) => item?.id === curSessionApp?.id
   );
@@ -161,6 +162,7 @@ export default function Page() {
           variant="h6"
           p={2}
           component={"span"}
+          sx={colorText(usercfgs?.bgimg)}
           onClick={() => {
             let url = app.script || app.scripts?.[0]?.script || "";
             if (!url) return;

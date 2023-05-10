@@ -1,5 +1,6 @@
 import moment from "moment";
 import React from "react";
+import { Theme } from "@mui/system";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: (type: "dark" | "light" | "auto") => {
@@ -12,6 +13,15 @@ export function getMediaMode() {
     ? "light"
     : "dark";
 }
+
+export const colorText = (img?: string) => {
+  return img
+    ? {
+        textShadow: "black 0.1em 0.1em 0.2em",
+        color: (theme: Theme) => theme.palette.common.white,
+      }
+    : {};
+};
 
 export const ROOT_PATH = `${process.env.ROOT_PATH}`;
 

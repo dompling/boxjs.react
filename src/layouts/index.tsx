@@ -7,6 +7,7 @@ import { Outlet, useLocation, useModel } from "@@/exports";
 import { Alert, Box, Container, Slide, Snackbar } from "@mui/material";
 import VConsole from "vconsole";
 
+import config from "@/utils/config";
 import { useEffect } from "react";
 import styles from "./index.less";
 
@@ -17,7 +18,7 @@ export default function Layout() {
   const tipState = useModel("alert");
   const log = useModel("log");
   const { initialState } = useModel("@@initialState");
-  const { fetchRunScript } = useModel("api");
+  const { fetchRunScript, fetchSave } = useModel("api");
 
   const onClose = () => {
     tipState.alert({});
@@ -53,11 +54,34 @@ export default function Layout() {
     } else if (!initialState?.boxdata?.usercfgs.isVConsole && vConsole) {
       vConsole?.destroy?.();
     }
-  }, [initialState?.boxdata?.usercfgs.isVConsole]);
+
+    if (initialState?.boxdata.usercfgs.isWallpaperMode) {
+      setTimeout(() => {
+        fetchSave.run([
+          {
+            key: config.userCfgs,
+            val: JSON.stringify({
+              ...initialState?.boxdata.usercfgs,
+              isWallpaperMode: false,
+            }),
+          },
+        ]);
+      }, 3000);
+    }
+  }, [
+    initialState?.boxdata?.usercfgs.isVConsole,
+    initialState?.boxdata.usercfgs.isWallpaperMode,
+  ]);
 
   return (
     <ToggleColorMode>
-      <Box className={styles.container}>
+      <Box
+        className={
+          initialState?.boxdata?.usercfgs.isWaitToggleSearchBar
+            ? styles.container_top
+            : styles.container
+        }
+      >
         {!["/my"].includes(location.pathname) && <HeaderContent />}
         <BoxJSActions />
         <div
@@ -73,7 +97,9 @@ export default function Layout() {
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             backgroundColor: "transparent",
-            backgroundImage: `linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${bgimg}?_=${initialState?.random})`,
+            backgroundImage: bgimg
+              ? `linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${bgimg}?_=${initialState?.random})`
+              : undefined,
           }}
         />
         <Container
@@ -83,7 +109,8 @@ export default function Layout() {
             styles[location.pathname.replace("/", "")]
           }`}
         >
-          <Outlet />
+          {!initialState?.boxdata.usercfgs.isWallpaperMode ? <Outlet /> : null}
+
           {tipState.options?.type ? (
             <Snackbar
               className={styles.alert}

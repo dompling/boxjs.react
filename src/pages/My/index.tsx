@@ -42,6 +42,7 @@ import {
 import QueueAnim from "rc-queue-anim";
 import { useState } from "react";
 import styles from "./index.less";
+import { colorText } from "@/utils";
 
 export default function Page() {
   const { initialState } = useModel("@@initialState");
@@ -374,14 +375,20 @@ export default function Page() {
             handleVisible("setting", true);
           }}
         >
-          <SettingsSuggestIcon color="primary" />
+          <SettingsSuggestIcon
+            color="primary"
+            sx={colorText(usercfgs?.bgimg)}
+          />
         </IconButton>
       </Box>
       <Box pl={2} pr={2} pt={2}>
         <Stack spacing={2}>
           {settings.map((setting, index) => {
             return (
-              <QueueAnim key={`group-${index}`} appear={!!initialState?.boxdata.usercfgs.isAnimate}>
+              <QueueAnim
+                key={`group-${index}`}
+                appear={!!initialState?.boxdata.usercfgs.isAnimate}
+              >
                 <Typography
                   variant="body2"
                   key={`title-${index}`}

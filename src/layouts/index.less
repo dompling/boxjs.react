@@ -1,5 +1,6 @@
 
-.container {
+.container, .container_top {
+
   .content {
     min-height: 100vh;
     overflow-x: hidden;
@@ -24,6 +25,19 @@
     top: calc(1rem + env(safe-area-inset-top));
     left: 1.5rem !important;
     right: 1.5rem !important;
+  }
+}
+
+.container_top {
+  .content {
+    padding-top: calc(0.5rem + constant(safe-area-inset-top));
+    padding-top: calc(0.5rem + env(safe-area-inset-top));
+  }
+
+  .my {
+    padding-top: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
 

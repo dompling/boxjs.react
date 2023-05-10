@@ -30,7 +30,7 @@ export interface UI {
 export async function getInitialState(): Promise<Initial> {
   const boxdata = await getAllData();
   let apps: boxjs.App[] = [...boxdata.sysapps];
-  boxdata.usercfgs.appsubs.forEach((item) => {
+  boxdata.usercfgs.appsubs.forEach((item: any) => {
     if (boxdata.appSubCaches[item.url]) {
       apps = [...apps, ...boxdata.appSubCaches[item.url].apps];
     }

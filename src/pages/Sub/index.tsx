@@ -1,5 +1,5 @@
 import AddSubs from "@/pages/Sub/components/AddSub";
-import { getCommentTime } from "@/utils";
+import { colorText, getCommentTime } from "@/utils";
 import config from "@/utils/config";
 import { useModel, useSearchParams } from "@@/exports";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -79,6 +79,7 @@ export default function Page() {
   const boxdata = initialState?.boxdata;
   const appsubs = boxdata?.usercfgs.appsubs || [];
   const appSubCaches = boxdata?.appSubCaches || {};
+  const usercfgs = initialState?.boxdata.usercfgs;
 
   useEffect(() => {
     setSearchParams({});
@@ -88,7 +89,9 @@ export default function Page() {
     <Box sx={{ paddingTop: 2 }}>
       <AddSubs open={open} onClose={() => setOpen(false)} />
       <Stack direction={"row"} justifyContent={"space-between"}>
-        <Typography variant="h5">应用订阅</Typography>
+        <Typography variant="h5" sx={colorText(usercfgs?.bgimg)}>
+          应用订阅
+        </Typography>
         <Stack direction={"row"} spacing={2}>
           <IconButton
             color="primary"
