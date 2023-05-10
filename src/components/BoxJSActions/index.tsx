@@ -26,7 +26,6 @@ const CusSpeedDial = styled(SpeedDial)(({ open }) => {
 const BoxJSActions: React.FC = () => {
   const [open, setOpen] = useState(false);
   const { initialState } = useModel("@@initialState");
-  const { fetchAllData } = useModel("api");
   const boxjs = initialState?.boxdata.syscfgs.boxjs;
   const usercfgs = initialState?.boxdata?.usercfgs;
 
