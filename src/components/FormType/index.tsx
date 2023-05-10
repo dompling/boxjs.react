@@ -178,7 +178,9 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
                     sx={{ m: 1 }}
                     disabled={data.disabled}
                     checked={
-                      field.value === "true" || field.value ? true : false
+                      field.value === "true" || field.value === true
+                        ? true
+                        : false
                     }
                     onChange={(e) => field.onChange(e.target.checked)}
                   />
