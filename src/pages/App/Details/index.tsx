@@ -1,6 +1,7 @@
 import DetailForm from "@/pages/App/Details/components/DetailForm";
 import EditForm from "@/pages/App/Details/components/EditForm";
 import { history, useModel, useParams } from "@@/exports";
+import CloseIcon from "@mui/icons-material/Close";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
@@ -318,6 +319,7 @@ export default function Page() {
                     <ListItemText
                       primary={item.key}
                       primaryTypographyProps={{
+                        noWrap: true,
                         variant: "caption",
                         sx: { fontWeight: "bold" },
                       }}
@@ -328,12 +330,25 @@ export default function Page() {
                           noWrap
                           component={"div"}
                         >
-                          {(typeof item.val === "object"
+                          {(typeof item.val === "object" && !!item.val
                             ? JSON.stringify(item.val)
                             : item.val) || "无数据"}
                         </Typography>
                       }
                     />
+                    <IconButton
+                      onClick={() => {
+                        const datas = [...(curSession?.datas || [])];
+                        const curIndex = datas.findIndex(
+                          (cur: any) => cur.key === item.key
+                        );
+
+                        datas[curIndex].val = "";
+                        fetchSave.run(datas);
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
                   </ListItem>
                 );
               })}

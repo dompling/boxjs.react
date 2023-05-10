@@ -3,20 +3,24 @@ import { uuid } from "uuidv4";
 
 export const getAllData = () => {
   return request<boxjs.data>("/query/boxdata").then((response: any) => {
-    return (
-      response === "BoxJs"
-        ? {
-            datas: {},
-            usercfgs: {},
-            sessions: [],
-            curSessions: {},
-            sysapps: [],
-            syscfgs: {},
-            appSubCaches: {},
-            globalbaks: [],
-          }
-        : response
-    ) as boxjs.data;
+    if (response === "BoxJs") {
+      return {
+        datas: {},
+        usercfgs: {},
+        sessions: [],
+        curSessions: {},
+        sysapps: [],
+        syscfgs: {},
+        appSubCaches: {},
+        globalbaks: [],
+      };
+    }
+
+    if (!response.sessions || !Array.isArray(response.sessions)) {
+      response.sessions = [];
+    }
+
+    return response;
   });
 };
 
