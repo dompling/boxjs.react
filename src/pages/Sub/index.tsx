@@ -25,7 +25,7 @@ import $copy from "copy-to-clipboard";
 import update from "immutability-helper";
 import QueueAnim from "rc-queue-anim";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { DndProvider, XYCoord, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import styles from "./index.less";
@@ -81,6 +81,7 @@ const SubItem: React.FC<{
   moveCard: (id: string, to: number) => void;
   findCard: (id: string) => { index: number };
 }> = ({ appItem, index, findCard, moveCard, data }) => {
+  const divRef = useRef<HTMLDivElement>(null);
   const { initialState } = useModel("@@initialState");
   const { fetchReloadAppSub, fetchSave } = useModel("api");
   const tip = useModel("alert");
@@ -88,7 +89,7 @@ const SubItem: React.FC<{
 
   const originalIndex = findCard(id).index;
 
-  const [{ isDragging }, drag] = useDrag(
+  const [{ isDragging }, drag, preview] = useDrag(
     () => ({
       type: "grid",
       item: { id, originalIndex },
@@ -99,9 +100,10 @@ const SubItem: React.FC<{
         };
       },
       end: (item, monitor) => {
-        const { id: droppedId, originalIndex } = item;
+        const { id: droppedId } = item;
         const didDrop = monitor.didDrop();
-        if (!didDrop) moveCard(droppedId, originalIndex);
+        if (item.originalIndex === originalIndex) return;
+        if (!didDrop) moveCard(droppedId, item.originalIndex);
         fetchSave.run([
           {
             key: config.userCfgs,
@@ -119,26 +121,68 @@ const SubItem: React.FC<{
   const [, drop] = useDrop(
     () => ({
       accept: "grid",
-      hover({ id: draggedId }: any) {
-        if (draggedId !== id) {
-          const { index: overIndex } = findCard(id);
-          moveCard(draggedId, overIndex);
+      hover(item: any, monitor) {
+        if (!divRef.current) return;
+        const dragIndex = item.index;
+        const hoverIndex = index;
+
+        // Don't replace items with themselves
+        if (dragIndex === hoverIndex) return;
+
+        // Determine rectangle on screen
+        const hoverBoundingRect = divRef.current?.getBoundingClientRect();
+
+        // Get vertical middle
+        const hoverMiddleY =
+          (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+        // Determine mouse position
+        const clientOffset = monitor.getClientOffset();
+
+        // Get pixels to the top
+        const hoverClientY =
+          (clientOffset as XYCoord).y - hoverBoundingRect.top;
+
+        // Only perform the move when the mouse has crossed half of the items height
+        // When dragging downwards, only move when the cursor is below 50%
+        // When dragging upwards, only move when the cursor is above 50%
+
+        // Dragging downwards
+        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+          return;
         }
+
+        // Dragging upwards
+        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+          return;
+        }
+
+        moveCard(item.id, hoverIndex);
+        item.index = hoverIndex;
+
+        // if (item.draggedId !== id) {
+        //   const { index: overIndex } = findCard(id);
+
+        // }
       },
     }),
     [findCard, moveCard]
   );
 
   const opacity = isDragging ? 0 : 1;
+  drag(drop(divRef));
 
   return (
     <>
       <Box
+        ref={preview}
         sx={{
           marginBottom: 2,
           boxSizing: "border-box",
           opacity,
           transform: isDragging ? `translate(0,0)` : "unset",
+          zIndex: isDragging ? -1 : "unset",
+          position: "relative",
         }}
       >
         <Paper
@@ -185,11 +229,7 @@ const SubItem: React.FC<{
               </StyledBadge>
               <Stack sx={{ overflow: "hidden", flex: "1 1" }}>
                 <Stack>
-                  <Typography
-                    variant="body2"
-                    gutterBottom
-                    ref={(node: any) => drag(drop(node))}
-                  >
+                  <Typography variant="body2" gutterBottom ref={divRef}>
                     {appItem.name}
                   </Typography>
                   <DotBadge
