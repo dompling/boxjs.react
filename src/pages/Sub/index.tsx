@@ -375,7 +375,7 @@ function Page() {
   const dragItemId = collectedProps.dragItem?.id;
   const dragItem = { ...appSubCaches[dragItemId], url: dragItemId };
   const divClient = divRef.current?.getBoundingClientRect();
-  console.log(divClient);
+
   return (
     <Box component={"div"}>
       <AddSubs open={open} onClose={() => setOpen(false)} />
