@@ -1,30 +1,30 @@
 import config from "@/utils/config";
-import { history,useModel } from "@@/exports";
+import { history, useModel } from "@@/exports";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
-AccordionProps,
-AccordionSummaryProps,
-Avatar,
-IconButton,
-List,
-ListItem,
-ListItemAvatar,
-ListItemButton,
-ListItemText,
-Accordion as MuiAccordion,
-AccordionDetails as MuiAccordionDetails,
-AccordionSummary as MuiAccordionSummary,
-Paper,
-Stack,
-Typography,
-styled,
+  AccordionProps,
+  AccordionSummaryProps,
+  Avatar,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Accordion as MuiAccordion,
+  AccordionDetails as MuiAccordionDetails,
+  AccordionSummary as MuiAccordionSummary,
+  Paper,
+  Stack,
+  Typography,
+  styled,
 } from "@mui/material";
 import QueueAnim from "rc-queue-anim";
-import React,{ SyntheticEvent,useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -145,13 +145,17 @@ export default function Page() {
             elevation={3}
             sx={{
               mb: 2,
-              borderRadius: (theme) => theme.spacing(2),
               overflow: "hidden",
+              borderRadius: (theme) => theme.spacing(2),
             }}
           >
             <Accordion
               expanded={expanded === item.id}
               onChange={handleChange(item.id)}
+              sx={{
+                borderRadius: (theme) => theme.spacing(2),
+                overflow: "hidden",
+              }}
             >
               <AccordionSummary aria-controls={item.id} id={item.id}>
                 <Stack
@@ -182,7 +186,7 @@ export default function Page() {
               </AccordionSummary>
 
               <AccordionDetails sx={{ padding: 0 }}>
-                <QueueAnim  type={["top", "bottom"]} leaveReverse>
+                <QueueAnim type={["top", "bottom"]} leaveReverse>
                   {expanded === item.id ? (
                     <List
                       key={"app_list"}

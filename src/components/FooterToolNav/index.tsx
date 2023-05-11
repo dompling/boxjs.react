@@ -67,11 +67,21 @@ const FooterToolNav: React.FC = () => {
   };
 
   return (
-    <QueueAnim type={["bottom", "bottom"]} appear={!!initialState?.boxdata.usercfgs.isAnimate}>
+    <QueueAnim
+      type={["bottom", "bottom"]}
+      appear={!!initialState?.boxdata.usercfgs.isAnimate}
+    >
       {!initialState?.boxdata.usercfgs.isHidedNaviBottom ? (
-        <Box className={styles.footer_container}>
+        <Box
+          className={
+            !boxdata?.usercfgs.isTraditionalMenu
+              ? styles.footer_container
+              : styles.footer_container_tow
+          }
+        >
           <Paper
             key={"paper"}
+            className={styles.footer_bar}
             sx={{
               borderRadius: 7,
               overflow: "hidden",

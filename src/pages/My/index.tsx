@@ -5,6 +5,7 @@ import ModalSettingForm from "@/pages/My/components/ModalSettingForm";
 import ModalBackgroundForm from "@/pages/My/components/ModalBackgroundForm";
 import ModalHttpApiForm from "@/pages/My/components/ModalHttpApiForm";
 import ModalThemeForm from "@/pages/My/components/ModalThemeForm";
+import { colorText } from "@/utils";
 import config from "@/utils/config";
 import { useModel } from "@@/exports";
 import ApiIcon from "@mui/icons-material/Api";
@@ -18,6 +19,7 @@ import Face5Icon from "@mui/icons-material/Face5";
 import ImageIcon from "@mui/icons-material/Image";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -42,7 +44,6 @@ import {
 import QueueAnim from "rc-queue-anim";
 import { useState } from "react";
 import styles from "./index.less";
-import { colorText } from "@/utils";
 
 export default function Page() {
   const { initialState } = useModel("@@initialState");
@@ -122,16 +123,12 @@ export default function Page() {
           id: "isHidedNaviBottom",
           icon: <BorderBottomIcon sx={{ color: colors.lime[400] }} />,
         },
-        // {
-        //   label: '自动顶栏',
-        //   type: 'switch',
-        //   id: 'isAutoSearchBar',
-        //   icon: (
-        //     <AlignVerticalTopOutlinedIcon
-        //       sx={{ color: colors.blueGrey[400] }}
-        //     />
-        //   ),
-        // },
+        {
+          label: "传统菜单",
+          type: "switch",
+          id: "isTraditionalMenu",
+          icon: <MenuOpenIcon sx={{ color: colors.blueGrey[400] }} />,
+        },
         // {
         //   type: 'switch',
         //   label: '自动底栏',

@@ -1,5 +1,5 @@
 
-.footer_container {
+.footer_container, .footer_container_tow {
   padding-bottom: calc(12px + constant(safe-area-inset-bottom) / 2) !important;
   padding-bottom: calc(12px + env(safe-area-inset-bottom) / 2) !important;
   position: fixed;
@@ -9,4 +9,14 @@
   z-index: 99;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+}
+
+.footer_container_tow {
+  padding: 0 !important;
+
+  .footer_bar {
+    padding-bottom: calc(constant(safe-area-inset-bottom) / 2) !important;
+    padding-bottom: calc(env(safe-area-inset-bottom) / 2) !important;
+    border-radius: unset;
+  }
 }

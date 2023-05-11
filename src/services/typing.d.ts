@@ -17,7 +17,7 @@ declare namespace boxjs {
     isPinedSearchBar: boolean;
     httpapi: string;
     http_backend: string;
-    theme: 'light' | 'dark' | 'auto';
+    theme: "light" | "dark" | "auto";
     isLeftBoxIcon: boolean;
     isHideRefresh: boolean;
     name: string;
@@ -121,7 +121,8 @@ declare namespace boxjs {
   }
 
   export interface usercfgs {
-    isAnimate:boolean;
+    isAnimate: boolean;
+    isTraditionalMenu: boolean;
     favapps: string[];
     appsubs: Appsub[];
     viewkeys: string[];
@@ -208,14 +209,14 @@ declare namespace boxjs {
     name: string;
     val: any;
     type:
-      | 'text'
-      | 'textarea'
-      | 'selects'
-      | 'boolean'
-      | 'radios'
-      | 'checkboxes'
-      | 'colorpicker'
-      | 'number';
+      | "text"
+      | "textarea"
+      | "selects"
+      | "boolean"
+      | "radios"
+      | "checkboxes"
+      | "colorpicker"
+      | "number";
     desc: string;
     disabled?: boolean;
     items?: Item[];
@@ -244,39 +245,35 @@ declare namespace boxjs {
   }
 }
 
-
-declare namespace Surge{
+declare namespace Surge {
   export interface Scripts {
-    scripts: Script[]
+    scripts: Script[];
   }
 
   export interface Script {
-    path: string
-    enabled: boolean
-    name: string
-    type: string
-    parameters: Parameters
+    path: string;
+    enabled: boolean;
+    name: string;
+    type: string;
+    parameters: Parameters;
   }
 
   export interface Parameters {
-    pattern?: string
-    "requires-body"?: string
-    type: string
-    "script-path": string
-    timeout?: string
-    "max-size"?: string
-    "script-update-interval"?: string
-    "binary-body-mode"?: string
-    debug?: string
-    cronexp?: string
-    "wake-system"?: string
+    pattern?: string;
+    "requires-body"?: string;
+    type: string;
+    "script-path": string;
+    timeout?: string;
+    "max-size"?: string;
+    "script-update-interval"?: string;
+    "binary-body-mode"?: string;
+    debug?: string;
+    cronexp?: string;
+    "wake-system"?: string;
   }
-
 
   export interface Modules {
-    enabled: string[]
-    available: string[]
+    enabled: string[];
+    available: string[];
   }
-
-
 }
