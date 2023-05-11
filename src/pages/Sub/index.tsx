@@ -142,8 +142,6 @@ const SubItem: React.FC<{
         }}
       >
         <Paper
-          component={"div"}
-          ref={(node: any) => drag(drop(node))}
           className={styles.dynamics}
           elevation={3}
           sx={{
@@ -187,7 +185,11 @@ const SubItem: React.FC<{
               </StyledBadge>
               <Stack sx={{ overflow: "hidden", flex: "1 1" }}>
                 <Stack>
-                  <Typography variant="body2" gutterBottom>
+                  <Typography
+                    variant="body2"
+                    gutterBottom
+                    ref={(node: any) => drag(drop(node))}
+                  >
                     {appItem.name}
                   </Typography>
                   <DotBadge
