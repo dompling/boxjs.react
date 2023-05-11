@@ -177,7 +177,7 @@ const GridItem: React.FC<{
       {isDragging && initialState?.isMobile && (
         <Stack
           sx={{
-            zIndex: 5,
+            zIndex: -1,
             opacity: 0.5,
             position: "fixed",
             left: offset?.x,
