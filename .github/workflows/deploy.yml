@@ -6,7 +6,7 @@ on:
     paths-ignore: # 下列文件的变更不触发部署，可以自行添加
       - README.md
 
-#jobs:
+jobs:
 #  check-branch:
 #    runs-on: ubuntu-latest
 #    steps:
