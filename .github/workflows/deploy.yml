@@ -37,26 +37,12 @@ jobs:
         uses: actions/checkout@v2
 
       # 打包构建
-      - name: Setup Node
+      - name: Build
         uses: actions/setup-node@master
         with:
           node-version: '16.x'
-
-      - name: Cache node_modules
-        id: cache-node-modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ matrix.node-version }}-nodeModules-${{ hashFiles('package-lock.json') }}-${{ hashFiles('package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.node-version }}-nodeModules-
-
-      - name: Install dependencies 📦️
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: |
-          npm install
-          npm install -g yarn
-
+      - run: npm install -g yarn # 安装依赖
+      - run: yarn install # 安装依赖
       - run: yarn build # 打包
 
       # 部署到 GitHub pages
