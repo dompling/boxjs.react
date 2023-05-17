@@ -11,9 +11,6 @@ jobs:
   deploy:
     if: github.repository == 'dompling/boxjs.react'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [ 16.13.1 ]  # 把 node.js 版本記錄在這，之後可以重新取出作為 cache key
 
     steps:
 
@@ -26,15 +23,14 @@ jobs:
       - name: Build
         uses: actions/setup-node@master
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "16.x"
         run: npm install -g yarn # 安装依赖
 
       - name: Cache Node Modules
         uses: actions/cache@v2
         with:
           path: node_modules
-          # cache key 包含了所有我們希望固定的資訊：OS，node 版本，以及 package-lock.json 的檔案內容，使用 hashFiles 將檔案內容轉換成字串
-          key: node-modules-${{ runner.os }}-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
       - name: Install Packages
         if: steps.cache.outputs.cache-hit != 'true'
