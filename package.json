@@ -23,6 +23,7 @@
     "moment": "^2.29.4",
     "monaco-editor": "^0.38.0",
     "rc-queue-anim": "^2.0.0",
+    "rc-tween-one": "^3.0.6",
     "react-color": "^2.19.3",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",

@@ -77,7 +77,7 @@ export default function Database() {
                   type: "warning",
                 });
               fetchDataKey.run(key).then((response) => {
-                if (response.val) form.setValue("data", response.val);
+                form.setValue("data", response.val);
               });
             }}
           >
