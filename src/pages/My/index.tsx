@@ -24,6 +24,8 @@ import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import WallpaperIcon from "@mui/icons-material/Wallpaper";
 import {
@@ -41,13 +43,16 @@ import {
   colors,
   useTheme,
 } from "@mui/material";
+import moment from "moment";
 import QueueAnim from "rc-queue-anim";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./index.less";
 
 export default function Page() {
   const { initialState } = useModel("@@initialState");
+  const tip = useModel("alert");
   const [visible, setVisible] = useState<Record<string, boolean>>({});
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleVisible = (key: string, val?: true) => {
     setVisible({ ...visible, [key]: !!val });
@@ -202,14 +207,32 @@ export default function Page() {
           icon: <AutoAwesomeIcon sx={{ color: colors.cyan[400] }} />,
         },
 
-        // {
-        //   type: "select",
-        //   label: "调试网址",
-        //   id: "debugger_web",
-        //   val: usercfgs?.debugger_web,
-        //   onClick: () => handleVisible(`debugger_web`, true),
-        //   icon: <LinkIcon sx={{ color: colors.teal[400] }} />,
-        // },
+        {
+          type: "select",
+          label: "下载数据备份",
+          id: "download",
+          onClick: () => {
+            const boxdataJson = JSON.stringify(initialState?.boxdata, null, 2);
+            const blob = new Blob([boxdataJson], { type: "application/json" });
+            const now = moment().format("YYYY_MM_DD_HH_mm_ss");
+            let fileName = `${now}_boxdata.json`;
+            let objectUrl = URL.createObjectURL(blob);
+            let link = document.createElement("a");
+            link.href = objectUrl;
+            link.setAttribute("download", fileName);
+            document.body.appendChild(link);
+            link.click();
+            window.URL.revokeObjectURL(link.href);
+          },
+          icon: <SimCardDownloadIcon sx={{ color: colors.teal[400] }} />,
+        },
+        {
+          type: "select",
+          label: "上传本地备份",
+          id: "upload",
+          onClick: () => inputRef.current?.click(),
+          icon: <UploadFileRoundedIcon sx={{ color: colors.teal[400] }} />,
+        },
       ],
     },
   ];
@@ -452,6 +475,58 @@ export default function Page() {
             );
           })}
         </Stack>
+        <input
+          ref={inputRef}
+          type={"file"}
+          style={{ display: "none" }}
+          onChange={() => {
+            const files = inputRef.current?.files;
+            if (!files?.length)
+              return tip.alert({ message: "请选择文件", type: "error" });
+            const reader = new FileReader(); //新建一个FileReader
+            reader.readAsText(files[0], "UTF-8"); //读取文件
+            reader.onload = (evt) => {
+              //读取完文件之后会回来这里
+              const fileString: any = evt?.target?.result; // 读取文件内容
+              try {
+                const boxjs_data = JSON.parse(fileString) as boxjs.data;
+                fetchSave
+                  .run([
+                    {
+                      key: config.userCfgs,
+                      val: JSON.stringify(boxjs_data.usercfgs),
+                    },
+                    {
+                      key: config.sessions,
+                      val: JSON.stringify(boxjs_data.sessions),
+                    },
+                    {
+                      key: config.cursessions,
+                      val: JSON.stringify(boxjs_data.curSessions),
+                    },
+                    {
+                      key: config.backups,
+                      val: JSON.stringify(boxjs_data.globalbaks),
+                    },
+                    {
+                      key: config.app_subCaches,
+                      val: JSON.stringify(boxjs_data.appSubCaches),
+                    },
+                  ])
+                  .then(() => {
+                    const datas: any[] = [];
+                    Object.keys(boxjs_data.datas).forEach((key) => {
+                      datas.push([{ key, val: boxjs_data.datas[key] }]);
+                    });
+                    fetchSave.run(datas);
+                  });
+              } catch (e) {
+                console.log(e);
+                tip.alert({ message: "备份恢复失败", type: "error" });
+              }
+            };
+          }}
+        />
       </Box>
     </Box>
   );
