@@ -45,7 +45,7 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import QueueAnim from "rc-queue-anim";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./index.less";
 
 export default function Page() {
@@ -273,6 +273,22 @@ export default function Page() {
     ]);
   };
 
+  useEffect(() => {
+    if (initialState?.boxdata.usercfgs) {
+      const isChecked: string[] = [];
+      settings.forEach((item) => {
+        item.data.forEach((setting) => {
+          if (
+            initialState?.boxdata.usercfgs[setting.id] &&
+            setting.type === "switch"
+          )
+            isChecked.push(setting.id);
+        });
+      });
+      setChecked(isChecked);
+    }
+  }, [initialState?.boxdata.usercfgs]);
+
   return (
     <Box>
       <ModalThemeForm
@@ -485,41 +501,43 @@ export default function Page() {
               return tip.alert({ message: "请选择文件", type: "error" });
             const reader = new FileReader(); //新建一个FileReader
             reader.readAsText(files[0], "UTF-8"); //读取文件
-            reader.onload = (evt) => {
+            reader.onload = async (evt) => {
               //读取完文件之后会回来这里
               const fileString: any = evt?.target?.result; // 读取文件内容
               try {
                 const boxjs_data = JSON.parse(fileString) as boxjs.data;
-                fetchSave
-                  .run([
-                    {
-                      key: config.userCfgs,
-                      val: JSON.stringify(boxjs_data.usercfgs),
-                    },
-                    {
-                      key: config.sessions,
-                      val: JSON.stringify(boxjs_data.sessions),
-                    },
-                    {
-                      key: config.cursessions,
-                      val: JSON.stringify(boxjs_data.curSessions),
-                    },
-                    {
-                      key: config.backups,
-                      val: JSON.stringify(boxjs_data.globalbaks),
-                    },
-                    {
-                      key: config.app_subCaches,
-                      val: JSON.stringify(boxjs_data.appSubCaches),
-                    },
-                  ])
-                  .then(() => {
-                    const datas: any[] = [];
-                    Object.keys(boxjs_data.datas).forEach((key) => {
-                      datas.push([{ key, val: boxjs_data.datas[key] }]);
-                    });
-                    fetchSave.run(datas);
-                  });
+                const fetchRun = [
+                  {
+                    key: config.userCfgs,
+                    val: JSON.stringify(boxjs_data.usercfgs),
+                  },
+                  {
+                    key: config.sessions,
+                    val: JSON.stringify(boxjs_data.sessions),
+                  },
+                  {
+                    key: config.cursessions,
+                    val: JSON.stringify(boxjs_data.curSessions),
+                  },
+                  {
+                    key: config.backups,
+                    val: JSON.stringify(boxjs_data.globalbaks),
+                  },
+                  {
+                    key: config.app_subCaches,
+                    val: JSON.stringify(boxjs_data.appSubCaches),
+                  },
+                ];
+
+                for (const fetchRunKey of fetchRun) {
+                  await fetchSave.run(fetchRunKey);
+                }
+
+                const datas: any[] = [];
+                Object.keys(boxjs_data.datas).forEach((key) => {
+                  datas.push([{ key, val: boxjs_data.datas[key] }]);
+                });
+                await fetchSave.run(datas);
               } catch (e) {
                 console.log(e);
                 tip.alert({ message: "备份恢复失败", type: "error" });
