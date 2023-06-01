@@ -78,9 +78,10 @@ const SubItem: React.FC<{
   index: number;
   appItem: boxjs.appSubCaches & boxjs.Appsub;
   data?: (boxjs.Appsub | undefined)[];
+  setCards:any;
   moveCard: (id: string, to: number) => void;
   findCard: (id: string) => { index: number };
-}> = ({ appItem, index, findCard, moveCard, data }) => {
+}> = ({ appItem, index, findCard, moveCard, data,setCards }) => {
   const divRef = useRef<HTMLDivElement>(null);
   const { initialState } = useModel("@@initialState");
   const { fetchReloadAppSub, fetchSave } = useModel("api");
@@ -313,6 +314,7 @@ const SubItem: React.FC<{
                 onClick={() => {
                   const appsubs = initialState?.boxdata.usercfgs.appsubs;
                   appsubs?.splice(index, 1);
+                  setCards(appsubs);
                   if (initialState)
                     fetchSave.run([
                       {
@@ -350,6 +352,7 @@ const DropRef: React.FC<{
   index: number;
   appItem: boxjs.appSubCaches & boxjs.Appsub;
   data?: (boxjs.Appsub | undefined)[];
+  setCards:any;
   moveCard: (id: string, to: number) => void;
   findCard: (id: string) => { index: number };
 }> = React.forwardRef((props, ref: any) => (
@@ -376,6 +379,7 @@ function Page() {
   const appsubs = boxdata?.usercfgs.appsubs || [];
   const appSubCaches = boxdata?.appSubCaches || {};
   const usercfgs = initialState?.boxdata.usercfgs;
+
   const [cards, setCards] = useState<boxjs.Appsub[]>(appsubs || []);
   const [mouse, setMouse] = useState<{ x: number; y: number }>();
   const findCard = useCallback(
@@ -475,6 +479,7 @@ function Page() {
               appItem={appItem}
               findCard={findCard}
               moveCard={moveCard}
+              setCards={setCards}
             />
           );
         })}
