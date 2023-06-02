@@ -538,6 +538,7 @@ export default function Page() {
                   datas.push([{ key, val: boxjs_data.datas[key] }]);
                 });
                 await fetchSave.run(datas);
+                tip.alert({ message: "备份恢复成功", type: "success" });
               } catch (e) {
                 console.log(e);
                 tip.alert({ message: "备份恢复失败", type: "error" });
