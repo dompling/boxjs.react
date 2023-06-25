@@ -9,6 +9,7 @@ on:
 jobs:
 
   deploy:
+    if: github.repository == 'dompling/boxjs.react'
     runs-on: ubuntu-latest
 
     steps:
