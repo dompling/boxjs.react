@@ -36,6 +36,7 @@ const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
         console.log(e);
       }
     });
+    console.log(defaultValues);
     form.reset(defaultValues);
   }, [initialState?.boxdata]);
 

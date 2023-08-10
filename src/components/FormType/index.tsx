@@ -200,7 +200,8 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
             {...formItemProps}
             render={({ field }) => {
               const isStr = typeof field.value === "string";
-              const fieldValue = isStr ? field.value.split(",") : field.value;
+              const fieldValue =
+                (isStr ? field.value.split(",") : field.value) || [];
               return (
                 <>
                   {data.items?.map((checkbox) => {
@@ -209,9 +210,10 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
                         key={checkbox.key}
                         control={
                           <Checkbox
-                            checked={fieldValue.includes(checkbox.key)}
+                            checked={fieldValue?.includes(checkbox.key)}
                             onChange={(e) => {
                               let newValue: string[] = fieldValue;
+
                               if (e.target.checked) {
                                 newValue.push(checkbox.key);
                               } else {
