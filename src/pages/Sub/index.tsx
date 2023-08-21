@@ -13,7 +13,13 @@ import {
   Avatar,
   Badge,
   Box,
+  Button,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   IconButton,
   Paper,
   Stack,
@@ -78,14 +84,15 @@ const SubItem: React.FC<{
   index: number;
   appItem: boxjs.appSubCaches & boxjs.Appsub;
   data?: (boxjs.Appsub | undefined)[];
-  setCards:any;
+  setCards: any;
   moveCard: (id: string, to: number) => void;
   findCard: (id: string) => { index: number };
-}> = ({ appItem, index, findCard, moveCard, data,setCards }) => {
+}> = ({ appItem, index, findCard, moveCard, data, setCards }) => {
   const divRef = useRef<HTMLDivElement>(null);
   const { initialState } = useModel("@@initialState");
   const { fetchReloadAppSub, fetchSave } = useModel("api");
   const tip = useModel("alert");
+  const [open, setOpen] = useState<boolean>(false);
   const id = appItem.url;
 
   const originalIndex = findCard(id).index;
@@ -175,6 +182,100 @@ const SubItem: React.FC<{
 
   return (
     <>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          确定要删除当前订阅吗？
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Box>
+              <Stack direction="row" spacing={2}>
+                <StyledBadge
+                  variant="dot"
+                  overlap="circular"
+                  color={appItem.id ? "success" : "error"}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  sx={{ position: "relative" }}
+                >
+                  <Avatar
+                    src={appItem.icon}
+                    sx={{
+                      border: "1px solid #e8e8e8",
+                      width: 36,
+                      height: 36,
+                    }}
+                  />
+                  {(fetchReloadAppSub.fetches[appItem.id]?.loading ||
+                    fetchReloadAppSub.fetches[`all`]?.loading) && (
+                    <CircularProgress
+                      size={40}
+                      sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        marginTop: "-23px",
+                        marginLeft: "-20px",
+                      }}
+                    />
+                  )}
+                </StyledBadge>
+                <Stack sx={{ overflow: "hidden", flex: "1 1" }}>
+                  <Stack>
+                    <Typography variant="body2" gutterBottom ref={divRef}>
+                      {appItem.name}
+                    </Typography>
+                    <DotBadge
+                      color="primary"
+                      badgeContent={appItem?.apps?.length}
+                      sx={{ top: -15, right: 13 }}
+                    />
+                  </Stack>
+                  <Typography
+                    noWrap
+                    variant="body2"
+                    sx={{ color: colors.grey[500], fontSize: 12 }}
+                  >
+                    {appItem.repo}
+                  </Typography>
+                </Stack>
+              </Stack>
+            </Box>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color="inherit" onClick={() => setOpen(false)}>
+            取消
+          </Button>
+          <Button
+            color="error"
+            onClick={() => {
+              setOpen(false);
+              const appsubs = initialState?.boxdata.usercfgs.appsubs;
+              appsubs?.splice(index, 1);
+              setCards(appsubs);
+              if (initialState)
+                fetchSave.run([
+                  {
+                    key: config.userCfgs,
+                    val: JSON.stringify({
+                      ...initialState?.boxdata.usercfgs,
+                      appsubs,
+                    }),
+                  },
+                ]);
+            }}
+            autoFocus
+          >
+            确定
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Box
         ref={preview}
         sx={{
@@ -312,19 +413,7 @@ const SubItem: React.FC<{
                 color="error"
                 component="label"
                 onClick={() => {
-                  const appsubs = initialState?.boxdata.usercfgs.appsubs;
-                  appsubs?.splice(index, 1);
-                  setCards(appsubs);
-                  if (initialState)
-                    fetchSave.run([
-                      {
-                        key: config.userCfgs,
-                        val: JSON.stringify({
-                          ...initialState?.boxdata.usercfgs,
-                          appsubs,
-                        }),
-                      },
-                    ]);
+                  setOpen(true);
                 }}
               >
                 <DeleteOutlineIcon />
@@ -352,7 +441,7 @@ const DropRef: React.FC<{
   index: number;
   appItem: boxjs.appSubCaches & boxjs.Appsub;
   data?: (boxjs.Appsub | undefined)[];
-  setCards:any;
+  setCards: any;
   moveCard: (id: string, to: number) => void;
   findCard: (id: string) => { index: number };
 }> = React.forwardRef((props, ref: any) => (
