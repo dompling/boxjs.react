@@ -24,7 +24,7 @@ import {
   styled,
 } from "@mui/material";
 import QueueAnim from "rc-queue-anim";
-import React, { SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent, useEffect } from "react";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -68,6 +68,7 @@ const CusListItem = styled(ListItem)(() => ({
 }));
 
 export default function Page() {
+  const { expanded, setExpanded } = useModel("app");
   const { initialState } = useModel("@@initialState");
   const apps = initialState?.apps || [];
   const { fetchSave } = useModel("api");
@@ -126,12 +127,24 @@ export default function Page() {
     },
   ];
 
-  const [expanded, setExpanded] = useState<string | false>("panel1");
   const UI = initialState?.ui?.(initialState?.boxdata);
   const handleChange =
     (panel: string) => (event: SyntheticEvent, newExpanded: boolean) => {
-      setExpanded(newExpanded ? panel : false);
+      setExpanded(newExpanded ? panel : undefined);
     };
+
+  const scrollToId = (id: string) => {
+    const dom = document.getElementById(id);
+    if (dom) {
+      dom.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  useEffect(() => {
+    if (expanded) {
+      setTimeout(() => scrollToId(expanded), 1000);
+    }
+  }, []);
 
   return (
     <QueueAnim
@@ -166,6 +179,7 @@ export default function Page() {
                 >
                   {typeof item.icon === "string" ? (
                     <Avatar
+                      id={item.id}
                       src={item.icon}
                       sx={{
                         boxShadow: (theme) => theme.shadows[1],
@@ -173,6 +187,7 @@ export default function Page() {
                     />
                   ) : (
                     <Avatar
+                      id={item.id}
                       sx={{
                         boxShadow: (theme) => theme.shadows[1],
                         bgcolor: (theme) => theme.palette.primary.main,
