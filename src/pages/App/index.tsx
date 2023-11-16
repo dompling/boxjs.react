@@ -272,7 +272,7 @@ export default function Page() {
                                   pr: "0 !important",
                                 }}
                                 onClick={() => {
-                                  history.push(`/app/${app.id}/${app.author}`);
+                                  history.push(`/app/${app.id}`);
                                 }}
                               >
                                 <ListItemAvatar>

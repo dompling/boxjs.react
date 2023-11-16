@@ -1,27 +1,59 @@
 import { request } from "@umijs/max";
+import _ from "lodash";
 import uuid from "react-uuid";
 
-export const getAllData = () => {
-  return request<boxjs.data>("/query/boxdata").then((response: any) => {
-    if (response === "BoxJs") {
-      return {
-        datas: {},
-        usercfgs: {},
-        sessions: [],
-        curSessions: {},
-        sysapps: [],
-        syscfgs: {},
-        appSubCaches: {},
-        globalbaks: [],
-      };
-    }
+const responseCallback = (response: boxjs.data | string) => {
+  if (typeof response === "string") {
+    return {
+      datas: {},
+      usercfgs: {},
+      sessions: [],
+      curSessions: {},
+      sysapps: [],
+      syscfgs: {},
+      appSubCaches: {},
+      globalbaks: [],
+    };
+  }
 
-    if (!response.sessions || !Array.isArray(response.sessions)) {
-      response.sessions = [];
-    }
+  if (!response.sessions || !Array.isArray(response.sessions)) {
+    response.sessions = [];
+  }
 
-    return response;
+  const ids: string[] = [];
+
+  response.usercfgs.appsubs.forEach((item: boxjs.Appsub) => {
+    if (response.appSubCaches[item.url]) {
+      response.appSubCaches[item.url].apps.forEach((appItem: boxjs.App) => {
+        ids.push(appItem.id);
+      });
+    }
   });
+
+  const replyIds = _.filter(ids, (val, i, iteratee) =>
+    _.includes(iteratee, val, i + 1)
+  );
+
+  response.usercfgs.appsubs.forEach((item: boxjs.Appsub) => {
+    if (
+      response.appSubCaches[item.url] &&
+      response.appSubCaches[item.url].apps
+    ) {
+      response.appSubCaches[item.url].apps = response.appSubCaches[
+        item.url
+      ]?.apps.map((appItem: boxjs.App) => {
+        if (replyIds.includes(appItem.id)) {
+          return { ...appItem, id: `${appItem.author}_${appItem.id}` };
+        }
+        return { ...appItem, id: appItem.id };
+      });
+    }
+  });
+  return response;
+};
+
+export const getAllData = () => {
+  return request<boxjs.data>("/query/boxdata").then(responseCallback);
 };
 
 export const getDataKey = (key: string) => {
@@ -32,18 +64,24 @@ export const getDataKey = (key: string) => {
 export function saveUserCfgs(
   params: { key: string; val?: any } | { key: string; val?: any }[]
 ) {
-  return request<boxjs.data>("/api/save", { method: "POST", data: params });
+  return request<boxjs.data>("/api/save", {
+    method: "POST",
+    data: params,
+  }).then(responseCallback);
 }
 
 export function saveData(params: { key: string; val: any }) {
-  return request<boxjs.data>("/api/saveData", { method: "POST", data: params });
+  return request<boxjs.data>("/api/saveData", {
+    method: "POST",
+    data: params,
+  }).then(responseCallback);
 }
 
 export function reloadAppSub(params?: any) {
   return request<boxjs.data>("/api/reloadAppSub", {
     method: "POST",
     data: params,
-  });
+  }).then(responseCallback);
 }
 
 // 添加应用订阅
@@ -52,7 +90,7 @@ export function addAppSub(url: string) {
   return request<boxjs.data>("/api/addAppSub", {
     method: "POST",
     data: sub,
-  });
+  }).then(responseCallback);
 }
 
 export function runScript(params: any) {

@@ -1,5 +1,6 @@
 import DetailForm from "@/pages/App/Details/components/DetailForm";
 import EditForm from "@/pages/App/Details/components/EditForm";
+import { colorText } from "@/utils";
 import { history, useModel, useParams } from "@@/exports";
 import CloseIcon from "@mui/icons-material/Close";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
@@ -24,7 +25,6 @@ import {
 import $copy from "copy-to-clipboard";
 import React, { useState } from "react";
 import uuid from "react-uuid";
-import { colorText } from "@/utils";
 
 const CusBadge = styled(Badge)(({ theme }) => ({
   right: "unset",
@@ -75,7 +75,7 @@ function a11yProps(index: number) {
 
 export default function Page() {
   const { initialState } = useModel("@@initialState");
-  const params = useParams<{ id: string; name: string }>();
+  const params = useParams<{ id: string;  }>();
   const id = params?.id;
   const [open, setOpen] =
     useState<
@@ -87,9 +87,7 @@ export default function Page() {
   const datas = initialState?.boxdata.datas;
   const sessions = initialState?.boxdata.sessions || [];
 
-  const app = initialState?.apps.find(
-    (item) => item.id === id && item.author === params.name
-  );
+  const app = initialState?.apps.find((item) => item.id === id);
 
   const appSession = sessions?.filter((item) => item?.appId === `${id}`);
 

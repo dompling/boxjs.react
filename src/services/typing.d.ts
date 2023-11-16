@@ -192,6 +192,7 @@ declare namespace boxjs {
 
   export interface App {
     id: string;
+    _id: string;
     name: string;
     keys: string[];
     descs_html: string[];
