@@ -111,6 +111,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <Controller
             {...formItemProps}
             render={({ field }) => {
+              field.value = field.value || data.val;
               return (
                 <Input
                   id={data.id}
@@ -130,21 +131,24 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
       {data.type === "textarea" && !data.child && (
         <Controller
           {...formItemProps}
-          render={({ field }) => (
-            <TextField
-              fullWidth
-              multiline
-              id={data.id}
-              size="small"
-              label={data.name}
-              variant="standard"
-              rows={6 || data.rows}
-              helperText={data.desc}
-              disabled={data.disabled}
-              placeholder={data.placeholder}
-              {...field}
-            />
-          )}
+          render={({ field }) => {
+            field.value = field.value || data.val;
+            return (
+              <TextField
+                fullWidth
+                multiline
+                id={data.id}
+                size="small"
+                label={data.name}
+                variant="standard"
+                rows={6 || data.rows}
+                helperText={data.desc}
+                disabled={data.disabled}
+                placeholder={data.placeholder}
+                {...field}
+              />
+            );
+          }}
         />
       )}
 
@@ -178,9 +182,9 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
                     sx={{ m: 1 }}
                     disabled={data.disabled}
                     checked={
-                      field.value === "true" || field.value === true
-                        ? true
-                        : false
+                      field.value === "true" ||
+                      field.value === true ||
+                      data.val === true
                     }
                     onChange={(e) => field.onChange(e.target.checked)}
                   />
@@ -201,7 +205,9 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
             render={({ field }) => {
               const isStr = typeof field.value === "string";
               const fieldValue =
-                (isStr ? field.value.split(",") : field.value) || [];
+                (isStr ? field.value.split(",") : field.value) ||
+                data.val ||
+                [];
               return (
                 <>
                   {data.items?.map((checkbox) => {
@@ -254,16 +260,19 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
           <Controller
             {...formItemProps}
-            render={({ field }) => (
-              <Input
-                id={data.id}
-                size="small"
-                type={data.type}
-                disabled={data.disabled}
-                placeholder={data.placeholder}
-                {...field}
-              />
-            )}
+            render={({ field }) => {
+              field.value = field.value || data.val;
+              return (
+                <Input
+                  id={data.id}
+                  size="small"
+                  type={data.type}
+                  disabled={data.disabled}
+                  placeholder={data.placeholder}
+                  {...field}
+                />
+              );
+            }}
           />
           <CusFormHelperText text={data.desc} />
         </FormControl>
@@ -274,21 +283,24 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <FormLabel component="legend">{data.name}</FormLabel>
           <Controller
             {...formItemProps}
-            render={({ field }) => (
-              <RadioGroup {...field}>
-                {data.items?.map((radio) => {
-                  return (
-                    <FormControlLabel
-                      key={radio.key}
-                      value={radio.key}
-                      label={radio.label}
-                      control={<Radio />}
-                      disabled={data.disabled}
-                    />
-                  );
-                })}
-              </RadioGroup>
-            )}
+            render={({ field }) => {
+              field.value = field.value || data.val;
+              return (
+                <RadioGroup {...field}>
+                  {data.items?.map((radio) => {
+                    return (
+                      <FormControlLabel
+                        key={radio.key}
+                        value={radio.key}
+                        label={radio.label}
+                        control={<Radio />}
+                        disabled={data.disabled}
+                      />
+                    );
+                  })}
+                </RadioGroup>
+              );
+            }}
           />
           <FormHelperText sx={{ minHeight: 20 }}>{data.desc}</FormHelperText>
         </FormControl>
@@ -299,22 +311,25 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
           <Controller
             {...formItemProps}
-            render={({ field }) => (
-              <Select
-                placeholder="请选择"
-                sx={{ width: `100%` }}
-                MenuProps={{ sx: { maxHeight: 300 } }}
-                {...field}
-              >
-                {data.items?.map((item, index) => {
-                  return (
-                    <MenuItem key={`${item.key}_${index}`} value={item.key}>
-                      {item.label}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            )}
+            render={({ field }) => {
+              field.value = field.value || data.val;
+              return (
+                <Select
+                  placeholder="请选择"
+                  sx={{ width: `100%` }}
+                  MenuProps={{ sx: { maxHeight: 300 } }}
+                  {...field}
+                >
+                  {data.items?.map((item, index) => {
+                    return (
+                      <MenuItem key={`${item.key}_${index}`} value={item.key}>
+                        {item.label}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              );
+            }}
           />
           <CusFormHelperText text={data.desc} />
         </FormControl>
@@ -335,6 +350,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <Controller
             {...formItemProps}
             render={({ field }) => {
+              field.value = field.value || data.val;
               return (
                 <FormPickerColor
                   value={field.value}
