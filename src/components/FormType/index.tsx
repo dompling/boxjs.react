@@ -39,6 +39,7 @@ import React, {
 import { ChromePicker } from "react-color";
 import {
   Controller,
+  ControllerRenderProps,
   UseFormReturn,
   useFieldArray,
   useForm,
@@ -103,6 +104,13 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
     control: form?.control,
   };
 
+  const formItemValue = (field: ControllerRenderProps<any>) => {
+    if (field.value === undefined) {
+      return data.val;
+    }
+    return field.value;
+  };
+
   return (
     <>
       {(["text", "number"].includes(data.type) || !data.type) && (
@@ -111,7 +119,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <Controller
             {...formItemProps}
             render={({ field }) => {
-              field.value = field.value || data.val;
+              field.value = formItemValue(field);
               return (
                 <Input
                   id={data.id}
@@ -132,7 +140,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
         <Controller
           {...formItemProps}
           render={({ field }) => {
-            field.value = field.value || data.val;
+            field.value = formItemValue(field);
             return (
               <TextField
                 fullWidth
@@ -174,23 +182,22 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
         <Stack>
           <Controller
             {...formItemProps}
-            render={({ field }) => (
-              <FormControlLabel
-                label={data.name}
-                control={
-                  <IOSSwitch
-                    sx={{ m: 1 }}
-                    disabled={data.disabled}
-                    checked={
-                      field.value === "true" ||
-                      field.value === true ||
-                      data.val === true
-                    }
-                    onChange={(e) => field.onChange(e.target.checked)}
-                  />
-                }
-              />
-            )}
+            render={({ field }) => {
+              field.value = formItemValue(field);
+              return (
+                <FormControlLabel
+                  label={data.name}
+                  control={
+                    <IOSSwitch
+                      sx={{ m: 1 }}
+                      disabled={data.disabled}
+                      checked={field.value === "true" || field.value === true}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    />
+                  }
+                />
+              );
+            }}
           />
           <FormHelperText sx={{ minHeight: 20 }}>{data.desc}</FormHelperText>
         </Stack>
@@ -203,11 +210,10 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <Controller
             {...formItemProps}
             render={({ field }) => {
+              field.value = formItemValue(field);
               const isStr = typeof field.value === "string";
               const fieldValue =
-                (isStr ? field.value.split(",") : field.value) ||
-                data.val ||
-                [];
+                (isStr ? field.value.split(",") : field.value) || [];
               return (
                 <>
                   {data.items?.map((checkbox) => {
@@ -261,7 +267,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <Controller
             {...formItemProps}
             render={({ field }) => {
-              field.value = field.value || data.val;
+              field.value = formItemValue(field);
               return (
                 <Input
                   id={data.id}
@@ -284,7 +290,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <Controller
             {...formItemProps}
             render={({ field }) => {
-              field.value = field.value || data.val;
+              field.value = formItemValue(field);
               return (
                 <RadioGroup {...field}>
                   {data.items?.map((radio) => {
@@ -312,7 +318,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <Controller
             {...formItemProps}
             render={({ field }) => {
-              field.value = field.value || data.val;
+              field.value = formItemValue(field);
               return (
                 <Select
                   placeholder="请选择"
@@ -350,7 +356,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <Controller
             {...formItemProps}
             render={({ field }) => {
-              field.value = field.value || data.val;
+              field.value = formItemValue(field);
               return (
                 <FormPickerColor
                   value={field.value}
