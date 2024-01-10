@@ -11,32 +11,26 @@ const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
   const { initialState } = useModel("@@initialState");
   const { fetchSave } = useModel("api");
   let defaultValues: any = {};
-  formConfig.forEach((setting) => {
-    const dataVal = initialState?.boxdata.datas[setting.id];
-    try {
-      defaultValues[setting.id.replaceAll(".", "~")] = setting.child
-        ? JSON.parse(`${initialState?.boxdata.datas[setting.id] || []}`)
-        : dataVal;
-    } catch (e) {
-      console.log(e);
-    }
-  });
-
-  const form = useForm({ defaultValues });
-
-  useEffect(() => {
-    defaultValues = {};
+  const initDefaultValue = () => {
     formConfig.forEach((setting) => {
-      const dataVal = initialState?.boxdata.datas[setting.id];
+      const data = initialState?.boxdata.datas[setting.id];
+      let dataVal = data === "" || data === undefined ? setting.val : data;
+      if (dataVal === null) dataVal = undefined;
       try {
         defaultValues[setting.id.replaceAll(".", "~")] = setting.child
-          ? JSON.parse(`${initialState?.boxdata.datas[setting.id] || []}`)
+          ? JSON.parse(`${dataVal || []}`)
           : dataVal;
       } catch (e) {
         console.log(e);
       }
     });
-    console.log(defaultValues);
+  };
+  initDefaultValue();
+  const form = useForm({ defaultValues });
+
+  useEffect(() => {
+    defaultValues = {};
+    initDefaultValue();
     form.reset(defaultValues);
   }, [initialState?.boxdata]);
 
