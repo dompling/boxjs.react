@@ -195,6 +195,12 @@ export default function Page() {
           icon: <VolumeOffIcon sx={{ color: colors.indigo[400] }} />,
         },
         {
+          label: "不显示查询警告",
+          type: "switch",
+          id: "isMuteQueryAlert",
+          icon: <VolumeOffIcon sx={{ color: colors.brown[400] }} />,
+        },
+        {
           type: "switch",
           label: "网页控制台",
           id: "isVConsole",
