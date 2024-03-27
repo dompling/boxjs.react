@@ -2,6 +2,7 @@ import DetailForm from "@/pages/App/Details/components/DetailForm";
 import EditForm from "@/pages/App/Details/components/EditForm";
 import { colorText } from "@/utils";
 import { history, useModel, useParams } from "@@/exports";
+import { CopyAll } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -75,7 +76,7 @@ function a11yProps(index: number) {
 
 export default function Page() {
   const { initialState } = useModel("@@initialState");
-  const params = useParams<{ id: string;  }>();
+  const params = useParams<{ id: string }>();
   const id = params?.id;
   const [open, setOpen] =
     useState<
@@ -327,7 +328,27 @@ export default function Page() {
                 return (
                   <ListItem sx={{ p: 0 }} key={item.key}>
                     <ListItemText
-                      primary={item.key}
+                      primary={
+                        <>
+                          {item.key}
+                          <IconButton
+                            onClick={() => {
+                              const datas = [...(curSession?.datas || [])];
+                              const curIndex = datas.findIndex(
+                                (cur: any) => cur.key === item.key
+                              );
+                              $copy(datas[curIndex].val);
+                              tip.alert({
+                                open: true,
+                                message: "复制成功",
+                                type: "success",
+                              });
+                            }}
+                          >
+                            <CopyAll fontSize="small" />
+                          </IconButton>
+                        </>
+                      }
                       primaryTypographyProps={{
                         noWrap: true,
                         variant: "caption",
@@ -335,9 +356,9 @@ export default function Page() {
                       }}
                       secondary={
                         <Typography
+                          noWrap
                           color="grey"
                           variant="caption"
-                          noWrap
                           component={"div"}
                         >
                           {(typeof item.val === "object" && !!item.val
@@ -346,6 +367,7 @@ export default function Page() {
                         </Typography>
                       }
                     />
+
                     <IconButton
                       onClick={() => {
                         const datas = [...(curSession?.datas || [])];
