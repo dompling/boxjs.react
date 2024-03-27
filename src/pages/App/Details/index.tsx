@@ -325,28 +325,42 @@ export default function Page() {
           <Box sx={{ p: 2 }}>
             <List disablePadding>
               {curSession?.datas.map((item: any) => {
+                const datas = [...(curSession?.datas || [])];
+                const curIndex = datas.findIndex(
+                  (cur: any) => cur.key === item.key
+                );
+
                 return (
                   <ListItem sx={{ p: 0 }} key={item.key}>
                     <ListItemText
                       primary={
                         <>
-                          {item.key}
-                          <IconButton
-                            onClick={() => {
-                              const datas = [...(curSession?.datas || [])];
-                              const curIndex = datas.findIndex(
-                                (cur: any) => cur.key === item.key
-                              );
-                              $copy(datas[curIndex].val);
-                              tip.alert({
-                                open: true,
-                                message: "复制成功",
-                                type: "success",
-                              });
+                          <span
+                            style={{
+                              maxWidth: "85%",
+                              display: "inline-block",
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                              height: "100%",
+                              verticalAlign: "middle",
                             }}
                           >
-                            <CopyAll fontSize="small" />
-                          </IconButton>
+                            {item.key}
+                          </span>
+                          {item.val && (
+                            <IconButton
+                              onClick={() => {
+                                $copy(item.val);
+                                tip.alert({
+                                  open: true,
+                                  message: "复制成功",
+                                  type: "success",
+                                });
+                              }}
+                            >
+                              <CopyAll fontSize="small" />
+                            </IconButton>
+                          )}
                         </>
                       }
                       primaryTypographyProps={{
