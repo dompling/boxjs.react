@@ -325,11 +325,6 @@ export default function Page() {
           <Box sx={{ p: 2 }}>
             <List disablePadding>
               {curSession?.datas.map((item: any) => {
-                const datas = [...(curSession?.datas || [])];
-                const curIndex = datas.findIndex(
-                  (cur: any) => cur.key === item.key
-                );
-
                 return (
                   <ListItem sx={{ p: 0 }} key={item.key}>
                     <ListItemText

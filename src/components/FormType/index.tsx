@@ -414,7 +414,11 @@ const FormList: React.FC<{
 
   return (
     <>
-      <Drawer anchor={"bottom"} open={open} onClose={() => handelDrawerClose()}>
+      <Drawer
+        anchor={"bottom"}
+        open={open}
+        onClose={() => handelDrawerClose()}
+      >
         <Box
           className={styles.add}
           sx={{
@@ -424,18 +428,13 @@ const FormList: React.FC<{
             borderColor: "divider",
             boxShadow: (theme) => theme.shadows[2],
             position: "fixed",
-            top: 0,
             width: `100%`,
             bgcolor: "inherit",
             zIndex: 99,
           }}
         >
           <Stack direction={"row"} alignItems={"center"}>
-            <IconButton color="inherit" onClick={() => setOpen(false)}>
-              <ChevronLeftIcon />
-            </IconButton>
-
-            <Typography sx={{ flexGrow: 1 }}>
+            <Typography sx={{ flexGrow: 1,pl:1 }}>
               {drawerTitle}-{setting?.name}
             </Typography>
             <Button
@@ -465,7 +464,7 @@ const FormList: React.FC<{
             </Button>
           </Stack>
         </Box>
-        <Stack sx={{ pt: 8, pl: 2, pr: 2, height: `100vh` }}>
+        <Stack sx={{ pt: 10, pl: 2, pr: 2, height: `60vh`,maxHeight:`60vh` }}>
           {formItems && drawerTitle === "新增" ? (
             formItems?.map((settingKey, index) => {
               let settingItem: boxjs.Setting = child[settingKey] || {

@@ -65,7 +65,7 @@ const ProModal: React.FC<
             <DialogTitle
               key="title"
               className={styles.header_container}
-              sx={{ fontSize: `1rem`, padding: 1 }}
+              sx={{ fontSize: `1rem`, padding: 1.5 }}
             >
               {title}
             </DialogTitle>

@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { ROOT_PATH } from "@/utils";
 
 const avatarBg = [
   `./static/background/2.png`,
@@ -35,7 +34,6 @@ const ModalSettingForm: React.FC<{
 
   return (
     <ProModal
-      fullScreen
       title={'个人设置'}
       open={!!props.open}
       onClose={() => {
@@ -132,7 +130,7 @@ const ModalSettingForm: React.FC<{
               fullWidth
               size="small"
               variant="standard"
-              placeholder={'自定义地址'}
+              placeholder={'自定义头像背景地址'}
               InputLabelProps={{
                 shrink: true,
               }}
