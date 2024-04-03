@@ -4,15 +4,17 @@ import routes from "./routes";
 
 //@ts-ignore
 const isDev = process.env.NODE_ENV === "development";
-const path = isDev ? "/" : "/boxjs.react/";
+const path = isDev ? "/" : "./";
 
 export default defineConfig({
   routes,
   hash: true,
-  history: { type: "hash" },
+  history: {
+    type: "hash",
+  },
   title: "BoxJs",
   //打包路径
-  base: isDev ? "/" : "/boxjs.react/",
+  // base: path,
   publicPath: path,
   codeSplitting: {
     jsStrategy: "granularChunks",
