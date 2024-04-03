@@ -8,7 +8,8 @@ const path = isDev ? "/" : "/boxjs.react/";
 
 export default defineConfig({
   routes,
-  history: { type: "browser" },
+  hash: true,
+  history: { type: "hash" },
   title: "BoxJs",
   //打包路径
   base: isDev ? "/" : "/boxjs.react/",
