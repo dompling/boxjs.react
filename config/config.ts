@@ -4,7 +4,7 @@ import routes from "./routes";
 
 //@ts-ignore
 const isDev = process.env.NODE_ENV === "development";
-const path = isDev ? "/" : "auto";
+const path = isDev ? "/" : "/boxjs.react/";
 
 export default defineConfig({
   routes,
