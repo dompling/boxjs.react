@@ -11,7 +11,7 @@ export default defineConfig({
   history: { type: "browser" },
   title: "BoxJs",
   //打包路径
-  // base: path,
+  base: isDev ? "/" : "/boxjs.react",
   publicPath: path,
   codeSplitting: {
     jsStrategy: "granularChunks",
