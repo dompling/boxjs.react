@@ -420,7 +420,6 @@ const FormList: React.FC<{
         onClose={() => handelDrawerClose()}
       >
         <Box
-          className={styles.add}
           sx={{
             pt: 1,
             pb: 1,

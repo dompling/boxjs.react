@@ -4,14 +4,11 @@ import routes from "./routes";
 
 //@ts-ignore
 const isDev = process.env.NODE_ENV === "development";
-const path = isDev ? "/" : "./";
+const path = isDev ? "/" : "./boxjs.react";
 
 export default defineConfig({
   routes,
-  hash: true,
-  history: {
-    type: "hash",
-  },
+  history: { type: "browser" },
   title: "BoxJs",
   //打包路径
   // base: path,
