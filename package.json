@@ -1,6 +1,7 @@
 {
   "private": true,
   "author": "dompling",
+  "homepage": "https://dompling.github.io/boxjs.react",
   "scripts": {
     "dev": "max dev",
     "build": "max build",
