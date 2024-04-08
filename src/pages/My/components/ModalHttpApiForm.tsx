@@ -15,7 +15,9 @@ const ModalHttpApiForm: React.FC<{
 
   const formRef = useForm();
 
-  const httpapis = initialState?.boxdata?.usercfgs?.httpapis?.split(`\n`) || [];
+  const httpapis = (
+    initialState?.boxdata?.usercfgs?.httpapis?.split(/,|\n/) || []
+  ).filter((item) => !!item);
 
   return (
     <ProModal
@@ -66,12 +68,22 @@ const ModalHttpApiForm: React.FC<{
           minRows={6}
           size="small"
           variant="standard"
-          placeholder={"请输入"}
+          placeholder={"examplekey@127.0.0.1:6166"}
           InputLabelProps={{
             shrink: true,
           }}
           defaultValue={props.value}
-          {...formRef.register("httpapi")}
+          {...formRef.register("httpapi", {
+            pattern: /.*?@.*?:[0-9]+/,
+            onChange: () => {
+              formRef.trigger(["httpapi"]);
+            },
+          })}
+          error={!!formRef.formState.errors.httpapi}
+          helperText={
+            formRef.formState.errors.httpapi &&
+            `格式错误: examplekey@127.0.0.1:6166`
+          }
         />
       )}
     </ProModal>

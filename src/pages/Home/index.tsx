@@ -51,7 +51,6 @@ const GridItem: React.FC<{
     () => ({
       type: "grid",
       item: { id, originalIndex },
-
       collect: (monitor) => {
         const clientOffset = monitor.getSourceClientOffset();
         let offset = { x: 0, y: 0 };
@@ -113,7 +112,6 @@ const GridItem: React.FC<{
             timeout[timeKey] = setTimeout(() => {
               if (timeout[timeKey] !== undefined)
                 clearTimeout(timeout[timeKey]);
-              console.log(timeoutCount[timeKey]);
               if (timeoutCount[timeKey] === 2) {
                 timeoutCount[timeKey] = 0;
 
@@ -144,7 +142,7 @@ const GridItem: React.FC<{
                 sx={{
                   width: "100%",
                   height: "100%",
-                  background:"#ECECEE"
+                  background: "#ECECEE",
                 }}
               />
               {fetchRunScript.fetches[`${script}`]?.loading && (
