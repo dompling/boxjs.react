@@ -1,6 +1,5 @@
 import { IOSSwitch } from "@/components/IOSSwitch";
 import { useModel } from "@@/exports";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
@@ -15,7 +14,6 @@ import {
   FormControlLabel,
   FormHelperText,
   FormLabel,
-  IconButton,
   Input,
   InputLabel,
   MenuItem,
@@ -101,6 +99,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
   const formItemProps = {
     name: data.formName || formName,
     control: form?.control,
+    rules: { pattern: data.pattern },
   };
 
   return (
@@ -110,27 +109,32 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
           <Controller
             {...formItemProps}
-            render={({ field }) => {
+            render={({ field, formState }) => {
               return (
-                <Input
-                  id={data.id}
-                  size="small"
-                  type={data.type}
-                  disabled={data.disabled}
-                  placeholder={data.placeholder}
-                  {...field}
-                />
+                <>
+                  <Input
+                    id={data.id}
+                    size="small"
+                    type={data.type}
+                    disabled={data.disabled}
+                    placeholder={data.placeholder}
+                    {...field}
+                  />
+                  <CusFormHelperText
+                    text={data.desc}
+                    error={!!formState.errors[field.name]}
+                  />
+                </>
               );
             }}
           />
-          <CusFormHelperText text={data.desc} />
         </FormControl>
       )}
 
       {data.type === "textarea" && !data.child && (
         <Controller
           {...formItemProps}
-          render={({ field }) => {
+          render={({ field, formState }) => {
             return (
               <TextField
                 fullWidth
@@ -143,6 +147,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
                 helperText={data.desc}
                 disabled={data.disabled}
                 placeholder={data.placeholder}
+                error={!!formState.errors[field.name]}
                 {...field}
               />
             );
@@ -254,20 +259,25 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
           <Controller
             {...formItemProps}
-            render={({ field }) => {
+            render={({ field, formState }) => {
               return (
-                <Input
-                  id={data.id}
-                  size="small"
-                  type={data.type}
-                  disabled={data.disabled}
-                  placeholder={data.placeholder}
-                  {...field}
-                />
+                <>
+                  <Input
+                    id={data.id}
+                    size="small"
+                    type={data.type}
+                    disabled={data.disabled}
+                    placeholder={data.placeholder}
+                    {...field}
+                  />
+                  <CusFormHelperText
+                    text={data.desc}
+                    error={!!formState.errors[field.name]}
+                  />
+                </>
               );
             }}
           />
-          <CusFormHelperText text={data.desc} />
         </FormControl>
       )}
 
@@ -414,11 +424,7 @@ const FormList: React.FC<{
 
   return (
     <>
-      <Drawer
-        anchor={"bottom"}
-        open={open}
-        onClose={() => handelDrawerClose()}
-      >
+      <Drawer anchor={"bottom"} open={open} onClose={() => handelDrawerClose()}>
         <Box
           sx={{
             pt: 1,
@@ -433,7 +439,7 @@ const FormList: React.FC<{
           }}
         >
           <Stack direction={"row"} alignItems={"center"}>
-            <Typography sx={{ flexGrow: 1,pl:1 }}>
+            <Typography sx={{ flexGrow: 1, pl: 1 }}>
               {drawerTitle}-{setting?.name}
             </Typography>
             <Button
@@ -463,7 +469,7 @@ const FormList: React.FC<{
             </Button>
           </Stack>
         </Box>
-        <Stack sx={{ pt: 10, pl: 2, pr: 2, height: `60vh`,maxHeight:`60vh` }}>
+        <Stack sx={{ pt: 10, pl: 2, pr: 2, height: `60vh`, maxHeight: `60vh` }}>
           {formItems && drawerTitle === "新增" ? (
             formItems?.map((settingKey, index) => {
               let settingItem: boxjs.Setting = child[settingKey] || {

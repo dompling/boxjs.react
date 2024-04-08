@@ -288,6 +288,7 @@ export default function Home() {
     <Box pt={4} component={"div"}>
       <DndProvider
         backend={initialState?.isMobile ? TouchBackend : HTML5Backend}
+        options={{ delay: 400 }}
       >
         <Page />
       </DndProvider>

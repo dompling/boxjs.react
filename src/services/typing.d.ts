@@ -226,7 +226,7 @@ declare namespace boxjs {
     rows?: number;
     primary?: string[];
     child?: Setting[];
-
+    pattern?: RegExp;
     formName: string;
   }
 
