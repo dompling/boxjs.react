@@ -217,7 +217,8 @@ declare namespace boxjs {
       | "radios"
       | "checkboxes"
       | "colorpicker"
-      | "number";
+      | "number"
+      | "cacheKey";
     desc: string;
     disabled?: boolean;
     items?: Item[];

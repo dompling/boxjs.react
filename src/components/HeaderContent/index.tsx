@@ -44,7 +44,7 @@ const ListItemTextDesc = styled(ListItemText)(() => ({
   },
 }));
 
-const Search = styled("div")(({ theme }) => ({
+export const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -55,13 +55,14 @@ const Search = styled("div")(({ theme }) => ({
   width: "100%",
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+export const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   width: `100%`,
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    paddingRight: `calc(1em + ${theme.spacing(4)})`,
+    paddingLeft: theme.spacing(1),
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("sm")]: {
@@ -73,9 +74,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
+export const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: "100%",
+  right: 0,
+  top: 0,
   position: "absolute",
   pointerEvents: "none",
   display: "flex",
@@ -112,7 +115,11 @@ const HeaderContent: React.FC = () => {
   const iconIndex = UI?.iconThemeIdx !== undefined ? UI?.iconThemeIdx : 1;
 
   return (
-    <QueueAnim appear={!!initialState?.boxdata.usercfgs.isAnimate} type={["top", "bottom"]} leaveReverse>
+    <QueueAnim
+      appear={!!initialState?.boxdata.usercfgs.isAnimate}
+      type={["top", "bottom"]}
+      leaveReverse
+    >
       {!boxdata?.usercfgs.isWaitToggleSearchBar ? (
         <Box className={styles.header_container}>
           <Paper

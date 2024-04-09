@@ -1,4 +1,5 @@
 import { IOSSwitch } from "@/components/IOSSwitch";
+import ProFormSelectAppKey from "@/components/ProFormSelectAppKey";
 import { useModel } from "@@/exports";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -246,6 +247,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
       )}
 
       {[
+        "cacheKey",
         "text",
         "textarea",
         "selects",
@@ -335,7 +337,27 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <CusFormHelperText text={data.desc} />
         </FormControl>
       )}
-
+      {data.type === "cacheKey" && (
+        <FormControl size="small" sx={{ width: 1 }} variant="standard">
+          <Controller
+            {...formItemProps}
+            render={({ field, formState }) => {
+              return (
+                <>
+                  <InputLabel htmlFor={data.id} shrink={!!field.value}>
+                    {data.name}
+                  </InputLabel>
+                  <ProFormSelectAppKey {...field} />
+                  <CusFormHelperText
+                    text={data.desc}
+                    error={!!formState.errors[field.name]}
+                  />
+                </>
+              );
+            }}
+          />
+        </FormControl>
+      )}
       {data.type === "colorpicker" && (
         <FormControl size="small" sx={{ width: 1 }} variant="standard">
           <InputLabel
@@ -359,7 +381,6 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
               );
             }}
           />
-
           <CusFormHelperText text={data.desc} />
         </FormControl>
       )}
