@@ -8,10 +8,6 @@ const path = isDev ? "/" : "./";
 
 export default defineConfig({
   routes,
-  hash: true,
-  history: {
-    type: "hash",
-  },
   title: "BoxJs",
   //打包路径
   // base: path,
@@ -54,7 +50,6 @@ export default defineConfig({
       href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
     },
   ],
-
   model: {},
   antd: false,
   request: {},

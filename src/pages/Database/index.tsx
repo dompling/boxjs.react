@@ -1,15 +1,17 @@
+import ProFormSelectAppKey from "@/components/ProFormSelectAppKey";
 import { useModel } from "@@/exports";
 import {
   Box,
   Button,
-  Divider,
+  Divider, FormHelperText,
   Paper,
   Stack,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
 import $copy from "copy-to-clipboard";
 import { useForm } from "react-hook-form";
+import React from "react";
 
 export default function Database() {
   const form = useForm();
@@ -50,17 +52,15 @@ export default function Database() {
               复制
             </Typography>
           </Stack>
-          <TextField
+          <ProFormSelectAppKey
+            {...form.register("key")}
             fullWidth
             size="small"
-            variant="standard"
             placeholder={"数据键 (Key)"}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            helperText={"输入要查询的数据键, 如: boxjs_host"}
-            {...form.register("key")}
           />
+          <FormHelperText>
+            输入要查询的数据键, 如: boxjs_host
+          </FormHelperText>
         </Box>
         <Divider />
         <Stack spacing={2} justifyContent={"flex-end"} pt={1} pb={1}>
@@ -81,7 +81,7 @@ export default function Database() {
               });
             }}
           >
-            VIEW
+            查询
           </Button>
         </Stack>
       </Paper>

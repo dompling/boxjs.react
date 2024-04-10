@@ -119,7 +119,7 @@ const ProFormSelectAppKey: React.FC<
           sx={{
             position: "relative",
             overflow: "auto",
-            maxHeight: 300,
+            minHeight: 300,
             "& ul": { padding: 0 },
           }}
         >
@@ -161,7 +161,7 @@ const ProFormSelectAppKey: React.FC<
                                 label={keyItem}
                                 sx={{
                                   "& .MuiFormControlLabel-label": {
-                                    maxWidth: "90%",
+                                    width: "80%",
                                     textOverflow: "ellipsis",
                                     overflow: "hidden",
                                     whiteSpace: "noWrap",
