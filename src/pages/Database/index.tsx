@@ -129,6 +129,7 @@ export default function Database() {
                       <Chip
                         label={item}
                         variant="outlined"
+                        sx={{ maxWidth: 120, "& span": { width: `100%` } }}
                         onDelete={() => {
                           fetchSave
                             .run([
