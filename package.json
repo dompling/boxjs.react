@@ -4,6 +4,7 @@
   "homepage": "https://dompling.github.io/boxjs.react",
   "scripts": {
     "dev": "max dev",
+    "build": "cross-env UMI_ENV=product max build",
     "build:vercel": "cross-env UMI_ENV=product max build",
     "build:github": "cross-env UMI_ENV=uat max build",
     "postinstall": "max setup",
