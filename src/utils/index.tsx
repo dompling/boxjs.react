@@ -23,8 +23,6 @@ export const colorText = (img?: string) => {
     : {};
 };
 
-export const ROOT_PATH = `${process.env.ROOT_PATH}`;
-
 export const getCommentTime = (str: string) => {
   const date = new Date(str);
   const createTime = moment(date).unix();

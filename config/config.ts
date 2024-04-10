@@ -2,16 +2,10 @@ import { defineConfig } from "@umijs/max";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 import routes from "./routes";
 
-//@ts-ignore
-const isDev = process.env.NODE_ENV === "development";
-const path = isDev ? "/" : "./";
-
 export default defineConfig({
   routes,
   title: "BoxJs",
   //打包路径
-  // base: path,
-  publicPath: path,
   codeSplitting: {
     jsStrategy: "granularChunks",
   },
@@ -75,36 +69,36 @@ export default defineConfig({
     config.merge({
       optimization: {
         minimize: true,
-        // splitChunks: {
-        //   chunks: "async",
-        //   minSize: 30000,
-        //   minChunks: 3,
-        //   automaticNameDelimiter: ".",
-        //   cacheGroups: {
-        //     mui: {
-        //       name: "mui",
-        //       chunks: "all",
-        //       test: /[\\/]node_modules[\\/](@mui)/,
-        //       priority: 10,
-        //     },
-        //     vendors: {
-        //       name: "vendors",
-        //       chunks: "all",
-        //       test: /[\\/]node_modules[\\/](lodash|moment|react|dva|postcss|mapbox-gl)/,
-        //       priority: 10,
-        //     },
-        //     commons: {
-        //       name: "commons",
-        //       // 其余同步加载包
-        //       chunks: "all",
-        //       minChunks: 2,
-        //       priority: 1,
-        //       // 这里需要注意下，webpack5会有问题， 需加上这个 enforce: true，
-        //       // refer: https://github.com/webpack-contrib/mini-css-extract-plugin/issues/257#issuecomment-432594711
-        //       enforce: true,
-        //     },
-        //   },
-        // },
+        splitChunks: {
+          chunks: "async",
+          minSize: 30000,
+          minChunks: 3,
+          automaticNameDelimiter: ".",
+          cacheGroups: {
+            mui: {
+              name: "mui",
+              chunks: "all",
+              test: /[\\/]node_modules[\\/](@mui)/,
+              priority: 10,
+            },
+            vendors: {
+              name: "vendors",
+              chunks: "all",
+              test: /[\\/]node_modules[\\/](lodash|moment|react|dva|postcss|mapbox-gl)/,
+              priority: 10,
+            },
+            commons: {
+              name: "commons",
+              // 其余同步加载包
+              chunks: "all",
+              minChunks: 2,
+              priority: 1,
+              // 这里需要注意下，webpack5会有问题， 需加上这个 enforce: true，
+              // refer: https://github.com/webpack-contrib/mini-css-extract-plugin/issues/257#issuecomment-432594711
+              enforce: true,
+            },
+          },
+        },
       },
     });
     return config;
@@ -118,8 +112,5 @@ export default defineConfig({
     statsFilename: "stats.json",
     logLevel: "info",
     defaultSizes: "parsed", // stat  // gzip
-  },
-  define: {
-    "process.env.ROOT_PATH": isDev ? "" : "/boxjs.react",
   },
 });
