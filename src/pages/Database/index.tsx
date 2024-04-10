@@ -77,6 +77,10 @@ export default function Database() {
                   size="small"
                   placeholder={"数据键 (Key)"}
                   {...field}
+                  onChange={(val) => {
+                    form.setValue("data", "");
+                    field.onChange(val);
+                  }}
                 />
               );
             }}
