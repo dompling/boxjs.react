@@ -53,7 +53,9 @@ const responseCallback = (response: boxjs.data | string) => {
 };
 
 export const getAllData = () => {
-  return request<boxjs.data>("/query/boxdata").then(responseCallback);
+  return request<boxjs.data>("/query/boxdata").then((response) => {
+    return responseCallback(response) as boxjs.data;
+  });
 };
 
 export const getDataKey = (key: string) => {

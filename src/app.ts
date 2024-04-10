@@ -129,7 +129,7 @@ export const request: RequestConfig = {
       }
 
       return {
-        url: url.indexOf(`http`) > -1 ? url : `//boxjs.net${url}`,
+        url: url.indexOf(`https`) > -1 ? url : `//boxjs.net${url}`,
         options,
       };
     },
