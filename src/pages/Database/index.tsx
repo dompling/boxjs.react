@@ -1,22 +1,37 @@
 import ProFormSelectAppKey from "@/components/ProFormSelectAppKey";
 import { useModel } from "@@/exports";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Box,
   Button,
-  Divider, FormHelperText,
+  Chip,
+  Divider,
+  FormHelperText,
   Paper,
   Stack,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
 import $copy from "copy-to-clipboard";
-import { useForm } from "react-hook-form";
-import React from "react";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+
+const gistCacheKey = "@chavy_boxjs_userCfgs.gist_cache_key";
 
 export default function Database() {
   const form = useForm();
   const tip = useModel("alert");
-  const { fetchDataKey, fetchSaveData } = useModel("api");
+  const { fetchDataKey, fetchSave } = useModel("api");
+  const { initialState } = useModel("@@initialState");
+  const dataKeys = Object.keys(initialState?.boxdata.datas || {});
+  const gistCacheData = fetchDataKey.fetches[gistCacheKey]?.data?.val || [];
+
+  useEffect(() => {
+    fetchDataKey.run(gistCacheKey);
+  }, []);
 
   return (
     <Stack spacing={3} m={1}>
@@ -52,16 +67,24 @@ export default function Database() {
               复制
             </Typography>
           </Stack>
-          <ProFormSelectAppKey
-            {...form.register("key")}
-            fullWidth
-            size="small"
-            placeholder={"数据键 (Key)"}
+          <Controller
+            name={"key"}
+            control={form.control}
+            render={({ field }) => {
+              return (
+                <ProFormSelectAppKey
+                  fullWidth
+                  size="small"
+                  placeholder={"数据键 (Key)"}
+                  {...field}
+                />
+              );
+            }}
           />
-          <FormHelperText>
-            输入要查询的数据键, 如: boxjs_host
-          </FormHelperText>
+
+          <FormHelperText>输入要查询的数据键, 如: boxjs_host</FormHelperText>
         </Box>
+
         <Divider />
         <Stack spacing={2} justifyContent={"flex-end"} pt={1} pb={1}>
           <Button
@@ -85,6 +108,57 @@ export default function Database() {
           </Button>
         </Stack>
       </Paper>
+      {gistCacheData.length > 0 && (
+        <Stack direction="column" mt={2}>
+          <Accordion>
+            <AccordionSummary
+              sx={{ m: 0 }}
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1-content"
+              id="panel1-header"
+            >
+              <Typography variant="body2">
+                非订阅数据（{gistCacheData.length}）
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
+                {gistCacheData.map((item: string, index: number) => {
+                  return (
+                    <div key={`${item}_${index}`} style={{ padding: 5 }}>
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        onDelete={() => {
+                          fetchSave
+                            .run([
+                              { key: item, val: "" },
+                              {
+                                key: gistCacheKey,
+                                val: gistCacheData.filter(
+                                  (cache: string) => cache !== item
+                                ),
+                              },
+                            ])
+                            .then(() => {
+                              fetchDataKey.run(gistCacheKey);
+                            });
+                        }}
+                        onClick={() => {
+                          form.setValue("key", item);
+                          fetchDataKey.run(item).then((response) => {
+                            form.setValue("data", response.val);
+                          });
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </Stack>
+            </AccordionDetails>
+          </Accordion>
+        </Stack>
+      )}
       <Paper elevation={3} sx={{ pt: 2 }}>
         <Box pr={2} pl={2} pb={1}>
           <Stack
@@ -146,7 +220,21 @@ export default function Database() {
                   message: "请输入数据 KEY",
                   type: "warning",
                 });
-              fetchSaveData.run({ key, val: data });
+              const formData = [{ key, val: data }];
+              if (!dataKeys.includes(key) && !gistCacheData.includes(key)) {
+                formData.push({
+                  key: gistCacheKey,
+                  val: [...gistCacheData, key],
+                });
+              } else if (gistCacheData.includes(key) && !data) {
+                formData.push({
+                  key: gistCacheKey,
+                  val: gistCacheData.filter((item: string) => item !== key),
+                });
+              }
+              fetchSave.run(formData).then(() => {
+                if (formData.length > 1) fetchDataKey.run(gistCacheKey);
+              });
             }}
           >
             保存

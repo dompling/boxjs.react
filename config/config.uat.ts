@@ -1,11 +1,5 @@
 import { defineConfig } from "@umijs/max";
 
-console.log(`ENV：uat`);
+console.log(`Github`);
 
-export default defineConfig({
-  hash: true,
-  history: {
-    type: "hash",
-  },
-  publicPath: "./",
-});
+export default defineConfig({});

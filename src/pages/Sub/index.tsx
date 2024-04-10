@@ -504,7 +504,10 @@ function Page() {
         setMouse({ x: event.touches[0].clientX, y: event.touches[0].clientY });
       });
     }
-  }, []);
+    if (appsubs.length !== cards.length) {
+      setCards(appsubs);
+    }
+  }, [appsubs]);
 
   // @ts-ignore
   const dragItemId = collectedProps.dragItem?.id;
@@ -639,6 +642,7 @@ export default function Sub() {
   return (
     <Box pt={2} component={"div"}>
       <DndProvider
+        options={{ delay: 400 }}
         backend={initialState?.isMobile ? TouchBackend : HTML5Backend}
       >
         <Page />

@@ -79,6 +79,9 @@ const ProFormSelectAppKey: React.FC<
       <Input
         value={value}
         {...props}
+        onChange={(event) => {
+          handelChange(event.target.value);
+        }}
         size="small"
         type={"text"}
         endAdornment={

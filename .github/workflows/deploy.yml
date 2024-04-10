@@ -42,6 +42,11 @@ jobs:
         id: build
         run: yarn build:github # 打包
 
+      - name: Copy to 404
+        id: Copy
+        run: cp index.html 404.html
+        working-directory: ./dist
+
       # 部署到 GitHub pages
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3 # 使用部署到 GitHub pages 的 action

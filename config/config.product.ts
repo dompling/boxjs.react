@@ -1,10 +1,5 @@
 import { defineConfig } from "@umijs/max";
 
-console.log(`ENV：prod`);
+console.log(`Vercel`);
 
-export default defineConfig({
-  history: {
-    type: "memory",
-  },
-  publicPath: "/",
-});
+export default defineConfig({});

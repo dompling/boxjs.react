@@ -92,7 +92,7 @@ export function addAppSub(url: string) {
   return request<boxjs.data>("/api/addAppSub", {
     method: "POST",
     data: sub,
-  }).then(responseCallback);
+  });
 }
 
 export function runScript(params: any) {

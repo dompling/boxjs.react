@@ -4,6 +4,11 @@ import routes from "./routes";
 
 export default defineConfig({
   routes,
+  hash:true,
+  history: {
+    type: "browser",
+  },
+  publicPath: "/",
   title: "BoxJs",
   //打包路径
   codeSplitting: {
