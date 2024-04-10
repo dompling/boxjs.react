@@ -4,7 +4,7 @@ console.log(`ENV：prod`);
 
 export default defineConfig({
   history: {
-    type: "browser",
+    type: "memory",
   },
   publicPath: "/",
 });
