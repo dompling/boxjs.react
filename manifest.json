@@ -1,0 +1,8 @@
+{
+  "name": "BoxJS",
+  "short_name": "BoxJS",
+  "display": "fullscreen",
+  "scope": "/",
+  "start_url": "/",
+  "orientation": "portrait"
+}
