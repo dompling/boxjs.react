@@ -5,9 +5,6 @@ import routes from "./routes";
 export default defineConfig({
   routes,
   hash: true,
-  history: {
-    type: "browser",
-  },
   reactRouter5Compat: {},
   runtimePublicPath: {},
   title: "BoxJs",
