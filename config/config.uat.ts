@@ -4,4 +4,7 @@ console.log(`Github`);
 
 export default defineConfig({
   publicPath: "./",
+  history: {
+    type: "hash"
+  }
 });
