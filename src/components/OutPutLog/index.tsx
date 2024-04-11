@@ -27,7 +27,7 @@ const OutPut: React.FC<{
   value: any;
   onClose: () => void;
 }> = (props) => {
-  if (props.value) return null;
+  if (!props.value) return null;
   return (
     <div>
       <SwipeableDrawer

@@ -4,11 +4,12 @@ import routes from "./routes";
 
 export default defineConfig({
   routes,
-  hash:true,
+  hash: true,
   history: {
     type: "browser",
   },
-  publicPath: "/",
+  reactRouter5Compat: {},
+  runtimePublicPath: {},
   title: "BoxJs",
   //打包路径
   codeSplitting: {
@@ -16,21 +17,42 @@ export default defineConfig({
   },
   metas: [
     {
+      name: "viewport",
+      content:
+        "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
+    },
+    {
       "http-equiv": "Permissions-Policy",
       content: "interest-cohort=()",
+    },
+    {
+      name: "keywords",
+      content: "react, boxjs, umi, surge, qx,loon ,stash",
+    },
+    {
+      name: "description",
+      content: "online boxjs",
     },
     {
       name: "apple-mobile-web-app-capable",
       content: "yes",
     },
     {
+      name: "mobile-web-app-capable",
+      content: "yes",
+    },
+    {
+      name: "apple-mobile-web-app-title",
+      content: "BoxJs",
+    },
+    {
       name: "apple-mobile-web-app-status-bar-style",
       content: "black-translucent",
     },
     {
-      name: "viewport",
+      name: "apple-touch-startup-image",
       content:
-        "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
+        "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
     },
   ],
   links: [
@@ -49,6 +71,9 @@ export default defineConfig({
       href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
     },
   ],
+  scripts: [
+    `(function(document,navigator,standalone){if((standalone in navigator)&&navigator[standalone]){var curnode,location=document.location,stop=/^(a|html)$/i;document.addEventListener('click',function(e){curnode=e.target;while(!(stop).test(curnode.nodeName)){curnode=curnode.parentNode}if('href'in curnode&&(chref=curnode.href).replace(location.href,'').indexOf('#')&&(!(/^[a-z\\+\\.\\-]+:/i).test(chref)||chref.indexOf(location.protocol+'//'+location.host)===0)){e.preventDefault();location.href=curnode.href}},false)}})(document,window.navigator,'standalone');`,
+  ],
   model: {},
   antd: false,
   request: {},
@@ -62,6 +87,7 @@ export default defineConfig({
     title: false,
     useLocalStorage: true,
   },
+  manifest: { fileName: "assets-manifest.json" },
   esbuildMinifyIIFE: true,
   chainWebpack: function (config) {
     config.plugin("monaco-editor-webpack-plugin").use(MonacoWebpackPlugin, [
