@@ -66,6 +66,10 @@ export default defineConfig({
       href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
     },
     {
+      rel: "manifest",
+      href: "./manifest.json",
+    },
+    {
       rel: "apple-touch-icon",
       sizes: "60x60",
       href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
@@ -87,7 +91,6 @@ export default defineConfig({
     title: false,
     useLocalStorage: true,
   },
-  manifest: { fileName: "assets-manifest.json" },
   esbuildMinifyIIFE: true,
   chainWebpack: function (config) {
     config.plugin("monaco-editor-webpack-plugin").use(MonacoWebpackPlugin, [
