@@ -5,8 +5,6 @@ import routes from "./routes";
 export default defineConfig({
   routes,
   hash: true,
-  reactRouter5Compat: {},
-  runtimePublicPath: {},
   title: "BoxJs",
   //打包路径
   codeSplitting: {
