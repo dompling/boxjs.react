@@ -97,9 +97,9 @@ const ProFormSelectAppKey: React.FC<
         }
       />
       <Dialog
-        onClose={() => onClose()}
         open={open}
-        sx={{ "& .MuiDialog-paper": { width: `100%` } }}
+        onClose={() => onClose()}
+        sx={{ mt: 15, mb: 15, "& .MuiDialog-paper": { width: `100%` } }}
       >
         <AppBar position="static">
           <Toolbar>
