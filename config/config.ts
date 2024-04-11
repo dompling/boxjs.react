@@ -9,7 +9,7 @@ export default defineConfig({
   title: "BoxJs",
   //打包路径
   codeSplitting: {
-    jsStrategy: "granularChunks",
+    jsStrategy: "bigVendors",
   },
   metas: [
     {
