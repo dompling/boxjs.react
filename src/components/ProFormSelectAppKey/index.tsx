@@ -1,7 +1,7 @@
 import {
   Search,
   SearchIconWrapper,
-  StyledInputBase,
+  StyledInputBase
 } from "@/components/HeaderContent";
 import { useModel } from "@@/exports";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
@@ -15,7 +15,7 @@ import {
   ListItem,
   ListItemText,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -29,8 +29,9 @@ import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
-  useState,
+  useState
 } from "react";
+import config from "@/utils/config";
 
 const ProFormSelectAppKey: React.FC<
   {
@@ -46,14 +47,26 @@ const ProFormSelectAppKey: React.FC<
   const debouncedValue = useDebounce(searchValue, { wait: 100 });
 
   const { initialState } = useModel("@@initialState");
-  let apps: boxjs.App[] = [];
+  let apps: boxjs.App[] = [
+    {
+      id: "extra_data_key",
+      name: "非订阅数据",
+      _id: "extra_data_key@local",
+      keys: initialState?.boxdata.usercfgs.gist_cache_key || [],
+      descs_html: [], author: "local", repo: "", icons: []
+    }
+  ];
+
   Object.values(initialState?.boxdata.appSubCaches || {}).forEach((item) => {
     apps = [...apps, ...item.apps.filter((item) => !!item.keys)];
   });
+
   apps = [...apps, ...(initialState?.boxdata.sysapps || [])].filter((item) => {
     if (item.name.indexOf(debouncedValue) > -1 || !debouncedValue) return true;
     return !!item.keys.find((key) => key.indexOf(debouncedValue) > -1);
   });
+
+
   const boxJsData = initialState?.boxdata.datas;
 
   useImperativeHandle(ref, () => {
@@ -123,7 +136,7 @@ const ProFormSelectAppKey: React.FC<
             position: "relative",
             overflow: "auto",
             minHeight: 300,
-            "& ul": { padding: 0 },
+            "& ul": { padding: 0 }
           }}
         >
           <RadioGroup
@@ -143,7 +156,7 @@ const ProFormSelectAppKey: React.FC<
                     <ListSubheader
                       sx={{
                         borderBottom: `1px solid rgba(0, 0, 0, .125)`,
-                        mt: 0,
+                        mt: 0
                       }}
                     >
                       {item?.name}（{item?.keys?.length}）
@@ -167,15 +180,15 @@ const ProFormSelectAppKey: React.FC<
                                     width: "80%",
                                     textOverflow: "ellipsis",
                                     overflow: "hidden",
-                                    whiteSpace: "noWrap",
-                                  },
+                                    whiteSpace: "noWrap"
+                                  }
                                 }}
                               />
                             }
                             primaryTypographyProps={{
                               noWrap: true,
                               variant: "caption",
-                              sx: { fontWeight: "bold" },
+                              sx: { fontWeight: "bold" }
                             }}
                             secondary={
                               <Typography

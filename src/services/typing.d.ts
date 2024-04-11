@@ -50,6 +50,7 @@ declare namespace boxjs {
     changeBgImgOutDefault: string;
     debugger_web: string;
     sysapppanel: number;
+    gist_cache_key?: string[];
   }
 
   export interface Appsub {

@@ -5,4 +5,5 @@ export default {
   app_subCaches: "chavy_boxjs_app_subCaches",
   backups: "chavy_boxjs_backups",
   cursessions: "chavy_boxjs_cur_sessions",
+  gistCacheKey: "@chavy_boxjs_userCfgs.gist_cache_key"
 };
