@@ -4,7 +4,7 @@ console.log(`Github`);
 
 export default defineConfig({
   // base: "/boxjs.react/",
-  publicPath: "./",
+  publicPath: "/boxjs.react/",
   history: {
     type: "browser"
   }
