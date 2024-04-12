@@ -67,7 +67,12 @@ export default function Database() {
                         <Chip
                           label={item}
                           variant="filled"
-                          sx={{ maxWidth: 200, "& span": { width: `100%` } }}
+                          sx={{
+                            maxWidth: 200,
+                            "& span": { width: `100%` },
+                            boxShadow: (theme) =>
+                              `0px 0 3px ${theme.palette.primary.main}`,
+                          }}
                           onDelete={() => {
                             fetchSave.run([
                               {
