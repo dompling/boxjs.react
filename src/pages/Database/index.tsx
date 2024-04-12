@@ -60,18 +60,18 @@ export default function Database() {
                 <Typography variant="body2">{tab.title}</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
+                <div style={{ display: "flex", flexWrap: "wrap" }}>
                   {tab.data.map((item: string, index: number) => {
                     return (
-                      <div key={`${item}_${index}`} style={{ padding: 5 }}>
+                      <div key={`${item}_${index}`} style={{ padding: 3 }}>
                         <Chip
                           label={item}
                           variant="filled"
                           sx={{
-                            maxWidth: 200,
+                            maxWidth: 160,
                             "& span": { width: `100%` },
                             boxShadow: (theme) =>
-                              `0px 0 3px ${theme.palette.primary.main}`,
+                              `0px 0 1px ${theme.palette.primary.main}`,
                           }}
                           onDelete={() => {
                             fetchSave.run([
@@ -93,7 +93,7 @@ export default function Database() {
                       </div>
                     );
                   })}
-                </Stack>
+                </div>
               </AccordionDetails>
             </Accordion>
           </Stack>
