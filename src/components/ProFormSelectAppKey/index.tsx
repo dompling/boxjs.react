@@ -229,7 +229,7 @@ const ProFormSelectAppKey: React.FC<
           </RadioGroup>
         </List>
         <DialogActions sx={{ borderTop: `1px solid rgba(0, 0, 0, .125)` }}>
-          <Button onClick={() => onClose()}>取消</Button>
+          <Button color="inherit" onClick={() => onClose()}>取消</Button>
           <Button onClick={() => onClose()} autoFocus>
             确定
           </Button>
