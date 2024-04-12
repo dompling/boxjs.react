@@ -1,7 +1,7 @@
 import {
   Search,
   SearchIconWrapper,
-  StyledInputBase
+  StyledInputBase,
 } from "@/components/HeaderContent";
 import { useModel } from "@@/exports";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
@@ -15,7 +15,7 @@ import {
   ListItem,
   ListItemText,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -29,9 +29,8 @@ import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
-  useState
+  useState,
 } from "react";
-import config from "@/utils/config";
 
 const ProFormSelectAppKey: React.FC<
   {
@@ -53,19 +52,25 @@ const ProFormSelectAppKey: React.FC<
       name: "非订阅数据",
       _id: "extra_data_key@local",
       keys: initialState?.boxdata.usercfgs.gist_cache_key || [],
-      descs_html: [], author: "local", repo: "", icons: []
-    }
+      descs_html: [],
+      author: "local",
+      repo: "",
+      icons: [],
+    },
+    ...(initialState?.boxdata.sysapps || []).filter((item) => item.keys && !!item.keys.length),
   ];
 
   Object.values(initialState?.boxdata.appSubCaches || {}).forEach((item) => {
-    apps = [...apps, ...item.apps.filter((item) => !!item.keys)];
+    apps = [
+      ...apps,
+      ...item.apps.filter((item) => item.keys && !!item.keys.length),
+    ];
   });
 
-  apps = [...apps, ...(initialState?.boxdata.sysapps || [])].filter((item) => {
+  apps = apps.filter((item) => {
     if (item.name.indexOf(debouncedValue) > -1 || !debouncedValue) return true;
     return !!item.keys.find((key) => key.indexOf(debouncedValue) > -1);
   });
-
 
   const boxJsData = initialState?.boxdata.datas;
 
@@ -105,7 +110,10 @@ const ProFormSelectAppKey: React.FC<
               setOpen(true);
             }}
           >
-            <KeyboardDoubleArrowRightIcon fontSize="small" />
+            <KeyboardDoubleArrowRightIcon
+              fontSize="small"
+              sx={{ color: (theme) => theme.palette.primary.main }}
+            />
           </IconButton>
         }
       />
@@ -114,7 +122,10 @@ const ProFormSelectAppKey: React.FC<
         onClose={() => onClose()}
         sx={{ mt: 15, mb: 15, "& .MuiDialog-paper": { width: `100%` } }}
       >
-        <AppBar position="static">
+        <AppBar
+          position="static"
+          sx={{ background: (theme) => theme.palette.primary.main }}
+        >
           <Toolbar>
             <Search>
               <StyledInputBase
@@ -136,7 +147,7 @@ const ProFormSelectAppKey: React.FC<
             position: "relative",
             overflow: "auto",
             minHeight: 300,
-            "& ul": { padding: 0 }
+            "& ul": { padding: 0 },
           }}
         >
           <RadioGroup
@@ -156,7 +167,7 @@ const ProFormSelectAppKey: React.FC<
                     <ListSubheader
                       sx={{
                         borderBottom: `1px solid rgba(0, 0, 0, .125)`,
-                        mt: 0
+                        mt: 0,
                       }}
                     >
                       {item?.name}（{item?.keys?.length}）
@@ -180,15 +191,15 @@ const ProFormSelectAppKey: React.FC<
                                     width: "80%",
                                     textOverflow: "ellipsis",
                                     overflow: "hidden",
-                                    whiteSpace: "noWrap"
-                                  }
+                                    whiteSpace: "noWrap",
+                                  },
                                 }}
                               />
                             }
                             primaryTypographyProps={{
                               noWrap: true,
                               variant: "caption",
-                              sx: { fontWeight: "bold" }
+                              sx: { fontWeight: "bold" },
                             }}
                             secondary={
                               <Typography
