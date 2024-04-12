@@ -24,7 +24,7 @@ import {
   styled,
 } from "@mui/material";
 import QueueAnim from "rc-queue-anim";
-import React, { SyntheticEvent } from "react";
+import React from "react";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -68,7 +68,7 @@ const CusListItem = styled(ListItem)(() => ({
 }));
 
 export default function Page() {
-  const { expanded, setExpanded } = useModel("app");
+  const { expanded, handleExpandedChange } = useModel("app");
   const { initialState } = useModel("@@initialState");
   const apps = initialState?.apps || [];
   const { fetchSave } = useModel("api");
@@ -128,15 +128,6 @@ export default function Page() {
   ];
 
   const UI = initialState?.ui?.(initialState?.boxdata);
-  const handleChange =
-    (panel: string) => (event: SyntheticEvent, newExpanded: boolean) => {
-      setExpanded((state) => {
-        if (newExpanded) {
-          return [...state, panel];
-        }
-        return state.filter((item) => item != panel);
-      });
-    };
 
   // const scrollToId = (id: string) => {
   //   const dom = document.getElementById(id);
@@ -169,7 +160,7 @@ export default function Page() {
           >
             <Accordion
               expanded={expanded.indexOf(item.id) !== -1}
-              onChange={handleChange(item.id)}
+              onChange={handleExpandedChange(item.id)}
               sx={{
                 borderRadius: (theme) => theme.spacing(2),
                 overflow: "hidden",

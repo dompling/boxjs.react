@@ -95,8 +95,8 @@ const ProFormSelectAppKey: React.FC<
   return (
     <>
       <Input
-        value={value}
         {...props}
+        value={value}
         onChange={(event) => {
           handelChange(event.target.value);
         }}

@@ -22,6 +22,7 @@ import { Controller, useForm } from "react-hook-form";
 export default function Database() {
   const form = useForm();
   const tip = useModel("alert");
+  const { expanded, handleExpandedChange } = useModel("app");
   const { fetchDataKey, fetchSave } = useModel("api");
   const { initialState } = useModel("@@initialState");
   const dataKeys = Object.keys(initialState?.boxdata.datas || {});
@@ -46,7 +47,10 @@ export default function Database() {
         if (!tab.data.length) return null;
         return (
           <Stack key={tab.title} direction="column" mt={2}>
-            <Accordion>
+            <Accordion
+              onChange={handleExpandedChange(tab.key)}
+              expanded={expanded.indexOf(tab.key) !== -1}
+            >
               <AccordionSummary
                 sx={{ m: 0 }}
                 expandIcon={<ExpandMoreIcon />}
@@ -62,8 +66,8 @@ export default function Database() {
                       <div key={`${item}_${index}`} style={{ padding: 5 }}>
                         <Chip
                           label={item}
-                          variant="outlined"
-                          sx={{ maxWidth: 120, "& span": { width: `100%` } }}
+                          variant="filled"
+                          sx={{ maxWidth: 200, "& span": { width: `100%` } }}
                           onDelete={() => {
                             fetchSave.run([
                               {
@@ -158,6 +162,12 @@ export default function Database() {
                   message: "请输入数据 KEY",
                   type: "warning",
                 });
+              if (!viewkeys.includes(key)) {
+                fetchSave.run({
+                  key: config.viewkeys,
+                  val: [key, ...viewkeys],
+                });
+              }
               fetchDataKey.run(key).then((response) => {
                 form.setValue("data", response.val);
               });
@@ -232,7 +242,7 @@ export default function Database() {
               if (!dataKeys.includes(key) && !gistCacheData.includes(key)) {
                 formData.push({
                   key: config.gistCacheKey,
-                  val: [...gistCacheData, key],
+                  val: [key, ...gistCacheData],
                 });
               } else if (gistCacheData.includes(key) && !data) {
                 formData.push({
