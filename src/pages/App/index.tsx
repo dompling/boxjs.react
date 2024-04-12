@@ -24,7 +24,7 @@ import {
   styled,
 } from "@mui/material";
 import QueueAnim from "rc-queue-anim";
-import React, { SyntheticEvent, useEffect } from "react";
+import React, { SyntheticEvent } from "react";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -130,7 +130,12 @@ export default function Page() {
   const UI = initialState?.ui?.(initialState?.boxdata);
   const handleChange =
     (panel: string) => (event: SyntheticEvent, newExpanded: boolean) => {
-      setExpanded(newExpanded ? panel : undefined);
+      setExpanded((state) => {
+        if (newExpanded) {
+          return [...state, panel];
+        }
+        return state.filter((item) => item != panel);
+      });
     };
 
   // const scrollToId = (id: string) => {
@@ -163,7 +168,7 @@ export default function Page() {
             }}
           >
             <Accordion
-              expanded={expanded === item.id}
+              expanded={expanded.indexOf(item.id) !== -1}
               onChange={handleChange(item.id)}
               sx={{
                 borderRadius: (theme) => theme.spacing(2),
@@ -196,107 +201,108 @@ export default function Page() {
                       {item.icon}
                     </Avatar>
                   )}
-                  <Typography>{item.name}</Typography>
+                  <Typography>
+                    {item.name}（{item.apps.length}）
+                  </Typography>
                 </Stack>
               </AccordionSummary>
 
               <AccordionDetails
-                sx={{ padding: 0, maxHeight: 500, overflowY: "auto" }}
+                sx={{ padding: 0, maxHeight: 300, overflowY: "auto" }}
               >
                 <QueueAnim type={["top", "bottom"]} leaveReverse>
-                  {expanded === item.id ? (
-                    <List
-                      key={"app_list"}
-                      sx={{ padding: 0, bgcolor: "background.paper" }}
-                    >
-                      {item.apps.map((app, index) => {
-                        const isFav = favApp.find((fav) => fav.id === app.id);
-                        UI?.loadAppBaseInfo(app);
-                        return (
-                          <React.Fragment key={`${app.id}-${index}`}>
-                            <CusListItem
-                              key={`${app.id}-${index}`}
-                              secondaryAction={
-                                !isFav ? (
-                                  <IconButton
-                                    edge="end"
-                                    aria-label="fav"
-                                    sx={{ padding: 0, paddingRight: `2px` }}
-                                    onClick={() => {
-                                      const isRun =
-                                        initialState?.boxdata.usercfgs.favapps.find(
-                                          (item) => item === app.id
-                                        );
-                                      if (isRun) return;
-                                      const usercfgs =
-                                        initialState?.boxdata.usercfgs;
-                                      usercfgs?.favapps?.push(app.id);
-                                      fetchSave.run({
-                                        key: config.userCfgs,
-                                        val: JSON.stringify({ ...usercfgs }),
-                                      });
-                                    }}
-                                  >
-                                    <StarBorderIcon />
-                                  </IconButton>
-                                ) : (
-                                  <IconButton
-                                    edge="end"
-                                    aria-label="cancelFav"
-                                    sx={{ padding: 0, paddingRight: `2px` }}
-                                    onClick={() => {
-                                      const isRun =
-                                        initialState?.boxdata.usercfgs.favapps.find(
-                                          (item) => item === app.id
-                                        );
-                                      if (!isRun) return;
-                                      const usercfgs =
-                                        initialState?.boxdata.usercfgs;
-                                      fetchSave.run({
-                                        key: config.userCfgs,
-                                        val: JSON.stringify({
-                                          ...usercfgs,
-                                          favapps: usercfgs?.favapps?.filter(
-                                            (item) => item !== app.id
-                                          ),
-                                        }),
-                                      });
-                                    }}
-                                  >
-                                    <StarIcon color="primary" />
-                                  </IconButton>
-                                )
-                              }
+                  <List
+                    key={"app_list"}
+                    sx={{ padding: 0, bgcolor: "background.paper" }}
+                  >
+                    {item.apps.map((app, index) => {
+                      const isFav = favApp.find((fav) => fav.id === app.id);
+                      UI?.loadAppBaseInfo(app);
+                      if (expanded.indexOf(item.id) === -1) return null;
+                      return (
+                        <React.Fragment key={`${app.id}-${index}`}>
+                          <CusListItem
+                            key={`${app.id}-${index}`}
+                            secondaryAction={
+                              !isFav ? (
+                                <IconButton
+                                  edge="end"
+                                  aria-label="fav"
+                                  sx={{ padding: 0, paddingRight: `2px` }}
+                                  onClick={() => {
+                                    const isRun =
+                                      initialState?.boxdata.usercfgs.favapps.find(
+                                        (item) => item === app.id
+                                      );
+                                    if (isRun) return;
+                                    const usercfgs =
+                                      initialState?.boxdata.usercfgs;
+                                    usercfgs?.favapps?.push(app.id);
+                                    fetchSave.run({
+                                      key: config.userCfgs,
+                                      val: JSON.stringify({ ...usercfgs }),
+                                    });
+                                  }}
+                                >
+                                  <StarBorderIcon />
+                                </IconButton>
+                              ) : (
+                                <IconButton
+                                  edge="end"
+                                  aria-label="cancelFav"
+                                  sx={{ padding: 0, paddingRight: `2px` }}
+                                  onClick={() => {
+                                    const isRun =
+                                      initialState?.boxdata.usercfgs.favapps.find(
+                                        (item) => item === app.id
+                                      );
+                                    if (!isRun) return;
+                                    const usercfgs =
+                                      initialState?.boxdata.usercfgs;
+                                    fetchSave.run({
+                                      key: config.userCfgs,
+                                      val: JSON.stringify({
+                                        ...usercfgs,
+                                        favapps: usercfgs?.favapps?.filter(
+                                          (item) => item !== app.id
+                                        ),
+                                      }),
+                                    });
+                                  }}
+                                >
+                                  <StarIcon color="primary" />
+                                </IconButton>
+                              )
+                            }
+                          >
+                            <ListItemButton
+                              sx={{
+                                padding: 0,
+                                pr: "0 !important",
+                              }}
+                              onClick={() => {
+                                history.push(`/app/${app.id}`);
+                              }}
                             >
-                              <ListItemButton
-                                sx={{
-                                  padding: 0,
-                                  pr: "0 !important",
-                                }}
-                                onClick={() => {
-                                  history.push(`/app/${app.id}`);
-                                }}
-                              >
-                                <ListItemAvatar>
-                                  <Avatar
-                                    alt={app.name[0]}
-                                    src={app.icon}
-                                    sx={{
-                                      boxShadow: (theme) => theme.shadows[1],
-                                    }}
-                                  />
-                                </ListItemAvatar>
-                                <ListItemTextDesc
-                                  primary={app.name}
-                                  secondary={app.repo}
+                              <ListItemAvatar>
+                                <Avatar
+                                  alt={app.name[0]}
+                                  src={app.icon}
+                                  sx={{
+                                    boxShadow: (theme) => theme.shadows[1],
+                                  }}
                                 />
-                              </ListItemButton>
-                            </CusListItem>
-                          </React.Fragment>
-                        );
-                      })}
-                    </List>
-                  ) : null}
+                              </ListItemAvatar>
+                              <ListItemTextDesc
+                                primary={app.name}
+                                secondary={app.repo}
+                              />
+                            </ListItemButton>
+                          </CusListItem>
+                        </React.Fragment>
+                      );
+                    })}
+                  </List>
                 </QueueAnim>
               </AccordionDetails>
             </Accordion>

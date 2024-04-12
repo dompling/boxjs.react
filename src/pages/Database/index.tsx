@@ -1,4 +1,5 @@
 import ProFormSelectAppKey from "@/components/ProFormSelectAppKey";
+import config from "@/utils/config";
 import { useModel } from "@@/exports";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
@@ -16,10 +17,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import $copy from "copy-to-clipboard";
-import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import config from "@/utils/config";
-
 
 export default function Database() {
   const form = useForm();
@@ -27,66 +25,71 @@ export default function Database() {
   const { fetchDataKey, fetchSave } = useModel("api");
   const { initialState } = useModel("@@initialState");
   const dataKeys = Object.keys(initialState?.boxdata.datas || {});
-  const gistCacheData = fetchDataKey.fetches[config.gistCacheKey]?.data?.val || [];
-
-  useEffect(() => {
-    fetchDataKey.run(config.gistCacheKey);
-  }, []);
+  const gistCacheData = initialState?.boxdata.usercfgs.gist_cache_key || [];
+  const viewkeys = initialState?.boxdata.usercfgs.viewkeys || [];
+  const accordion = [
+    {
+      data: gistCacheData,
+      key: config.gistCacheKey,
+      title: `非订阅数据（${gistCacheData.length}）`,
+    },
+    {
+      key: config.viewkeys,
+      title: `近期查看（${viewkeys.length}）`,
+      data: viewkeys,
+    },
+  ];
 
   return (
     <Stack spacing={3} m={1}>
-      {gistCacheData.length > 0 && (
-        <Stack direction="column" mt={2}>
-          <Accordion>
-            <AccordionSummary
-              sx={{ m: 0 }}
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1-content"
-              id="panel1-header"
-            >
-              <Typography variant="body2">
-                非订阅数据（{gistCacheData.length}）
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
-                {gistCacheData.map((item: string, index: number) => {
-                  return (
-                    <div key={`${item}_${index}`} style={{ padding: 5 }}>
-                      <Chip
-                        label={item}
-                        variant="outlined"
-                        sx={{ maxWidth: 120, "& span": { width: `100%` } }}
-                        onDelete={() => {
-                          fetchSave
-                            .run([
-                              { key: item, val: "" },
+      {accordion.map((tab, index) => {
+        if (!tab.data.length) return null;
+        return (
+          <Stack key={tab.title} direction="column" mt={2}>
+            <Accordion>
+              <AccordionSummary
+                sx={{ m: 0 }}
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel${index}-content`}
+                id={`panel${index}-header`}
+              >
+                <Typography variant="body2">{tab.title}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
+                  {tab.data.map((item: string, index: number) => {
+                    return (
+                      <div key={`${item}_${index}`} style={{ padding: 5 }}>
+                        <Chip
+                          label={item}
+                          variant="outlined"
+                          sx={{ maxWidth: 120, "& span": { width: `100%` } }}
+                          onDelete={() => {
+                            fetchSave.run([
                               {
-                                key: config.gistCacheKey,
-                                val: gistCacheData.filter(
+                                key: tab.key,
+                                val: tab.data.filter(
                                   (cache: string) => cache !== item
                                 ),
                               },
-                            ])
-                            .then(() => {
-                              fetchDataKey.run(config.gistCacheKey);
+                            ]);
+                          }}
+                          onClick={() => {
+                            form.setValue("key", item);
+                            fetchDataKey.run(item).then((response) => {
+                              form.setValue("data", response.val);
                             });
-                        }}
-                        onClick={() => {
-                          form.setValue("key", item);
-                          fetchDataKey.run(item).then((response) => {
-                            form.setValue("data", response.val);
-                          });
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-        </Stack>
-      )}
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+          </Stack>
+        );
+      })}
       <Paper elevation={3} sx={{ pt: 2 }}>
         <Box pr={2} pl={2} pb={1}>
           <Stack
@@ -237,9 +240,7 @@ export default function Database() {
                   val: gistCacheData.filter((item: string) => item !== key),
                 });
               }
-              fetchSave.run(formData).then(() => {
-                if (formData.length > 1) fetchDataKey.run(config.gistCacheKey);
-              });
+              fetchSave.run(formData);
             }}
           >
             保存
