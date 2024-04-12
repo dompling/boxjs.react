@@ -130,7 +130,7 @@ const BoxJSActions: React.FC = () => {
         icon={
           <Avatar
             alt="BoxJS"
-            src={boxjs?.icons[iconIndex]}
+            src={usercfgs?.icon || boxjs?.icons[iconIndex]}
             sx={{ width: 1, height: 1 }}
           >
             <LinkOffIcon color="error" />

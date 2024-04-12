@@ -6,6 +6,6 @@ export default defineConfig({
   base: "/boxjs.react/",
   publicPath: "/boxjs.react/",
   history: {
-    type: "browser"
+    type: "hash"
   }
 });

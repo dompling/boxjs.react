@@ -133,18 +133,18 @@ export default function Page() {
       setExpanded(newExpanded ? panel : undefined);
     };
 
-  const scrollToId = (id: string) => {
-    const dom = document.getElementById(id);
-    if (dom) {
-      dom.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  };
-
-  useEffect(() => {
-    if (expanded) {
-      setTimeout(() => scrollToId(expanded), 1000);
-    }
-  }, []);
+  // const scrollToId = (id: string) => {
+  //   const dom = document.getElementById(id);
+  //   if (dom) {
+  //     dom.scrollIntoView({ behavior: "smooth", block: "center" });
+  //   }
+  // };
+  //
+  // useEffect(() => {
+  //   if (expanded) {
+  //     setTimeout(() => scrollToId(expanded), 1000);
+  //   }
+  // }, []);
 
   return (
     <QueueAnim
@@ -200,7 +200,9 @@ export default function Page() {
                 </Stack>
               </AccordionSummary>
 
-              <AccordionDetails sx={{ padding: 0 }}>
+              <AccordionDetails
+                sx={{ padding: 0, maxHeight: 500, overflowY: "auto" }}
+              >
                 <QueueAnim type={["top", "bottom"]} leaveReverse>
                   {expanded === item.id ? (
                     <List

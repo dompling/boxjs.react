@@ -85,10 +85,7 @@ const FooterToolNav: React.FC = () => {
             sx={{
               borderRadius: 7,
               overflow: "hidden",
-              boxShadow: (theme) =>
-                theme.palette.mode === "dark"
-                  ? `0px 0 3px ${theme.palette.primary.main}`
-                  : theme.shadows[3],
+              boxShadow: (theme) => `0px 0 3px ${theme.palette.primary.main}`,
             }}
           >
             <BottomNavigation
