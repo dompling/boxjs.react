@@ -26,7 +26,7 @@ import { Controller, useForm } from "react-hook-form";
 export default function Database() {
   const form = useForm();
   const tip = useModel("alert");
-  const [delType, setDelType] = useState<"delKey" | "all">("delKey");
+  const [delType, setDelType] = useState<Record<string, "delKey" | "all">>({});
   const { expanded, handleExpandedChange } = useModel("app");
   const { fetchDataKey, fetchSave } = useModel("api");
   const { initialState } = useModel("@@initialState");
@@ -50,6 +50,7 @@ export default function Database() {
     <Stack spacing={3} m={1}>
       {accordion.map((tab, index) => {
         if (!tab.data.length) return null;
+        const delTypeItem = delType[tab.key];
         return (
           <Stack key={tab.title} direction="column" mt={2}>
             <Accordion
@@ -87,7 +88,7 @@ export default function Database() {
                                 ),
                               },
                             ];
-                            if (delType === "all") {
+                            if (delTypeItem === "all") {
                               formData.push({ key: tab.key, val: null });
                             }
                             fetchSave.run(formData);
@@ -115,14 +116,20 @@ export default function Database() {
                   <Chip
                     label="删除键和值"
                     size="small"
-                    onClick={() => setDelType("all")}
-                    color={delType === "all" ? "primary" : undefined}
+                    onClick={() => setDelType({ ...delType, [tab.key]: "all" })}
+                    color={delTypeItem === "all" ? "primary" : undefined}
                   />
                   <Chip
                     label="仅删除键"
                     size="small"
-                    onClick={() => setDelType("delKey")}
-                    color={delType === "delKey" ? "primary" : undefined}
+                    onClick={() =>
+                      setDelType({ ...delType, [tab.key]: "delKey" })
+                    }
+                    color={
+                      delTypeItem === "delKey" || !delTypeItem
+                        ? "primary"
+                        : undefined
+                    }
                   />
                   <IconButton
                     aria-label="delete"
@@ -136,7 +143,7 @@ export default function Database() {
                         },
                       ];
 
-                      if (delType === "all") {
+                      if (delTypeItem === "all") {
                         tab.data.map((dat) => {
                           formData.push({ key: dat, val: null });
                         });
