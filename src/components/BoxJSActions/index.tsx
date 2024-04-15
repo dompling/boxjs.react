@@ -110,9 +110,10 @@ const BoxJSActions: React.FC = () => {
         transform: "translateZ(0px)",
         flexGrow: 1,
         position: "fixed",
-        bottom: `9%`,
+        bottom: 0,
         right: 16,
         zIndex: 99,
+        mb: 10,
       }}
     >
       <CusSpeedDial
