@@ -1,6 +1,7 @@
 import ProFormSelectAppKey from "@/components/ProFormSelectAppKey";
 import config from "@/utils/config";
 import { useModel } from "@@/exports";
+import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   AccordionActions,
@@ -9,6 +10,7 @@ import {
   Chip,
   Divider,
   FormHelperText,
+  IconButton,
   Paper,
   Stack,
   TextField,
@@ -122,6 +124,10 @@ export default function Database() {
                     onClick={() => setDelType("delKey")}
                     color={delType === "delKey" ? "primary" : undefined}
                   />
+                  <IconButton aria-label="delete">
+                    <DeleteIcon />
+                    清空
+                  </IconButton>
                 </Stack>
               </AccordionActions>
             </Accordion>
