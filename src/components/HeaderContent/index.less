@@ -2,6 +2,7 @@
 .header_container {
   padding-top: calc(8px + constant(safe-area-inset-top)) !important;
   padding-top: calc(8px + env(safe-area-inset-top)) !important;
+  box-sizing: border-box;
   position: fixed;
   top: 0;
   left: 0;
@@ -14,4 +15,5 @@
 .app_bar {
   padding-top: calc(constant(safe-area-inset-top)) !important;
   padding-top: calc(env(safe-area-inset-top)) !important;
+  box-sizing: border-box;
 }

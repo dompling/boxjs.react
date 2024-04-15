@@ -26,7 +26,6 @@ import {
 import $copy from "copy-to-clipboard";
 import React, { useState } from "react";
 import uuid from "react-uuid";
-import ProFormSelectAppKey from "@/components/ProFormSelectAppKey";
 
 const CusBadge = styled(Badge)(({ theme }) => ({
   right: "unset",
@@ -166,7 +165,7 @@ export default function Page() {
           onClick={() => {
             let url = app.script || app.scripts?.[0]?.script || "";
             if (!url) return;
-            history.push("/code", { url });
+            history.push(`/code?url=${url}`);
           }}
         >
           {app.name}
@@ -270,7 +269,7 @@ export default function Page() {
                       sx={{ fontWeight: 500 }}
                       component={"span"}
                       onClick={() => {
-                        history.push("/code", { url: item.script });
+                        history.push(`/code?url=${item.script}`);
                       }}
                     >
                       {`${index + 1}.${item.name}`}

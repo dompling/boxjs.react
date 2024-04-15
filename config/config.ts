@@ -51,6 +51,22 @@ export default defineConfig({
         "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
     },
   ],
+  links: [
+    {
+      rel: "Bookmark",
+      href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
+    },
+    {
+      rel: "shortcut icon",
+      type: "image/x-icon",
+      href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
+    },
+    {
+      rel: "apple-touch-icon",
+      sizes: "60x60",
+      href: "https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png",
+    },
+  ],
   model: {},
   antd: false,
   request: {},

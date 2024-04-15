@@ -1,8 +1,11 @@
-import { request, useLocation, useModel, useRequest } from "@@/exports";
-import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import { request, useModel, useRequest, useSearchParams } from "@@/exports";
+import { javascript } from "@codemirror/lang-javascript";
+import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
+import UploadIcon from "@mui/icons-material/UploadFile";
+import { Box, CircularProgress, Paper, Stack, Typography } from "@mui/material";
+import CodeMirror from "@uiw/react-codemirror";
 import * as monaco from "monaco-editor";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MonacoEditor from "react-monaco-editor";
 
 export { monaco };
@@ -49,17 +52,22 @@ const surgejs_demo = [
   "$done()",
 ];
 
-export default function CodeEdit() {
+const CodeEdit: React.FC = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const $tip = useModel("alert");
   const { initialState } = useModel("@@initialState");
   const { fetchRunScript } = useModel("api");
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const queryUrl = searchParams.get("url");
+
   const value =
     initialState?.boxdata?.syscfgs.env === "Surge" &&
     initialState?.boxdata.usercfgs.httpapi
       ? surgejs_demo.join("\n")
       : envjs_demo.join("\n");
 
-  const [initialValue, setValue] = useState(value);
+  const [initialValue, setValue] = useState(queryUrl ? "" : value);
   const fetchUrl = useRequest((url) => request(url), {
     manual: true,
     formatResult: (res) => res,
@@ -69,10 +77,10 @@ export default function CodeEdit() {
   });
 
   useEffect(() => {
-    const state: any = location.state;
-    if (state?.url) fetchUrl.run(state.url);
+    if (queryUrl) fetchUrl.run(queryUrl);
   }, []);
 
+  // @ts-ignore
   return (
     <Box pt={2}>
       <Paper>
@@ -82,34 +90,94 @@ export default function CodeEdit() {
           justifyContent={"space-between"}
           alignItems={"center"}
         >
-          <Typography variant="h6">脚本编辑器</Typography>
-          <Box
-            component={"span"}
+          <Stack direction="row" alignItems={"center"} gap={1}>
+            <Typography variant="h6">脚本编辑器</Typography>
+            <Stack
+              onClick={() => {
+                inputRef.current?.click();
+              }}
+              alignItems={"center"}
+              direction="row"
+            >
+              <UploadIcon color="primary" sx={{ fontSize: 24 }} />
+            </Stack>
+          </Stack>
+
+          <Stack
+            alignItems={"center"}
+            sx={{ position: "relative" }}
             onClick={() => {
               if (!initialValue) return;
               fetchRunScript.run({ script: initialValue });
             }}
           >
-            <PlayCircleOutlineIcon color="primary" />
-          </Box>
+            <PlayCircleFilledIcon color="primary" sx={{ fontSize: 24 }} />
+            {fetchRunScript.loading && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: "-12px",
+                  marginLeft: "-12px",
+                }}
+              />
+            )}
+          </Stack>
         </Stack>
 
-        <MonacoEditor
-          width="100%"
-          value={fetchUrl.loading ? `//...Loading` : initialValue}
-          height={`calc(100vh - 200px)`}
-          theme={initialState?.mode === "dark" ? "vs-dark" : "vs"}
-          onChange={(editorValue) => {
-            setValue(editorValue);
-          }}
-          options={{
-            fontSize: 12,
-            tabSize: 2,
-            selectOnLineNumbers: true,
-            minimap: { enabled: false },
-          }}
-        />
+        {initialState?.isMobile ? (
+          <CodeMirror
+            value={initialValue}
+            style={{ fontSize: 12 }}
+            maxWidth="100%"
+            extensions={[javascript()]}
+            height={`calc(100vh - 240px)`}
+            theme={initialState?.mode === "dark" ? "dark" : "light"}
+          />
+        ) : (
+          <MonacoEditor
+            width="100%"
+            value={fetchUrl.loading ? `//...Loading` : initialValue}
+            height={`calc(100vh - 200px)`}
+            theme={initialState?.mode === "dark" ? "vs-dark" : "vs"}
+            onChange={(editorValue) => {
+              setValue(editorValue);
+            }}
+            options={{
+              fontSize: 12,
+              tabSize: 2,
+              contextmenu: false,
+              selectOnLineNumbers: true,
+              minimap: { enabled: false },
+            }}
+          />
+        )}
       </Paper>
+      <input
+        ref={inputRef}
+        type={"file"}
+        style={{ display: "none" }}
+        onChange={() => {
+          const files = inputRef.current?.files;
+          if (!files?.length)
+            return $tip.alert({ message: "请选择文件", type: "error" });
+          const reader = new FileReader(); //新建一个FileReader
+          reader.readAsText(files[0], "UTF-8"); //读取文件
+          reader.onload = async (evt) => {
+            //读取完文件之后会回来这里
+            const fileString: any = evt?.target?.result; // 读取文件内容
+            try {
+              setValue(fileString);
+            } catch (e) {
+              console.log(e);
+            }
+          };
+        }}
+      />
     </Box>
   );
-}
+};
+
+export default CodeEdit;
