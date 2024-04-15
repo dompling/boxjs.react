@@ -133,7 +133,7 @@ const CodeEdit: React.FC = () => {
             style={{ fontSize: 12 }}
             maxWidth="100%"
             extensions={[javascript()]}
-            height={`calc(100vh - 240px)`}
+            height={`calc(100vh - 300px)`}
             theme={initialState?.mode === "dark" ? "dark" : "light"}
             onChange={(value) => setValue(value)}
           />
