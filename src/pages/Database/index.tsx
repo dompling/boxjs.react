@@ -124,8 +124,27 @@ export default function Database() {
                     onClick={() => setDelType("delKey")}
                     color={delType === "delKey" ? "primary" : undefined}
                   />
-                  <IconButton aria-label="delete">
-                    <DeleteIcon />
+                  <IconButton
+                    aria-label="delete"
+                    color="primary"
+                    sx={{ fontSize: 16 }}
+                    onClick={() => {
+                      const formData: any[] = [
+                        {
+                          key: tab.key,
+                          val: [],
+                        },
+                      ];
+
+                      if (delType === "all") {
+                        tab.data.map((dat) => {
+                          formData.push({ key: dat, val: null });
+                        });
+                      }
+                      fetchSave.run(formData);
+                    }}
+                  >
+                    <DeleteIcon color="primary" sx={{ fontSize: 16 }} />
                     清空
                   </IconButton>
                 </Stack>
