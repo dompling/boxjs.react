@@ -160,6 +160,7 @@ const GridItem: React.FC<{
             variant="body2"
             sx={{
               fontSize: 12,
+              maxWidth: 54,
               color: initialState?.boxdata.usercfgs.bgimg ? "#fff" : "unset",
               width: `100%`,
               fontWeight: "bold",
