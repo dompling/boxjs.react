@@ -3,6 +3,7 @@ import config from "@/utils/config";
 import { useModel } from "@@/exports";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
+  AccordionActions,
   Box,
   Button,
   Chip,
@@ -17,11 +18,13 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import $copy from "copy-to-clipboard";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export default function Database() {
   const form = useForm();
   const tip = useModel("alert");
+  const [delType, setDelType] = useState<"delKey" | "all">("delKey");
   const { expanded, handleExpandedChange } = useModel("app");
   const { fetchDataKey, fetchSave } = useModel("api");
   const { initialState } = useModel("@@initialState");
@@ -74,14 +77,20 @@ export default function Database() {
                               `0px 0 1px ${theme.palette.primary.main}`,
                           }}
                           onDelete={() => {
-                            fetchSave.run([
-                              {
-                                key: tab.key,
-                                val: tab.data.filter(
-                                  (cache: string) => cache !== item
-                                ),
-                              },
-                            ]);
+                            const formData: any[] = [
+                              [
+                                {
+                                  key: tab.key,
+                                  val: tab.data.filter(
+                                    (cache: string) => cache !== item
+                                  ),
+                                },
+                              ],
+                            ];
+                            if (delType === "all") {
+                              formData.push([{ key: tab.key, val: null }]);
+                            }
+                            fetchSave.run(formData);
                           }}
                           onClick={() => {
                             form.setValue("key", item);
@@ -95,6 +104,28 @@ export default function Database() {
                   })}
                 </div>
               </AccordionDetails>
+              <Divider />
+              <AccordionActions>
+                <Stack
+                  direction="row"
+                  alignItems={"center"}
+                  justifyContent={"space-between"}
+                  sx={{ width: `100%`, p: 1 }}
+                >
+                  <Chip
+                    label="删除键和值"
+                    size="small"
+                    onClick={() => setDelType("all")}
+                    color={delType === "all" ? "primary" : undefined}
+                  />
+                  <Chip
+                    label="仅删除键"
+                    size="small"
+                    onClick={() => setDelType("delKey")}
+                    color={delType === "delKey" ? "primary" : undefined}
+                  />
+                </Stack>
+              </AccordionActions>
             </Accordion>
           </Stack>
         );
