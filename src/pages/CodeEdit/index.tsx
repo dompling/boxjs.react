@@ -135,6 +135,7 @@ const CodeEdit: React.FC = () => {
             extensions={[javascript()]}
             height={`calc(100vh - 240px)`}
             theme={initialState?.mode === "dark" ? "dark" : "light"}
+            onChange={(value) => setValue(value)}
           />
         ) : (
           <MonacoEditor

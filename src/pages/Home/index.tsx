@@ -263,8 +263,8 @@ function Page() {
         let script: any = null;
         if (item?.script) {
           script = item?.script;
-        } else if (item?.scripts && item?.scripts[0].script) {
-          script = item?.scripts[0].script;
+        } else if (item?.scripts && item?.scripts[0]?.script) {
+          script = item?.scripts[0]?.script;
         }
         return (
           <DropItem
