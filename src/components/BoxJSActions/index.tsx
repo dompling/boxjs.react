@@ -110,7 +110,7 @@ const BoxJSActions: React.FC = () => {
         transform: "translateZ(0px)",
         flexGrow: 1,
         position: "fixed",
-        bottom: `12%`,
+        bottom: `9%`,
         right: 16,
         zIndex: 99,
       }}

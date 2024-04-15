@@ -3,12 +3,12 @@ import { history, useModel } from "@@/exports";
 import {
   Avatar,
   Box,
-  Grid,
   LinearProgress,
   Paper,
   Stack,
   Typography,
   styled,
+  useMediaQuery,
 } from "@mui/material";
 import update from "immutability-helper";
 import { memo, useCallback, useState } from "react";
@@ -42,6 +42,8 @@ const GridItem: React.FC<{
   moveCard: (id: string, to: number) => void;
   findCard: (id: string) => { index: number };
 }> = ({ item, script, moveCard, findCard, data, ...props }) => {
+  const matches = useMediaQuery("(min-width:960px)");
+
   const id = `${item?.id}_${item?.author}`;
   const { initialState } = useModel("@@initialState");
   const { fetchRunScript, fetchSave } = useModel("api");
@@ -95,84 +97,82 @@ const GridItem: React.FC<{
 
   return (
     <>
-      <Grid
-        item
-        xs={3}
-        md={2}
+      <Item
         key={`${item?.id}/${item?.author}/${item?.name}`}
-        style={{ opacity, transform: `translate(0,0)` }}
+        sx={{
+          flex: matches ? `0 0 ${100 / 6}%` : `0 0 25%`,
+          opacity,
+          transform: `translate(0,0)`,
+          pt: 1,
+          pb: 1,
+        }}
+        ref={(node) => drag(drop(node))}
+        onClick={() => {
+          const timeKey = `${item?.id}`;
+          if (timeoutCount[timeKey] === undefined) timeoutCount[timeKey] = 0;
+          timeoutCount[timeKey] += 1;
+
+          timeout[timeKey] = setTimeout(() => {
+            if (timeout[timeKey] !== undefined) clearTimeout(timeout[timeKey]);
+            if (timeoutCount[timeKey] === 2) {
+              timeoutCount[timeKey] = 0;
+
+              if (!script) return history.push(`/app/${timeKey}`);
+              fetchRunScript.run({ url: script, isRemote: true });
+            } else if (timeoutCount[timeKey] === 1) {
+              history.push(`/app/${timeKey}`);
+            }
+            timeoutCount = {};
+          }, 200);
+        }}
       >
-        <Item
-          ref={(node) => drag(drop(node))}
-          onClick={() => {
-            const timeKey = `${item?.id}`;
-            if (timeoutCount[timeKey] === undefined) timeoutCount[timeKey] = 0;
-            timeoutCount[timeKey] += 1;
-
-            timeout[timeKey] = setTimeout(() => {
-              if (timeout[timeKey] !== undefined)
-                clearTimeout(timeout[timeKey]);
-              if (timeoutCount[timeKey] === 2) {
-                timeoutCount[timeKey] = 0;
-
-                if (!script) return history.push(`/app/${timeKey}`);
-                fetchRunScript.run({ url: script, isRemote: true });
-              } else if (timeoutCount[timeKey] === 1) {
-                history.push(`/app/${timeKey}`);
-              }
-              timeoutCount = {};
-            }, 200);
-          }}
-        >
-          <Stack spacing={1} justifyContent={"center"} alignItems={"center"}>
-            <Box
+        <Stack spacing={1} justifyContent={"center"} alignItems={"center"}>
+          <Box
+            sx={{
+              width: 50,
+              height: 50,
+              borderRadius: 2,
+              overflow: "hidden",
+              position: "relative",
+              boxShadow: (theme) => theme.shadows[5],
+            }}
+          >
+            <Avatar
+              variant="square"
+              alt={item?.name}
+              src={item?.icon}
               sx={{
-                width: 50,
-                height: 50,
-                borderRadius: 2,
-                overflow: "hidden",
-                position: "relative",
-                boxShadow: (theme) => theme.shadows[4],
+                width: "100%",
+                height: "100%",
               }}
-            >
-              <Avatar
-                variant="square"
-                alt={item?.name}
-                src={item?.icon}
+            />
+            {fetchRunScript.fetches[`${script}`]?.loading && (
+              <LinearProgress
                 sx={{
+                  position: "absolute",
+                  bottom: 0,
                   width: "100%",
-                  height: "100%",
-                  background: "#ECECEE",
                 }}
               />
-              {fetchRunScript.fetches[`${script}`]?.loading && (
-                <LinearProgress
-                  sx={{
-                    position: "absolute",
-                    bottom: 0,
-                    width: "100%",
-                  }}
-                />
-              )}
-            </Box>
-            <Typography
-              variant="body2"
-              sx={{
-                fontSize: 10,
-                color: initialState?.boxdata.usercfgs.bgimg ? "#fff" : "unset",
-                width: `100%`,
-                fontWeight: "bold",
-                textShadow: initialState?.boxdata.usercfgs.bgimg
-                  ? "black 0.1em 0.1em 0.2em"
-                  : "unset",
-              }}
-              noWrap
-            >
-              {item?.name}
-            </Typography>
-          </Stack>
-        </Item>
-      </Grid>
+            )}
+          </Box>
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: 12,
+              color: initialState?.boxdata.usercfgs.bgimg ? "#fff" : "unset",
+              width: `100%`,
+              fontWeight: "bold",
+              textShadow: initialState?.boxdata.usercfgs.bgimg
+                ? "black 0.1em 0.1em 0.2em"
+                : "unset",
+            }}
+            noWrap
+          >
+            {item?.name}
+          </Typography>
+        </Stack>
+      </Item>
       {isDragging && initialState?.isMobile && (
         <Stack
           sx={{
@@ -257,7 +257,7 @@ function Page() {
   const UI = initialState?.ui(initialState.boxdata);
 
   return (
-    <Grid ref={drop} container spacing={4}>
+    <Stack ref={drop} direction={"row"} flexWrap={"wrap"}>
       {cards?.map((item, index) => {
         UI?.loadAppBaseInfo(item);
         let script: any = null;
@@ -278,17 +278,17 @@ function Page() {
           />
         );
       })}
-    </Grid>
+    </Stack>
   );
 }
 
 export default function Home() {
   const { initialState } = useModel("@@initialState");
   return (
-    <Box pt={4} component={"div"}>
+    <Box pt={1} component={"div"}>
       <DndProvider
-        backend={initialState?.isMobile ? TouchBackend : HTML5Backend}
         options={{ delay: 400 }}
+        backend={initialState?.isMobile ? TouchBackend : HTML5Backend}
       >
         <Page />
       </DndProvider>
