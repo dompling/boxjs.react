@@ -78,17 +78,15 @@ export default function Database() {
                           }}
                           onDelete={() => {
                             const formData: any[] = [
-                              [
-                                {
-                                  key: tab.key,
-                                  val: tab.data.filter(
-                                    (cache: string) => cache !== item
-                                  ),
-                                },
-                              ],
+                              {
+                                key: tab.key,
+                                val: tab.data.filter(
+                                  (cache: string) => cache !== item
+                                ),
+                              },
                             ];
                             if (delType === "all") {
-                              formData.push([{ key: tab.key, val: null }]);
+                              formData.push({ key: tab.key, val: null });
                             }
                             fetchSave.run(formData);
                           }}
