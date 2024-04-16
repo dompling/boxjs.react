@@ -228,6 +228,8 @@ declare namespace boxjs {
     rows?: number;
     primary?: string[];
     child?: Setting[];
+
+    childScripts?: Script[];
     pattern?: RegExp;
     formName: string;
   }

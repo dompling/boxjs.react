@@ -198,7 +198,7 @@ export default function Page() {
           </Box>
         )}
       </Stack>
-      {app.descs_html?.length && (
+      {app.descs_html?.length > 0 && (
         <Paper key={"html"} sx={{ padding: 2, mb: 2 }} elevation={3}>
           {app.descs_html.map((item, index) => {
             return (

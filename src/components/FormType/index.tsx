@@ -1,8 +1,9 @@
 import { IOSSwitch } from "@/components/IOSSwitch";
 import ProFormSelectAppKey from "@/components/ProFormSelectAppKey";
-import { useModel } from "@@/exports";
+import { history, request, useModel, useRequest } from "@@/exports";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import {
   Accordion,
   AccordionDetails,
@@ -10,13 +11,17 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   Drawer,
   FormControl,
   FormControlLabel,
   FormHelperText,
   FormLabel,
+  IconButton,
   Input,
   InputLabel,
+  List,
+  ListItem,
   MenuItem,
   Radio,
   RadioGroup,
@@ -398,6 +403,13 @@ const FormList: React.FC<{
     control: form?.control,
   });
 
+  const { fetchRunScript } = useModel("api");
+
+  const fetchUrl = useRequest((url) => request(url), {
+    manual: true,
+    formatResult: (res) => res,
+  });
+
   const formDrawer = useForm();
   const tip = useModel("alert");
 
@@ -441,6 +453,61 @@ const FormList: React.FC<{
   const handelDrawerClose = () => {
     setOpen(false);
     formDrawer.reset();
+  };
+
+  const renderChildScripts = (values?: any) => {
+    return setting?.childScripts ? (
+      <List disablePadding>
+        {setting?.childScripts?.map((item, index) => {
+          return (
+            <ListItem
+              key={item.name}
+              sx={{ padding: 0, mb: 2 }}
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  sx={{ mr: -3.5, position: "relative" }}
+                  aria-label={item.name}
+                  onClick={() => {
+                    const params = `const $arguments=${JSON.stringify(
+                      values || formDrawer.getValues()
+                    )};\n`;
+                    fetchUrl.run(item.script).then((res) => {
+                      fetchRunScript.run({ script: `${params}${res}` });
+                    });
+                  }}
+                >
+                  <PlayCircleFilledIcon />
+                  {fetchRunScript.loading && (
+                    <CircularProgress
+                      size={24}
+                      sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        marginTop: "-12px",
+                        marginLeft: "-12px",
+                      }}
+                    />
+                  )}
+                </IconButton>
+              }
+            >
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 500 }}
+                component={"span"}
+                onClick={() => {
+                  history.push(`/code?url=${item.script}`);
+                }}
+              >
+                {`${index + 1}.${item.name}`}
+              </Typography>
+            </ListItem>
+          );
+        })}
+      </List>
+    ) : null;
   };
 
   return (
@@ -491,6 +558,7 @@ const FormList: React.FC<{
           </Stack>
         </Box>
         <Stack sx={{ pt: 10, pl: 2, pr: 2, height: `60vh`, maxHeight: `60vh` }}>
+          {renderChildScripts()}
           {formItems && drawerTitle === "新增" ? (
             formItems?.map((settingKey, index) => {
               let settingItem: boxjs.Setting = child[settingKey] || {
@@ -548,6 +616,7 @@ const FormList: React.FC<{
               <Typography variant="body2">{title?.join("-")}</Typography>
             </AccordionSummary>
             <AccordionDetails>
+              {renderChildScripts(item)}
               {expanded === id &&
                 formItems?.map((settingKey) => {
                   let settingItem: boxjs.Setting = child[settingKey] || {

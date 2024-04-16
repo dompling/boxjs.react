@@ -42,6 +42,7 @@ const OutPut: React.FC<{
           keepMounted: true,
         }}
         sx={{
+          zIndex: 9999,
           "& .MuiDrawer-paperAnchorBottom": {
             maxHeight: `60%`,
             minHeight: `30%`,

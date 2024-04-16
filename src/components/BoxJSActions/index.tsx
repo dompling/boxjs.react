@@ -175,7 +175,7 @@ const BoxJSActions: React.FC = () => {
         <div
           style={{
             position: "fixed",
-            zIndex: 9998,
+            zIndex: 98,
             left: 0,
             top: 0,
             right: 0,
@@ -194,7 +194,7 @@ const BoxJSActions: React.FC = () => {
           position: "fixed",
           bottom: 100,
           right: 16,
-          zIndex: 9999,
+          zIndex: 99,
           ...actionStyle,
         }}
         component={"div"}
