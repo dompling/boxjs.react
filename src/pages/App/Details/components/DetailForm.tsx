@@ -18,7 +18,7 @@ const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
       if (dataVal === null) dataVal = undefined;
       try {
         defaultValues[setting.id.replaceAll(".", "~")] = setting.child
-          ? JSON.parse(`${dataVal || []}`)
+          ? JSON.parse(`${dataVal || "[]"}`)
           : dataVal;
       } catch (e) {
         console.log(e);
