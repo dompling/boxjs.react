@@ -455,7 +455,7 @@ const FormList: React.FC<{
     formDrawer.reset();
   };
 
-  const renderChildScripts = (values?: any) => {
+  const renderChildScripts = (index?: number) => {
     return setting?.childScripts ? (
       <List disablePadding>
         {setting?.childScripts?.map((item, index) => {
@@ -470,7 +470,7 @@ const FormList: React.FC<{
                   aria-label={item.name}
                   onClick={() => {
                     const params = `const $arguments=${JSON.stringify(
-                      values || formDrawer.getValues()
+                      form?.control._formValues[name][index] || formDrawer.getValues()
                     )};\n`;
                     fetchUrl.run(item.script).then((res) => {
                       fetchRunScript.run({ script: `${params}${res}` });
@@ -616,7 +616,7 @@ const FormList: React.FC<{
               <Typography variant="body2">{title?.join("-")}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              {renderChildScripts(item)}
+              {renderChildScripts(index)}
               {expanded === id &&
                 formItems?.map((settingKey) => {
                   let settingItem: boxjs.Setting = child[settingKey] || {
