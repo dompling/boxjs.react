@@ -1,9 +1,13 @@
+import footerStyle from "@/components/FooterToolNav/index.less";
+import headerStyle from "@/components/HeaderContent/index.less";
 import { request, useModel, useRequest, useSearchParams } from "@@/exports";
 import { javascript } from "@codemirror/lang-javascript";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
-import UploadIcon from "@mui/icons-material/UploadFile";
 import { Box, CircularProgress, Paper, Stack, Typography } from "@mui/material";
 import CodeMirror from "@uiw/react-codemirror";
+import moment from "moment";
 import * as monaco from "monaco-editor";
 import React, { useEffect, useRef, useState } from "react";
 import MonacoEditor from "react-monaco-editor";
@@ -76,11 +80,22 @@ const CodeEdit: React.FC = () => {
     },
   });
 
+  const footerRect =
+    (document
+      .getElementsByClassName(footerStyle.footer_container)?.[0]
+      ?.getBoundingClientRect().height || 100) + 30;
+
+  const headerRect =
+    (document
+      .getElementsByClassName(headerStyle.header_container)?.[0]
+      ?.getBoundingClientRect().height || 160) + 60;
+  const calc = footerRect + headerRect;
+  console.log(calc);
+
   useEffect(() => {
     if (queryUrl) fetchUrl.run(queryUrl);
   }, []);
 
-  // @ts-ignore
   return (
     <Box pt={2}>
       <Paper>
@@ -92,14 +107,34 @@ const CodeEdit: React.FC = () => {
         >
           <Stack direction="row" alignItems={"center"} gap={1}>
             <Typography variant="h6">脚本编辑器</Typography>
-            <Stack
-              onClick={() => {
-                inputRef.current?.click();
-              }}
-              alignItems={"center"}
-              direction="row"
-            >
-              <UploadIcon color="primary" sx={{ fontSize: 24 }} />
+            <Stack alignItems={"center"} direction="row" spacing={2}>
+              <CloudUploadIcon
+                color="primary"
+                sx={{ fontSize: 24 }}
+                onClick={() => {
+                  inputRef.current?.click();
+                }}
+              />
+              <CloudDownloadIcon
+                color="primary"
+                sx={{ fontSize: 24 }}
+                onClick={() => {
+                  const blob = new Blob([initialValue], {
+                    type: "text/plain;charset=utf-8;",
+                  });
+                  const now = moment().format("YYYY_MM_DD_HH_mm_ss");
+                  const urls = queryUrl?.split("/") || [];
+                  const urlFileName = urls[urls.length - 1] || "未知名称";
+                  let fileName = `${urlFileName.replace(".js", "")}_${now}.js`;
+                  let objectUrl = URL.createObjectURL(blob);
+                  let link = document.createElement("a");
+                  link.href = objectUrl;
+                  link.setAttribute("download", fileName);
+                  document.body.appendChild(link);
+                  link.click();
+                  window.URL.revokeObjectURL(link.href);
+                }}
+              />
             </Stack>
           </Stack>
 
@@ -133,7 +168,7 @@ const CodeEdit: React.FC = () => {
             style={{ fontSize: 12 }}
             maxWidth="100%"
             extensions={[javascript()]}
-            height={`calc(100vh - 240px)`}
+            height={`calc(100vh - ${calc}px)`}
             theme={initialState?.mode === "dark" ? "dark" : "light"}
             onChange={(value) => setValue(value)}
           />
@@ -141,7 +176,7 @@ const CodeEdit: React.FC = () => {
           <MonacoEditor
             width="100%"
             value={fetchUrl.loading ? `//...Loading` : initialValue}
-            height={`calc(100vh - 200px)`}
+            height={`calc(100vh - ${calc - 90}px)`}
             theme={initialState?.mode === "dark" ? "vs-dark" : "vs"}
             onChange={(editorValue) => {
               setValue(editorValue);
