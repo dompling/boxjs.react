@@ -91,14 +91,16 @@ const BoxJSActions: React.FC = () => {
   };
 
   useEffect(() => {
-    actionRef.current?.addEventListener("touchmove", handelDragMove, {
-      passive: false,
-    });
+    if (!open) {
+      actionRef.current?.addEventListener("touchmove", handelDragMove, {
+        passive: false,
+      });
+    }
 
     return () => {
       actionRef.current?.removeEventListener("touchmove", handelDragMove);
     };
-  }, []);
+  }, [open]);
 
   const actions = [
     ...(!usercfgs?.isHideHelp
