@@ -1,3 +1,5 @@
+import footerStyle from "@/components/FooterToolNav/index.less";
+import headerStyle from "@/components/HeaderContent/index.less";
 import config from "@/utils/config";
 import { history, useModel } from "@@/exports";
 import CodeIcon from "@mui/icons-material/Code";
@@ -48,7 +50,18 @@ const BoxJSActions: React.FC = () => {
 
   const half = window?.innerWidth / 2;
 
+  const headerRect =
+    (document
+      .getElementsByClassName(headerStyle.header_container)?.[0]
+      ?.getBoundingClientRect().height || 160) + 30;
+
+  const footerRect =
+    (document
+      .getElementsByClassName(footerStyle.footer_container)?.[0]
+      ?.getBoundingClientRect().height || 100) + 15;
+
   const handelDragMove = (event: React.TouchEvent | any) => {
+    if (open) return;
     event.stopPropagation();
     if (!actionRef.current) return;
     const touch = event.touches[0];
@@ -66,12 +79,12 @@ const BoxJSActions: React.FC = () => {
       window.innerHeight -
       (touch.clientY + actionRef.current?.getBoundingClientRect().height / 2);
 
-    if (styles.bottom <= 100) {
-      styles.bottom = 100;
+    if (styles.bottom <= footerRect) {
+      styles.bottom = footerRect;
     }
 
-    if (styles.bottom >= window.innerHeight - 120) {
-      styles.bottom = window.innerHeight - 120;
+    if (styles.bottom >= window.innerHeight - headerRect) {
+      styles.bottom = window.innerHeight - headerRect;
     }
 
     setActionStyle(styles);
@@ -81,6 +94,7 @@ const BoxJSActions: React.FC = () => {
     actionRef.current?.addEventListener("touchmove", handelDragMove, {
       passive: false,
     });
+
     return () => {
       actionRef.current?.removeEventListener("touchmove", handelDragMove);
     };
@@ -183,11 +197,13 @@ const BoxJSActions: React.FC = () => {
         }}
         component={"div"}
         onTouchStart={(event) => {
+          if (open) return;
           setDrag(true);
           event.stopPropagation();
         }}
         onTouchEnd={(event) => {
           setDrag(false);
+          if (open) return;
           event.stopPropagation();
           if (lodash.isEqual(actionStyle, usercfgs?.actions_position)) return;
           const newState = { ...actionStyle };
@@ -208,7 +224,7 @@ const BoxJSActions: React.FC = () => {
         }}
       >
         <CusSpeedDial
-          open={open}
+          open={open && !isDrag}
           onClose={(e) => {
             setOpen(false);
             e.preventDefault();
