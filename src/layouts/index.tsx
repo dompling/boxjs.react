@@ -83,7 +83,9 @@ export default function Layout() {
         }
       >
         {!["/my"].includes(location.pathname) && <HeaderContent />}
-        <BoxJSActions />
+        {initialState?.boxdata?.usercfgs?.isHideBoxIcon !== true && (
+          <BoxJSActions />
+        )}
         <div
           draggable={false}
           style={{
