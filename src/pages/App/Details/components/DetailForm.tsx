@@ -14,7 +14,7 @@ const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
   const initDefaultValue = () => {
     formConfig.forEach((setting) => {
       const data = initialState?.boxdata.datas[setting.id];
-      let dataVal = data === undefined ? setting.val : data;
+      let dataVal = data === "" || data === undefined ? setting.val : data;
       if (dataVal === null) dataVal = undefined;
       try {
         defaultValues[setting.id.replaceAll(".", "~")] = setting.child
