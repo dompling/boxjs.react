@@ -1,4 +1,5 @@
 import { IOSSwitch } from "@/components/IOSSwitch";
+import ProFormModalSelect from "@/components/ProFormModalSelect";
 import ProFormSelectAppKey from "@/components/ProFormSelectAppKey";
 import { history, request, useModel, useRequest } from "@@/exports";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -66,6 +67,18 @@ function CusFormHelperText({ text, ...props }: any) {
       ) : null}
     </QueueAnim>
   );
+}
+
+function getOption(data: string | { label: string; key: string }) {
+  let options = { label: "", key: "" };
+
+  if (typeof data === "string") {
+    options.label = data;
+    options.key = data;
+  } else {
+    options = data;
+  }
+  return options;
 }
 
 const FormPickerColor: React.FC<{
@@ -212,33 +225,36 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
             render={({ field }) => {
               const isStr = typeof field.value === "string";
               const fieldValue =
-                (isStr ? field.value.split(",") : field.value) || [];
+                (isStr && field.value ? field.value.split(",") : field.value) ||
+                [];
+
               return (
                 <>
                   {data.items?.map((checkbox) => {
+                    const options = getOption(checkbox);
                     return (
                       <FormControlLabel
-                        key={checkbox.key}
+                        key={options.key}
                         control={
                           <Checkbox
-                            checked={fieldValue?.includes(checkbox.key)}
+                            checked={fieldValue?.includes(options.key)}
                             onChange={(e) => {
                               let newValue: string[] = fieldValue;
-
                               if (e.target.checked) {
-                                newValue.push(checkbox.key);
+                                newValue.push(options.key);
                               } else {
                                 newValue = newValue.filter(
-                                  (f) => f != checkbox.key
+                                  (f) => f != options.key
                                 );
                               }
+
                               field.onChange(
                                 isStr ? newValue.join(",") : newValue
                               );
                             }}
                           />
                         }
-                        label={checkbox.label}
+                        label={options.label}
                         disabled={data.disabled}
                       />
                     );
@@ -252,6 +268,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
       )}
 
       {[
+        "modalSelects",
         "cacheKey",
         "text",
         "textarea",
@@ -297,11 +314,12 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
               return (
                 <RadioGroup {...field}>
                   {data.items?.map((radio) => {
+                    const options = getOption(radio);
                     return (
                       <FormControlLabel
-                        key={radio.key}
-                        value={radio.key}
-                        label={radio.label}
+                        key={options.key}
+                        value={options.key}
+                        label={options.label}
                         control={<Radio />}
                         disabled={data.disabled}
                       />
@@ -329,9 +347,13 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
                   {...field}
                 >
                   {data.items?.map((item, index) => {
+                    const options = getOption(item);
                     return (
-                      <MenuItem key={`${item.key}_${index}`} value={item.key}>
-                        {item.label}
+                      <MenuItem
+                        key={`${options.key}_${index}`}
+                        value={options.key}
+                      >
+                        {options.label}
                       </MenuItem>
                     );
                   })}
@@ -342,6 +364,33 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
           <CusFormHelperText text={data.desc} />
         </FormControl>
       )}
+
+      {data.type === "modalSelects" && (
+        <FormControl sx={{ m: 1 }} variant="standard">
+          <Controller
+            {...formItemProps}
+            render={({ field, formState }) => {
+              return (
+                <>
+                  <InputLabel htmlFor={data.id} shrink={!!field.value}>
+                    {data.name}
+                  </InputLabel>
+                  <ProFormModalSelect
+                    inputProps={{ shrink: true }}
+                    {...field}
+                    items={data.items}
+                  />
+                  <CusFormHelperText
+                    text={data.desc}
+                    error={!!formState.errors[field.name]}
+                  />
+                </>
+              );
+            }}
+          />
+        </FormControl>
+      )}
+
       {data.type === "cacheKey" && (
         <FormControl size="small" sx={{ width: 1 }} variant="standard">
           <Controller
@@ -455,7 +504,7 @@ const FormList: React.FC<{
     formDrawer.reset();
   };
 
-  const renderChildScripts = (index?: number) => {
+  const renderChildScripts = () => {
     return setting?.childScripts ? (
       <List disablePadding>
         {setting?.childScripts?.map((item, index) => {
@@ -470,7 +519,8 @@ const FormList: React.FC<{
                   aria-label={item.name}
                   onClick={() => {
                     const params = `const $arguments=${JSON.stringify(
-                      form?.control._formValues[name][index] || formDrawer.getValues()
+                      form?.control._formValues[name][index] ||
+                        formDrawer.getValues()
                     )};\n`;
                     fetchUrl.run(item.script).then((res) => {
                       fetchRunScript.run({ script: `${params}${res}` });
@@ -616,7 +666,7 @@ const FormList: React.FC<{
               <Typography variant="body2">{title?.join("-")}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              {renderChildScripts(index)}
+              {renderChildScripts()}
               {expanded === id &&
                 formItems?.map((settingKey) => {
                   let settingItem: boxjs.Setting = child[settingKey] || {

@@ -219,17 +219,18 @@ declare namespace boxjs {
       | "checkboxes"
       | "colorpicker"
       | "number"
-      | "cacheKey";
+      | "cacheKey"
+      | "modalSelects";
     desc: string;
     disabled?: boolean;
-    items?: Item[];
+    items?: Item[] | string[];
     placeholder?: string;
     autoGrow?: boolean;
     rows?: number;
     primary?: string[];
     child?: Setting[];
-
     childScripts?: Script[];
+    readCache?: string;
     pattern?: RegExp;
     formName: string;
   }

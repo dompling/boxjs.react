@@ -14,7 +14,7 @@ const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
   const initDefaultValue = () => {
     formConfig.forEach((setting) => {
       const data = initialState?.boxdata.datas[setting.id];
-      let dataVal = data === "" || data === undefined ? setting.val : data;
+      let dataVal = data === undefined ? setting.val : data;
       if (dataVal === null) dataVal = undefined;
       try {
         defaultValues[setting.id.replaceAll(".", "~")] = setting.child
@@ -60,7 +60,10 @@ const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
       autoComplete="off"
     >
       <Stack sx={{ pl: 2, pr: 2 }} spacing={1}>
-        {formConfig.map((setting) => {
+        {formConfig.map((setting: any) => {
+          if (typeof setting.items === "string") {
+            setting.items = initialState?.boxdata.datas[setting.items] || [];
+          }
           return (
             <FormType
               form={form}

@@ -90,7 +90,6 @@ const CodeEdit: React.FC = () => {
       .getElementsByClassName(headerStyle.header_container)?.[0]
       ?.getBoundingClientRect().height || 160) + 60;
   const calc = footerRect + headerRect;
-  console.log(calc);
 
   useEffect(() => {
     if (queryUrl) fetchUrl.run(queryUrl);
