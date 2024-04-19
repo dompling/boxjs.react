@@ -38,7 +38,6 @@ const ToggleColorMode: React.FC<{ children: React.ReactNode }> = (props) => {
       }),
     [mode, color_light_primary, color_dark_primary]
   );
-
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
