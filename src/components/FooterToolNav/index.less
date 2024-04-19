@@ -7,8 +7,8 @@
   left: 0;
   right: 0;
   z-index: 99;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   transition: padding 1s linear;
 
   .footer_bar {
@@ -20,11 +20,9 @@
   padding: 0 !important;
 
   .footer_bar {
-    > div {
-      padding-bottom: calc(constant(safe-area-inset-bottom) / 2) !important;
-      padding-bottom: calc(env(safe-area-inset-bottom) / 2) !important;
-    }
 
+    padding-bottom: calc(constant(safe-area-inset-bottom) / 2) !important;
+    padding-bottom: calc(env(safe-area-inset-bottom) / 2) !important;
     border-radius: unset;
 
   }

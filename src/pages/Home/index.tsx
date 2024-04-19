@@ -129,8 +129,8 @@ const GridItem: React.FC<{
         <Stack spacing={1} justifyContent={"center"} alignItems={"center"}>
           <Box
             sx={{
-              width: 50,
-              height: 50,
+              width: 56,
+              height: 56,
               borderRadius: 2,
               overflow: "hidden",
               position: "relative",
@@ -160,7 +160,7 @@ const GridItem: React.FC<{
             variant="body2"
             sx={{
               fontSize: 12,
-              maxWidth: 54,
+              maxWidth: 56,
               color: initialState?.boxdata.usercfgs.bgimg ? "#fff" : "unset",
               width: `100%`,
               fontWeight: "bold",

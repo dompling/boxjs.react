@@ -22,22 +22,23 @@ const FooterToolNav: React.FC = () => {
   const { initialState } = useModel("@@initialState");
   const { loading } = useModel("api");
   const boxdata = initialState?.boxdata;
+  const fontSize = 30;
 
   const bottomNav: Record<string, BottomNavigationActionProps> = {
     "/": {
       // label: '主页',
       value: "/",
-      icon: <HomeIcon />,
+      icon: <HomeIcon sx={{ fontSize }} />,
     },
     "/app": {
       // label: '应用',
       value: "/app",
-      icon: <WebAssetIcon />,
+      icon: <WebAssetIcon sx={{ fontSize}} />,
     },
     "/sub": {
       // label: '订阅',
       value: "/sub",
-      icon: <StorageIcon />,
+      icon: <StorageIcon sx={{ fontSize }} />,
     },
     "/my": {
       // label: '我的',
@@ -47,7 +48,7 @@ const FooterToolNav: React.FC = () => {
           <Avatar
             alt="boxJS"
             src={boxdata?.usercfgs.icon || config.logo}
-            sx={{ width: 24, height: 24 }}
+            sx={{ width: 34, height: 34 }}
           />
           {loading && (
             <CircularProgress
