@@ -143,7 +143,7 @@ const CodeEdit: React.FC = () => {
             onClick={() => {
               if (!initialValue) return;
               if (fetchRunScript.loading) return;
-              fetchRunScript.run({ script: initialValue, timeout: 180 });
+              fetchRunScript.run({ script: initialValue });
             }}
           >
             {fetchRunScript.loading ? (
