@@ -242,14 +242,14 @@ export default function Page() {
                         sx={{ mr: -3.5, position: "relative" }}
                         aria-label={item.name}
                         onClick={() => {
+                          if (fetchRunScript.loading) return;
                           fetchRunScript.run({
                             url: item.script,
                             isRemote: true,
                           });
                         }}
                       >
-                        <PlayCircleFilledIcon />
-                        {fetchRunScript.fetches[item.script]?.loading && (
+                        {fetchRunScript.loading ? (
                           <CircularProgress
                             size={24}
                             sx={{
@@ -260,6 +260,8 @@ export default function Page() {
                               marginLeft: "-12px",
                             }}
                           />
+                        ) : (
+                          <PlayCircleFilledIcon />
                         )}
                       </IconButton>
                     }

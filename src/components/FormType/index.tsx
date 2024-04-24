@@ -376,7 +376,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
                     {data.name}
                   </InputLabel>
                   <ProFormModalSelect
-                    inputProps={{ shrink: true }}
+                    inputProps={{ shrink: "true" }}
                     {...field}
                     items={data.items}
                   />
@@ -518,6 +518,7 @@ const FormList: React.FC<{
                   sx={{ mr: -3.5, position: "relative" }}
                   aria-label={item.name}
                   onClick={() => {
+                    if (fetchRunScript.loading) return;
                     fetchRunScript.run({
                       url: item.script,
                       argument:
@@ -526,8 +527,7 @@ const FormList: React.FC<{
                     });
                   }}
                 >
-                  <PlayCircleFilledIcon />
-                  {fetchRunScript.loading && (
+                  {fetchRunScript.loading ? (
                     <CircularProgress
                       size={24}
                       sx={{
@@ -538,6 +538,8 @@ const FormList: React.FC<{
                         marginLeft: "-12px",
                       }}
                     />
+                  ) : (
+                    <PlayCircleFilledIcon />
                   )}
                 </IconButton>
               }

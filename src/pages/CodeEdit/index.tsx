@@ -142,11 +142,11 @@ const CodeEdit: React.FC = () => {
             sx={{ position: "relative" }}
             onClick={() => {
               if (!initialValue) return;
+              if (fetchRunScript.loading) return;
               fetchRunScript.run({ script: initialValue });
             }}
           >
-            <PlayCircleFilledIcon color="primary" sx={{ fontSize: 24 }} />
-            {fetchRunScript.loading && (
+            {fetchRunScript.loading ? (
               <CircularProgress
                 size={24}
                 sx={{
@@ -157,6 +157,8 @@ const CodeEdit: React.FC = () => {
                   marginLeft: "-12px",
                 }}
               />
+            ) : (
+              <PlayCircleFilledIcon color="primary" sx={{ fontSize: 24 }} />
             )}
           </Stack>
         </Stack>
