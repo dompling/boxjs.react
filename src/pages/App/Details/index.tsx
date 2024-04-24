@@ -345,7 +345,11 @@ export default function Page() {
                           {item.val && (
                             <IconButton
                               onClick={() => {
-                                $copy(item.val);
+                                $copy(
+                                  typeof item.val === "object"
+                                    ? JSON.stringify(item.val)
+                                    : item.val
+                                );
                                 tip.alert({
                                   open: true,
                                   message: "复制成功",
