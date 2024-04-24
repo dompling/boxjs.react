@@ -518,12 +518,11 @@ const FormList: React.FC<{
                   sx={{ mr: -3.5, position: "relative" }}
                   aria-label={item.name}
                   onClick={() => {
-                    const params = `const $arguments=${JSON.stringify(
-                      form?.control._formValues[name][index] ||
-                        formDrawer.getValues()
-                    )};\n`;
-                    fetchUrl.run(item.script).then((res) => {
-                      fetchRunScript.run({ script: `${params}${res}` });
+                    fetchRunScript.run({
+                      url: item.script,
+                      argument:
+                        form?.control._formValues[name][index] ||
+                        formDrawer.getValues(),
                     });
                   }}
                 >
