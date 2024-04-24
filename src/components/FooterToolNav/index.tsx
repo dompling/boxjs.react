@@ -52,7 +52,7 @@ const FooterToolNav: React.FC = () => {
           />
           {loading && (
             <CircularProgress
-              size={24}
+              size={34}
               sx={{
                 position: "absolute",
                 top: "50%",
