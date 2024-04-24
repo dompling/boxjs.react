@@ -215,7 +215,7 @@ export default function Page() {
         </Paper>
       )}
 
-      {app.scripts?.length>0 && (
+      {app.scripts && app.scripts?.length > 0 && (
         <Paper key="scripts" sx={{ padding: 2, mb: 2 }} elevation={3}>
           <Stack spacing={2}>
             <Stack
@@ -282,7 +282,7 @@ export default function Page() {
         </Paper>
       )}
 
-      {app.settings?.length>0 && (
+      {app.settings && app.settings?.length > 0 && (
         <Paper key={"setting"} sx={{ mb: 2 }} elevation={3}>
           <Stack spacing={2}>
             <Stack
