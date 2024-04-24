@@ -57,8 +57,8 @@ const FooterToolNav: React.FC = () => {
                 position: "absolute",
                 top: "50%",
                 left: "50%",
-                marginTop: "-12px",
-                marginLeft: "-12px",
+                marginTop: "-17px",
+                marginLeft: "-17px",
               }}
             />
           )}
