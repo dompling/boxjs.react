@@ -239,7 +239,6 @@ export default function Page() {
                     secondaryAction={
                       <IconButton
                         edge="end"
-                        sx={{ mr: -3.5, position: "relative" }}
                         aria-label={item.name}
                         onClick={() => {
                           if (fetchRunScript.loading) return;
@@ -251,16 +250,7 @@ export default function Page() {
                         }}
                       >
                         {fetchRunScript.loading ? (
-                          <CircularProgress
-                            size={24}
-                            sx={{
-                              position: "absolute",
-                              top: "50%",
-                              left: "50%",
-                              marginTop: "-12px",
-                              marginLeft: "-12px",
-                            }}
-                          />
+                          <CircularProgress size={24} />
                         ) : (
                           <PlayCircleFilledIcon />
                         )}

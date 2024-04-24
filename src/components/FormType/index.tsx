@@ -510,7 +510,7 @@ const FormList: React.FC<{
               secondaryAction={
                 <IconButton
                   edge="end"
-                  sx={{ mr: -3.5, position: "relative" }}
+                  sx={{ mr: -3.5 }}
                   aria-label={item.name}
                   onClick={() => {
                     if (fetchRunScript.loading) return;
@@ -528,16 +528,7 @@ const FormList: React.FC<{
                   }}
                 >
                   {fetchRunScript.loading ? (
-                    <CircularProgress
-                      size={24}
-                      sx={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        marginTop: "-12px",
-                        marginLeft: "-12px",
-                      }}
-                    />
+                    <CircularProgress size={24} />
                   ) : (
                     <PlayCircleFilledIcon />
                   )}

@@ -147,16 +147,7 @@ const CodeEdit: React.FC = () => {
             }}
           >
             {fetchRunScript.loading ? (
-              <CircularProgress
-                size={24}
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  marginTop: "-12px",
-                  marginLeft: "-12px",
-                }}
-              />
+              <CircularProgress size={24} />
             ) : (
               <PlayCircleFilledIcon color="primary" sx={{ fontSize: 24 }} />
             )}
