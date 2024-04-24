@@ -245,6 +245,7 @@ export default function Page() {
                           if (fetchRunScript.loading) return;
                           fetchRunScript.run({
                             url: item.script,
+                            timeout: 180,
                             isRemote: true,
                           });
                         }}

@@ -1,7 +1,7 @@
 import { IOSSwitch } from "@/components/IOSSwitch";
 import ProFormModalSelect from "@/components/ProFormModalSelect";
 import ProFormSelectAppKey from "@/components/ProFormSelectAppKey";
-import { history, request, useModel, useRequest } from "@@/exports";
+import { history, useModel } from "@@/exports";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
@@ -454,11 +454,6 @@ const FormList: React.FC<{
 
   const { fetchRunScript } = useModel("api");
 
-  const fetchUrl = useRequest((url) => request(url), {
-    manual: true,
-    formatResult: (res) => res,
-  });
-
   const formDrawer = useForm();
   const tip = useModel("alert");
 
@@ -519,11 +514,16 @@ const FormList: React.FC<{
                   aria-label={item.name}
                   onClick={() => {
                     if (fetchRunScript.loading) return;
+                    const params =
+                      form?.control._formValues[name][index] ||
+                      formDrawer.getValues();
                     fetchRunScript.run({
                       url: item.script,
+                      timeout: 180,
                       argument:
-                        form?.control._formValues[name][index] ||
-                        formDrawer.getValues(),
+                        typeof params === "object"
+                          ? JSON.stringify(params)
+                          : params,
                     });
                   }}
                 >
