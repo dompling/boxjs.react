@@ -519,6 +519,7 @@ const FormList: React.FC<{
                       formDrawer.getValues();
                     fetchRunScript.run({
                       url: item.script,
+                      isRemote: true,
                       argument:
                         typeof params === "object"
                           ? JSON.stringify(params)
