@@ -17,7 +17,7 @@ export default defineConfig({
     },
     {
       rel: "manifest",
-      href: "./manifest.json",
+      href: "/manifest.json",
     },
     {
       rel: "apple-touch-icon",
