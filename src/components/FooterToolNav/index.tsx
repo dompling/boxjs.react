@@ -25,9 +25,9 @@ const FooterToolNav: React.FC = () => {
   const fontSize = 30;
 
   const bottomNav: Record<string, BottomNavigationActionProps> = {
-    "/": {
+    "/home": {
       // label: '主页',
-      value: "/",
+      value: "/home",
       icon: <HomeIcon sx={{ fontSize }} />,
     },
     "/app": {
