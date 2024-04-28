@@ -131,7 +131,7 @@ const GridItem: React.FC<{
             sx={{
               width: 56,
               height: 56,
-              borderRadius: 2,
+              borderRadius: 3,
               overflow: "hidden",
               position: "relative",
               boxShadow: (theme) => theme.shadows[5],
