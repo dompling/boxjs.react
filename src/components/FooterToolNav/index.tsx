@@ -33,7 +33,7 @@ const FooterToolNav: React.FC = () => {
     "/app": {
       // label: '应用',
       value: "/app",
-      icon: <WebAssetIcon sx={{ fontSize}} />,
+      icon: <WebAssetIcon sx={{ fontSize }} />,
     },
     "/sub": {
       // label: '订阅',
@@ -48,11 +48,16 @@ const FooterToolNav: React.FC = () => {
           <Avatar
             alt="boxJS"
             src={boxdata?.usercfgs.icon || config.logo}
-            sx={{ width: 34, height: 34 }}
+            sx={{
+              width: 34,
+              height: 34,
+              boxSizing: "border-box",
+              border: (theme) => `1px solid ${theme.palette.primary.main}`,
+            }}
           />
           {loading && (
             <CircularProgress
-              size={34}
+              size={35}
               sx={{
                 position: "absolute",
                 top: "50%",
