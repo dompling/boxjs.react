@@ -191,8 +191,8 @@ export default function Page() {
           : []),
 
         {
-          label: "表单高度",
           type: "input",
+          label: "应用设置高度",
           id: "app_settings_height",
           val: usercfgs?.app_settings_height,
           icon: <HeightIcon sx={{ color: colors.teal[400] }} />,
