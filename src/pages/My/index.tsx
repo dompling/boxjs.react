@@ -158,7 +158,6 @@ export default function Page() {
           id: "isHideHelp",
           icon: <QuestionMarkIcon sx={{ color: colors.amber[400] }} />,
         },
-
         {
           type: "switch",
           label: "隐藏编码按钮",

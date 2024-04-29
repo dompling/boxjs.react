@@ -12,17 +12,31 @@ import {
   Paper,
 } from "@mui/material";
 import { BottomNavigationActionProps } from "@mui/material/BottomNavigationAction/BottomNavigationAction";
+import lodash from "lodash";
 import QueueAnim from "rc-queue-anim";
 import React from "react";
 import styles from "./index.less";
 
+let taskLists: any[] = [];
 const FooterToolNav: React.FC = () => {
   const location = useLocation();
 
   const { initialState } = useModel("@@initialState");
-  const { loading } = useModel("api");
+  const { loading, fetchSave } = useModel("api");
   const boxdata = initialState?.boxdata;
   const fontSize = 30;
+
+  const handelDoubleClick = () => {
+    fetchSave.run([
+      {
+        key: config.userCfgs,
+        val: JSON.stringify({
+          ...initialState?.boxdata.usercfgs,
+          isHideBoxIcon: !boxdata?.usercfgs.isHideBoxIcon,
+        }),
+      },
+    ]);
+  };
 
   const bottomNav: Record<string, BottomNavigationActionProps> = {
     "/home": {
@@ -97,9 +111,6 @@ const FooterToolNav: React.FC = () => {
             <BottomNavigation
               showLabels
               value={location.pathname}
-              onChange={(_, key) => {
-                history.push(key);
-              }}
               sx={{
                 "& .Mui-selected": {
                   "&:after": {
@@ -108,25 +119,48 @@ const FooterToolNav: React.FC = () => {
                 },
               }}
             >
-              {Object.keys(bottomNav).map((key) => (
-                <BottomNavigationAction
-                  key={key}
-                  {...bottomNav[key]}
-                  sx={{
-                    "&:after": {
-                      content: `""`,
-                      position: "absolute",
-                      height: 2,
-                      width: 0,
-                      borderRadius: 1,
-                      background: (theme) => theme.palette.primary.main,
-                      top: 1,
-                      transition: `width 0.3s linear`,
-                      boxShadow: 1,
-                    },
-                  }}
-                />
-              ))}
+              {Object.keys(bottomNav).map((key) => {
+                const nav = bottomNav[key];
+                return (
+                  <BottomNavigationAction
+                    key={key}
+                    value={nav.value}
+                    icon={nav.icon}
+                    onClick={(e) => {
+                      if (location.pathname === nav.value) return;
+                      if (nav.value === "/my") {
+                        const taskItem = lodash.debounce(() => {
+                          history.push(nav.value);
+                          taskLists = [];
+                        }, 200);
+                        taskLists.push(taskItem);
+                        if (taskLists.length > 1) {
+                          lodash.map(taskLists, (task) => task.cancel());
+                          taskLists = [];
+                          return handelDoubleClick();
+                        }
+                        taskItem();
+                      } else {
+                        history.push(nav.value);
+                      }
+                      e.preventDefault();
+                    }}
+                    sx={{
+                      "&:after": {
+                        content: `""`,
+                        position: "absolute",
+                        height: 2,
+                        width: 0,
+                        borderRadius: 1,
+                        background: (theme) => theme.palette.primary.main,
+                        top: 1,
+                        transition: `width 0.3s linear`,
+                        boxShadow: 1,
+                      },
+                    }}
+                  />
+                );
+              })}
             </BottomNavigation>
           </Paper>
         </Box>

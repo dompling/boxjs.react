@@ -33,6 +33,7 @@ export default function useAPI() {
 
   const fetchSave = useRequest(saveUserCfgs, {
     manual: true,
+    loadingDelay: 300,
     formatResult: (res) => res,
     fetchKey: (params) =>
       JSON.stringify(params).indexOf("chavy_boxjs_cur_sessions") > -1
@@ -45,6 +46,7 @@ export default function useAPI() {
 
   const fetchReloadAppSub = useRequest(reloadAppSub, {
     manual: true,
+    loadingDelay: 300,
     formatResult: (res) => res,
     fetchKey: (params) => params?.id || "all",
     onSuccess: (response: boxjs.data) => {
@@ -54,6 +56,7 @@ export default function useAPI() {
 
   const fetchAddAppSub = useRequest(addAppSub, {
     manual: true,
+    loadingDelay: 300,
     formatResult: (res) => res,
     onSuccess: (response: boxjs.data) => {
       update(response);
@@ -61,7 +64,9 @@ export default function useAPI() {
   });
 
   const fetchAllData = useRequest(getAllData, {
-    manual: true,
+    loadingDelay: 300,
+    focusTimespan: 1000,
+    refreshOnWindowFocus: true,
     formatResult: (res) => res,
     onSuccess: (response: boxjs.data) => {
       update(response);
@@ -70,6 +75,7 @@ export default function useAPI() {
 
   const fetchRunScript = useRequest(runScript, {
     manual: true,
+    loadingDelay: 300,
     formatResult: (res) => res,
     fetchKey: (params) => params.url,
     onSuccess: () => {
@@ -80,12 +86,14 @@ export default function useAPI() {
 
   const fetchDataKey = useRequest(getDataKey, {
     manual: true,
+    loadingDelay: 300,
     formatResult: (res) => res,
     fetchKey: (key) => key,
   });
 
   const fetchSaveData = useRequest(saveData, {
     manual: true,
+    loadingDelay: 300,
     formatResult: (res) => res,
     onSuccess: () => {
       fetchAllData.run();
@@ -94,15 +102,18 @@ export default function useAPI() {
 
   const fetchScripts = useRequest(getScripts, {
     manual: true,
+    loadingDelay: 300,
     formatResult: (res) => res,
   });
 
   const fetchModules = useRequest(getModules, {
     manual: true,
+    loadingDelay: 300,
     formatResult: (res) => res,
   });
 
   const fetchUpdateModules = useRequest(setModules, {
+    loadingDelay: 300,
     manual: true,
   });
 

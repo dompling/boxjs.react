@@ -18,7 +18,6 @@ import { useEffect } from "react";
 export default function Actions() {
   const { fetchScripts, fetchUpdateModules, fetchModules, fetchRunScript } =
     useModel("api");
-  const { initialState } = useModel("@@initialState");
 
   let timeoutCount: Record<string, any> = {};
   let timeout: Record<string, any> = {};
