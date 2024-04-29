@@ -164,6 +164,8 @@ declare namespace boxjs {
     debugger_web: string;
     sysapppanel: number;
 
+    app_settings_height:string;
+
     [key: string]: any;
   }
 

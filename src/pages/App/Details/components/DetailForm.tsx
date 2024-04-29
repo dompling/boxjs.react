@@ -10,6 +10,7 @@ const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
 }) => {
   const { initialState } = useModel("@@initialState");
   const { fetchSave } = useModel("api");
+  const usercfgs = initialState?.boxdata.usercfgs;
   let defaultValues: any = {};
   const initDefaultValue = () => {
     formConfig.forEach((setting) => {
@@ -59,7 +60,19 @@ const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
       }}
       autoComplete="off"
     >
-      <Stack sx={{ pl: 2, pr: 2 }} spacing={1}>
+      <Stack
+        sx={{
+          pl: 2,
+          pr: 2,
+          ...(Number(usercfgs?.app_settings_height || "0") > 0
+            ? {
+                maxHeight: `${usercfgs?.app_settings_height}px`,
+                overflow: "auto",
+              }
+            : {}),
+        }}
+        spacing={1}
+      >
         {formConfig.map((setting: any) => {
           if (typeof setting.items === "string") {
             setting.items = initialState?.boxdata.datas[setting.items] || [];

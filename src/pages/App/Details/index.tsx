@@ -4,6 +4,7 @@ import { colorText } from "@/utils";
 import { history, useModel, useParams } from "@@/exports";
 import { CopyAll } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
@@ -23,6 +24,9 @@ import {
   styled,
   tabsClasses,
 } from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
 import $copy from "copy-to-clipboard";
 import React, { useState } from "react";
 import uuid from "react-uuid";
@@ -199,19 +203,31 @@ export default function Page() {
         )}
       </Stack>
       {app.descs_html?.length > 0 && (
-        <Paper key={"html"} sx={{ padding: 2, mb: 2 }} elevation={3}>
-          {app.descs_html.map((item, index) => {
-            return (
-              <CusTypography
-                color="grey"
-                display="block"
-                variant="caption"
-                sx={{ mb: 0 }}
-                key={`html-${index}`}
-                dangerouslySetInnerHTML={{ __html: item }}
-              />
-            );
-          })}
+        <Paper>
+          <Accordion>
+            <AccordionSummary
+              sx={{ m: 0 }}
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel-content`}
+              id={`panel-header`}
+            >
+              <Typography variant="body2">操作提示</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {app.descs_html.map((item, index) => {
+                return (
+                  <CusTypography
+                    color="grey"
+                    display="block"
+                    variant="caption"
+                    sx={{ mb: 0 }}
+                    key={`html-${index}`}
+                    dangerouslySetInnerHTML={{ __html: item }}
+                  />
+                );
+              })}
+            </AccordionDetails>
+          </Accordion>
         </Paper>
       )}
 
