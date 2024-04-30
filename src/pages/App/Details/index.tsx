@@ -136,7 +136,7 @@ export default function Page() {
     <QueueAnim interval={0} appear={!!initialState?.boxdata.usercfgs.isAnimate}>
       <Stack key={"container"} spacing={1} p={1}>
         <ModalImportForm
-          open={open?.import.open}
+          open={open?.import?.open}
           onClose={() => {
             setOpen((preSate) => {
               if (preSate) {
