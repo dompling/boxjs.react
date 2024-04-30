@@ -553,6 +553,7 @@ function Page() {
       </Stack>
       <QueueAnim
         ref={drop}
+        interval={0}
         component={"div"}
         appear={!!initialState?.boxdata.usercfgs.isAnimate}
       >

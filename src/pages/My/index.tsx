@@ -444,6 +444,7 @@ export default function Page() {
           {settings.map((setting, index) => {
             return (
               <QueueAnim
+                interval={0}
                 key={`group-${index}`}
                 appear={!!initialState?.boxdata.usercfgs.isAnimate}
               >

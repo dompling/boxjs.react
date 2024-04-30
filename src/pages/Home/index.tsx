@@ -15,6 +15,7 @@ import { memo, useCallback, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
+import QueueAnim from "rc-queue-anim";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -286,13 +287,15 @@ function Page() {
 export default function Home() {
   const { initialState } = useModel("@@initialState");
   return (
-    <Box pt={1} component={"div"}>
-      <DndProvider
-        options={{ delay: 400 }}
-        backend={initialState?.isMobile ? TouchBackend : HTML5Backend}
-      >
-        <Page />
-      </DndProvider>
-    </Box>
+    <QueueAnim interval={0} appear={!!initialState?.boxdata.usercfgs.isAnimate}>
+      <Box key="container" pt={1} component={"div"}>
+        <DndProvider
+          options={{ delay: 400 }}
+          backend={initialState?.isMobile ? TouchBackend : HTML5Backend}
+        >
+          <Page />
+        </DndProvider>
+      </Box>
+    </QueueAnim>
   );
 }

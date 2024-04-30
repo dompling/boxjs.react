@@ -101,6 +101,7 @@ const FormPickerColor: React.FC<{
   }, [value]);
 
   return (
+    // @ts-ignore
     <ChromePicker
       {...pickerProps}
       className={styles.picker}

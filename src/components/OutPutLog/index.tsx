@@ -30,6 +30,7 @@ const OutPut: React.FC<{
   if (!props.value) return null;
   return (
     <div>
+      {/* @ts-ignore */}
       <SwipeableDrawer
         anchor="bottom"
         swipeAreaWidth={0}

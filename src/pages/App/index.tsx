@@ -144,6 +144,7 @@ export default function Page() {
 
   return (
     <QueueAnim
+      interval={0}
       style={{ marginTop: 16 }}
       appear={!!initialState?.boxdata.usercfgs.isAnimate}
     >
