@@ -16,6 +16,7 @@ import {
   Button,
   Chip,
   CircularProgress,
+  Divider,
   IconButton,
   List,
   ListItem,
@@ -24,7 +25,7 @@ import {
   Stack,
   Typography,
   colors,
-  styled, Divider
+  styled,
 } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -190,6 +191,7 @@ export default function Page() {
             }}
           >
             {app.name}
+            {app.author ? `(${app.author})` : ""}
           </Typography>
           {app.script && (
             <Box sx={{ position: "relative" }}>
