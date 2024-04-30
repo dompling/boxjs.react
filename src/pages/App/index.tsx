@@ -202,7 +202,6 @@ export default function Page() {
               <AccordionDetails
                 sx={{ padding: 0, maxHeight: 300, overflowY: "auto" }}
               >
-                <QueueAnim type={["top", "bottom"]} leaveReverse>
                   <List
                     key={"app_list"}
                     sx={{ padding: 0, bgcolor: "background.paper" }}
@@ -295,7 +294,6 @@ export default function Page() {
                       );
                     })}
                   </List>
-                </QueueAnim>
               </AccordionDetails>
             </Accordion>
           </Paper>
