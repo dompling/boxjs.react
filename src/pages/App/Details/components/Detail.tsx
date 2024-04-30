@@ -35,6 +35,7 @@ const Detail: React.FC<{
       }}
       sx={{
         zIndex: 9999,
+        overflow:"auto",
         "& .MuiDrawer-paperAnchorBottom": {
           maxHeight: `60%`,
           minHeight: `30%`,
