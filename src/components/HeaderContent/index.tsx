@@ -139,7 +139,7 @@ const HeaderContent: React.FC = () => {
                       : theme.palette.common.white,
                 }}
               >
-                {["/", "/app", "/sub"].indexOf(location.pathname) === -1 ? (
+                {["/home", "/app", "/sub"].indexOf(location.pathname) === -1 ? (
                   <IconButton
                     color="primary"
                     onClick={() => history.back()}

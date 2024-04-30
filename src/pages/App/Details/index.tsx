@@ -330,7 +330,17 @@ export default function Page() {
               ) : null}
             </Stack>
           </Box>
-          <Box sx={{ p: 2 }}>
+          <Box
+            sx={{
+              p: 2,
+              ...(Number(usercfgs?.app_settings_height || "0") > 0
+                ? {
+                    maxHeight: `${usercfgs?.app_settings_height}px`,
+                    overflow: "auto",
+                  }
+                : {}),
+            }}
+          >
             <List disablePadding>
               {curSession?.datas.map((item: any) => {
                 return (
@@ -490,7 +500,17 @@ export default function Page() {
           {appSession?.map((session, index) => {
             return (
               <TabPanel value={index} key={session.id} index={tabValue}>
-                <List disablePadding>
+                <List
+                  disablePadding
+                  sx={{
+                    ...(Number(usercfgs?.app_settings_height || "0") > 0
+                      ? {
+                          maxHeight: `${usercfgs?.app_settings_height}px`,
+                          overflow: "auto",
+                        }
+                      : {}),
+                  }}
+                >
                   {session?.datas.map((item) => {
                     return (
                       <ListItem sx={{ p: 0 }} key={item.key}>

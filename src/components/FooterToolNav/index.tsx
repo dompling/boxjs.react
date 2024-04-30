@@ -85,6 +85,25 @@ const FooterToolNav: React.FC = () => {
       ),
     },
   };
+  const handleClick = (nav: any) => {
+    if (location.pathname === nav.value) return;
+    if (nav.value === "/my") {
+      const taskItem = lodash.debounce(() => {
+        history.push(nav.value);
+        taskLists = [];
+      }, 200);
+      taskLists.push(taskItem);
+      console.log(taskLists.length);
+      if (taskLists.length === 2) {
+        lodash.map(taskLists, (task) => task.cancel());
+        taskLists = [];
+        return handelDoubleClick();
+      }
+      return taskItem();
+    } else {
+      history.push(nav.value);
+    }
+  };
 
   return (
     <QueueAnim
@@ -124,27 +143,10 @@ const FooterToolNav: React.FC = () => {
                 return (
                   <BottomNavigationAction
                     key={key}
-                    value={nav.value}
                     icon={nav.icon}
-                    onClick={(e) => {
-                      if (location.pathname === nav.value) return;
-                      if (nav.value === "/my") {
-                        const taskItem = lodash.debounce(() => {
-                          history.push(nav.value);
-                          taskLists = [];
-                        }, 200);
-                        taskLists.push(taskItem);
-                        if (taskLists.length > 1) {
-                          lodash.map(taskLists, (task) => task.cancel());
-                          taskLists = [];
-                          return handelDoubleClick();
-                        }
-                        taskItem();
-                      } else {
-                        history.push(nav.value);
-                      }
-                      e.preventDefault();
-                    }}
+                    value={nav.value}
+                    onTouchEnd={() => handleClick(nav)}
+                    onClick={() => !initialState?.isMobile && handleClick(nav)}
                     sx={{
                       "&:after": {
                         content: `""`,
