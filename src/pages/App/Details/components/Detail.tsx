@@ -48,7 +48,6 @@ const Detail: React.FC<{
         sx={{
           borderBottom: 1,
           borderColor: "divider",
-          overflow: "auto",
           px: 2,
           py: 2,
         }}
@@ -57,7 +56,7 @@ const Detail: React.FC<{
           <Typography>{props.session?.name || ""}</Typography>
         </Stack>
       </Box>
-      <Box p={2}>
+      <Box p={2} sx={{height:"100%",overflowY:"auto"}}>
         <List disablePadding>
           {props.datas?.map((item: any) => {
             return (
