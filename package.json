@@ -26,6 +26,7 @@
     "copy-to-clipboard": "^3.3.3",
     "immutability-helper": "^3.1.1",
     "lodash": "^4.17.21",
+    "material-ui-popup-state": "^5.1.0",
     "moment": "^2.29.4",
     "monaco-editor": "^0.38.0",
     "rc-queue-anim": "^2.0.0",
