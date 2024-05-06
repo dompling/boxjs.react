@@ -3,6 +3,6 @@
   "short_name": "BoxJS",
   "display": "fullscreen",
   "scope": "/",
-  "start_url": "/",
+  "start_url": "/home",
   "orientation": "portrait"
 }
