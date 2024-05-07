@@ -144,64 +144,65 @@ export default function Page() {
 
   return (
     <QueueAnim
-      interval={0}
+      interval={[100, 0]}
       style={{ marginTop: 16 }}
       appear={!!initialState?.boxdata.usercfgs.isAnimate}
     >
-      {appSubs.map((item) => {
-        return (
-          <Paper
-            key={item.id}
-            elevation={3}
-            sx={{
-              mb: 2,
-              overflow: "hidden",
-              borderRadius: (theme) => theme.spacing(2),
-            }}
-          >
-            <Accordion
-              expanded={expanded.indexOf(item.id) !== -1}
-              onChange={handleExpandedChange(item.id)}
+      <div key="container">
+        {appSubs.map((item) => {
+          return (
+            <Paper
+              key={item.id}
+              elevation={3}
               sx={{
-                borderRadius: (theme) => theme.spacing(2),
+                mb: 2,
                 overflow: "hidden",
+                borderRadius: (theme) => theme.spacing(2),
               }}
             >
-              <AccordionSummary aria-controls={item.id} id={item.id}>
-                <Stack
-                  spacing={2}
-                  direction={"row"}
-                  justifyContent={`center`}
-                  alignItems={"center"}
-                >
-                  {typeof item.icon === "string" ? (
-                    <Avatar
-                      id={item.id}
-                      src={item.icon}
-                      sx={{
-                        boxShadow: (theme) => theme.shadows[1],
-                      }}
-                    />
-                  ) : (
-                    <Avatar
-                      id={item.id}
-                      sx={{
-                        boxShadow: (theme) => theme.shadows[1],
-                        bgcolor: (theme) => theme.palette.primary.main,
-                      }}
-                    >
-                      {item.icon}
-                    </Avatar>
-                  )}
-                  <Typography>
-                    {item.name}（{item.apps.length}）
-                  </Typography>
-                </Stack>
-              </AccordionSummary>
-
-              <AccordionDetails
-                sx={{ padding: 0, maxHeight: 300, overflowY: "auto" }}
+              <Accordion
+                expanded={expanded.indexOf(item.id) !== -1}
+                onChange={handleExpandedChange(item.id)}
+                sx={{
+                  borderRadius: (theme) => theme.spacing(2),
+                  overflow: "hidden",
+                }}
               >
+                <AccordionSummary aria-controls={item.id} id={item.id}>
+                  <Stack
+                    spacing={2}
+                    direction={"row"}
+                    justifyContent={`center`}
+                    alignItems={"center"}
+                  >
+                    {typeof item.icon === "string" ? (
+                      <Avatar
+                        id={item.id}
+                        src={item.icon}
+                        sx={{
+                          boxShadow: (theme) => theme.shadows[1],
+                        }}
+                      />
+                    ) : (
+                      <Avatar
+                        id={item.id}
+                        sx={{
+                          boxShadow: (theme) => theme.shadows[1],
+                          bgcolor: (theme) => theme.palette.primary.main,
+                        }}
+                      >
+                        {item.icon}
+                      </Avatar>
+                    )}
+                    <Typography>
+                      {item.name}（{item.apps.length}）
+                    </Typography>
+                  </Stack>
+                </AccordionSummary>
+
+                <AccordionDetails
+                  sx={{ padding: 0, maxHeight: 300, overflowY: "auto" }}
+                >
                   <List
                     key={"app_list"}
                     sx={{ padding: 0, bgcolor: "background.paper" }}
@@ -294,11 +295,12 @@ export default function Page() {
                       );
                     })}
                   </List>
-              </AccordionDetails>
-            </Accordion>
-          </Paper>
-        );
-      })}
+                </AccordionDetails>
+              </Accordion>
+            </Paper>
+          );
+        })}
+      </div>
     </QueueAnim>
   );
 }

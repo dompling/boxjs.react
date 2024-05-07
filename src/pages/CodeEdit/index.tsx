@@ -97,7 +97,7 @@ const CodeEdit: React.FC = () => {
   }, []);
 
   return (
-    <QueueAnim interval={0} appear={!!initialState?.boxdata.usercfgs.isAnimate}>
+    <QueueAnim interval={[100, 0]} appear={!!initialState?.boxdata.usercfgs.isAnimate}>
       <Box key={"container"} pt={2}>
         <Paper>
           <Stack

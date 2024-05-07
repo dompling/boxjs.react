@@ -133,7 +133,7 @@ export default function Page() {
   if (!app) return `No find App`;
 
   return (
-    <QueueAnim interval={0} appear={!!initialState?.boxdata.usercfgs.isAnimate}>
+    <QueueAnim interval={[100, 0]} appear={!!initialState?.boxdata.usercfgs.isAnimate}>
       <Stack key={"container"} spacing={1} p={1}>
         <ModalImportForm
           open={open?.import?.open}

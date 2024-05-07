@@ -30,13 +30,12 @@ import {
 import $copy from "copy-to-clipboard";
 import update from "immutability-helper";
 import QueueAnim from "rc-queue-anim";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { DndProvider, XYCoord, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import styles from "./index.less";
 
-import React from "react";
+import styles from "./index.less";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -551,12 +550,7 @@ function Page() {
           </IconButton>
         </Stack>
       </Stack>
-      <QueueAnim
-        ref={drop}
-        interval={0}
-        component={"div"}
-        appear={!!initialState?.boxdata.usercfgs.isAnimate}
-      >
+      <div ref={drop}>
         {cards.map((item, index) => {
           const appItem = { ...item, ...appSubCaches[item.url] } || {
             name: "匿名订阅",
@@ -633,7 +627,7 @@ function Page() {
             </Stack>
           </Paper>
         </Box>
-      </QueueAnim>
+      </div>
     </Box>
   );
 }
@@ -641,13 +635,18 @@ function Page() {
 export default function Sub() {
   const { initialState } = useModel("@@initialState");
   return (
-    <Box pt={2} component={"div"}>
-      <DndProvider
-        options={{ delay: 400 }}
-        backend={initialState?.isMobile ? TouchBackend : HTML5Backend}
-      >
-        <Page />
-      </DndProvider>
-    </Box>
+    <QueueAnim
+      interval={[100, 0]}
+      appear={!!initialState?.boxdata.usercfgs.isAnimate}
+    >
+      <Box key={"container"} pt={2} component={"div"}>
+        <DndProvider
+          options={{ delay: 400 }}
+          backend={initialState?.isMobile ? TouchBackend : HTML5Backend}
+        >
+          <Page />
+        </DndProvider>
+      </Box>
+    </QueueAnim>
   );
 }
