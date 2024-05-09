@@ -102,7 +102,7 @@ export default function Page() {
   const datas = initialState?.boxdata.datas;
   const sessions = initialState?.boxdata.sessions || [];
 
-  const app = initialState?.apps.find((item) => item.id === id);
+  const app = initialState?.apps?.find((item) => item.id === id);
 
   const appSession = sessions?.filter((item) => item?.appId === `${id}`);
 

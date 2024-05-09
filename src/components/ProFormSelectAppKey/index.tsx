@@ -57,13 +57,15 @@ const ProFormSelectAppKey: React.FC<
       repo: "",
       icons: [],
     },
-    ...(initialState?.boxdata.sysapps || []).filter((item) => item.keys && !!item.keys.length),
+    ...(initialState?.boxdata.sysapps || []).filter(
+      (item) => item.keys && !!item.keys.length
+    ),
   ];
 
   Object.values(initialState?.boxdata.appSubCaches || {}).forEach((item) => {
     apps = [
       ...apps,
-      ...item.apps.filter((item) => item.keys && !!item.keys.length),
+      ...(item?.apps?.filter((item) => item.keys && !!item.keys.length) || []),
     ];
   });
 
@@ -229,7 +231,9 @@ const ProFormSelectAppKey: React.FC<
           </RadioGroup>
         </List>
         <DialogActions sx={{ borderTop: `1px solid rgba(0, 0, 0, .125)` }}>
-          <Button color="inherit" onClick={() => onClose()}>取消</Button>
+          <Button color="inherit" onClick={() => onClose()}>
+            取消
+          </Button>
           <Button onClick={() => onClose()} autoFocus>
             确定
           </Button>
