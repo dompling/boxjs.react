@@ -51,6 +51,8 @@ declare namespace boxjs {
     debugger_web: string;
     sysapppanel: number;
     gist_cache_key?: string[];
+    backend_address?: string;
+    backend_address_list?: string;
   }
 
   export interface Appsub {
@@ -164,7 +166,7 @@ declare namespace boxjs {
     debugger_web: string;
     sysapppanel: number;
 
-    app_settings_height:string;
+    app_settings_height: string;
 
     [key: string]: any;
   }
@@ -240,6 +242,7 @@ declare namespace boxjs {
   export interface Item {
     key: string;
     label: string;
+    children?: Item[];
   }
 
   export interface Script {

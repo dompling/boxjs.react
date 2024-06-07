@@ -1,6 +1,6 @@
+import { Theme } from "@mui/system";
 import moment from "moment";
 import React from "react";
-import { Theme } from "@mui/system";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: (type: "dark" | "light" | "auto") => {
@@ -46,3 +46,6 @@ export const getCommentTime = (str: string) => {
     return moment(createTime - 0).format("YYYY-MM-DD");
   }
 };
+
+export const BACKEND_API = process.env.BACKEND_API || "";
+export const TOKEN = process.env.TOKEN || "";

@@ -32,6 +32,7 @@ import {
   Typography,
   useFormControl,
 } from "@mui/material";
+import ListSubheader from "@mui/material/ListSubheader";
 import $copy from "copy-to-clipboard";
 import lodash from "lodash";
 import QueueAnim from "rc-queue-anim";
@@ -70,7 +71,7 @@ function CusFormHelperText({ text, ...props }: any) {
 }
 
 function getOption(data: string | { label: string; key: string }) {
-  let options = { label: "", key: "" };
+  let options: boxjs.Item = { label: "", key: "" };
 
   if (typeof data === "string") {
     options.label = data;
@@ -113,7 +114,11 @@ const FormPickerColor: React.FC<{
   );
 });
 
-const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
+const renderFormItem = (
+  data: boxjs.Setting,
+  form?: UseFormReturn<any>,
+  itemValue?: any
+) => {
   data.name = (data.disabled ? "🈲 手动填写-" : "") + data.name;
   const formName = data.id.replaceAll(".", "~");
   const formItemProps = {
@@ -188,7 +193,12 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
             {data.name}
           </InputLabel>
           {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
-          <FormList name={formItemProps.name} form={form} setting={data} />
+          <FormList
+            name={formItemProps.name}
+            form={form}
+            setting={data}
+            itemValue={itemValue}
+          />
           <CusFormHelperText text={data.desc} />
         </FormControl>
       )}
@@ -335,7 +345,7 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
       )}
 
       {data.type === "selects" && (
-        <FormControl sx={{ m: 1 }} variant="standard">
+        <FormControl sx={{ width: `100%` }} variant="standard">
           <InputLabel htmlFor={data.id}>{data.name}</InputLabel>
           <Controller
             {...formItemProps}
@@ -349,6 +359,26 @@ const renderFormItem = (data: boxjs.Setting, form?: UseFormReturn<any>) => {
                 >
                   {data.items?.map((item, index) => {
                     const options = getOption(item);
+                    if (options.children) {
+                      const optGroup: any[] = [];
+                      optGroup.push(
+                        <ListSubheader>{options.label}</ListSubheader>
+                      );
+                      optGroup.push(
+                        options.children.map((child) => {
+                          return (
+                            <MenuItem
+                              value={`${options.label}_${child.key}`}
+                              key={`${options.label}_${child.key}_${index}`}
+                            >
+                              {child.label}
+                            </MenuItem>
+                          );
+                        })
+                      );
+                      return optGroup;
+                    }
+
                     return (
                       <MenuItem
                         key={`${options.key}_${index}`}
@@ -447,7 +477,8 @@ const FormList: React.FC<{
   name: string;
   form?: UseFormReturn<any>;
   setting?: boxjs.Setting;
-}> = ({ setting, form, name }) => {
+  itemValue?: any;
+}> = ({ setting, form, name, itemValue }) => {
   const { fields, append, remove } = useFieldArray({
     name: name,
     control: form?.control,
@@ -609,6 +640,9 @@ const FormList: React.FC<{
                 name: settingKey,
                 type: "text",
               };
+              if (typeof settingItem.items === "string") {
+                settingItem.items = itemValue?.[settingItem.items] || [];
+              }
               return (
                 <React.Fragment key={settingItem.id}>
                   {renderFormItem(settingItem, formDrawer)}
@@ -667,6 +701,9 @@ const FormList: React.FC<{
                     id: settingKey,
                     name: settingKey,
                   };
+                  if (typeof settingItem.items === "string") {
+                    settingItem.items = itemValue?.[settingItem.items] || [];
+                  }
 
                   return (
                     <React.Fragment key={settingItem.id}>
@@ -788,13 +825,14 @@ const FormList: React.FC<{
 function FormType({
   form,
   setting,
+  itemValue,
 }: {
   form?: UseFormReturn<any>;
   setting?: boxjs.Setting;
   itemValue?: Record<string, string | null>;
 }) {
   if (!setting) return null;
-  return renderFormItem({ ...setting }, form);
+  return renderFormItem({ ...setting }, form, itemValue);
 }
 
 export default FormType;

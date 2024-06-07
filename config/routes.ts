@@ -2,6 +2,8 @@ export default [
   { path: "/", redirect: "/home" },
   { path: "/home", title: "主页", component: "Home/index" },
   { path: "/app", title: "应用", component: "App/index" },
+  { path: "/task", title: "定时任务", component: "Task/index" },
+  { path: "/task/:tag", title: "定时任务详情", component: "Task/Detail" },
   { path: "/app/:id", title: "应用详情", component: "App/Details/index" },
   { path: "/sub", title: "订阅", component: "Sub/index" },
   { path: "/my", title: "个人中心", component: "My/index" },

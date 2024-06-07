@@ -136,4 +136,8 @@ export default defineConfig({
     logLevel: "info",
     defaultSizes: "parsed", // stat  // gzip
   },
+  define:{
+    "process.env.BACKEND_API": "BACKEND_API",
+    "process.env.TOKEN": "TOKEN",
+  }
 });

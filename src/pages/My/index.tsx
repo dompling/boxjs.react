@@ -3,10 +3,11 @@ import ModalDebugForm from "@/pages/My/components/ModalDebugForm";
 import ModalSettingForm from "@/pages/My/components/ModalSettingForm";
 
 import ModalBackgroundForm from "@/pages/My/components/ModalBackgroundForm";
+import ModalBckEndApiForm from "@/pages/My/components/ModalBckEndApiForm";
 import ModalHttpApiForm from "@/pages/My/components/ModalHttpApiForm";
 import ModalSettingsHeightForm from "@/pages/My/components/ModalSettingsHeightForm";
 import ModalThemeForm from "@/pages/My/components/ModalThemeForm";
-import { colorText } from "@/utils";
+import { BACKEND_API, colorText } from "@/utils";
 import config from "@/utils/config";
 import { useModel } from "@@/exports";
 import ApiIcon from "@mui/icons-material/Api";
@@ -189,7 +190,14 @@ export default function Page() {
               },
             ]
           : []),
-
+        {
+          type: "select",
+          id: "backend",
+          label: "后端设置",
+          val: localStorage.getItem(BACKEND_API),
+          icon: <ApiIcon sx={{ color: colors.red[400] }} />,
+          onClick: () => handleVisible(`backend`, true),
+        },
         {
           type: "input",
           label: "应用内容高度",
@@ -335,6 +343,11 @@ export default function Page() {
         open={visible.httpapi}
         value={usercfgs?.httpapi}
         onClose={() => handleVisible(`httpapi`)}
+      />
+
+      <ModalBckEndApiForm
+        open={visible.backend}
+        onClose={() => handleVisible(`backend`)}
       />
 
       <ModalSettingForm

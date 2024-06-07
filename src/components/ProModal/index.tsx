@@ -32,7 +32,7 @@ const ProModal: React.FC<
     title?: any;
     children: React.ReactNode;
     onSubmit?: (formValue: any) => void;
-    form?: UseFormReturn;
+    form?: UseFormReturn<any>;
     footer?: null | React.ReactNode;
   } & Omit<DialogProps, "title">
 > = ({

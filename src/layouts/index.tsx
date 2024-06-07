@@ -7,6 +7,7 @@ import { Outlet, useLocation, useModel } from "@@/exports";
 import { Alert, Box, Container, Slide, Snackbar } from "@mui/material";
 import VConsole from "vconsole";
 
+import Notification from "@/components/Notification";
 import config from "@/utils/config";
 import { useEffect } from "react";
 import styles from "./index.less";
@@ -109,6 +110,7 @@ export default function Layout() {
           }`}
         >
           {!initialState?.boxdata.usercfgs.isWallpaperMode ? <Outlet /> : null}
+          <Notification />
 
           {tipState.options?.type ? (
             <Snackbar

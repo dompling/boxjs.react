@@ -17,12 +17,13 @@ const DetailForm: React.FC<{ formConfig: boxjs.Setting[] }> = ({
       const data = initialState?.boxdata.datas[setting.id];
       let dataVal = data === "" || data === undefined ? setting.val : data;
       if (dataVal === null) dataVal = undefined;
+      const key = setting.id.replaceAll(".", "~");
       try {
-        defaultValues[setting.id.replaceAll(".", "~")] = setting.child
+        defaultValues[key] = setting.child
           ? JSON.parse(`${dataVal || "[]"}`)
           : dataVal;
       } catch (e) {
-        console.log(e);
+        defaultValues[key] = dataVal;
       }
     });
   };

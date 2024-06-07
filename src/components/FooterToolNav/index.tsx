@@ -1,5 +1,6 @@
 import config from "@/utils/config";
 import { history, useLocation, useModel } from "@@/exports";
+import AccessAlarmsIcon from "@mui/icons-material/AccessAlarms";
 import HomeIcon from "@mui/icons-material/Home";
 import StorageIcon from "@mui/icons-material/Storage";
 import WebAssetIcon from "@mui/icons-material/WebAsset";
@@ -11,6 +12,7 @@ import {
   CircularProgress,
   Paper,
 } from "@mui/material";
+
 import { BottomNavigationActionProps } from "@mui/material/BottomNavigationAction/BottomNavigationAction";
 import lodash from "lodash";
 import QueueAnim from "rc-queue-anim";
@@ -24,6 +26,7 @@ const FooterToolNav: React.FC = () => {
   const { initialState } = useModel("@@initialState");
   const { loading, fetchSave } = useModel("api");
   const boxdata = initialState?.boxdata;
+  const taskSubs: any = boxdata?.datas["@SET_TIME.CACHE"] || [];
   const fontSize = 30;
 
   const handelDoubleClick = () => {
@@ -44,6 +47,14 @@ const FooterToolNav: React.FC = () => {
       value: "/home",
       icon: <HomeIcon sx={{ fontSize }} />,
     },
+    ...(taskSubs.length
+      ? {
+          "/task": {
+            value: "/task",
+            icon: <AccessAlarmsIcon sx={{ fontSize }} />,
+          },
+        }
+      : {}),
     "/app": {
       // label: '应用',
       value: "/app",
@@ -87,13 +98,12 @@ const FooterToolNav: React.FC = () => {
   };
   const handleClick = (nav: any) => {
     if (location.pathname === nav.value) return;
-    if (nav.value === "/my") {
+    if (nav.value === "/my" && initialState?.boxdata.usercfgs) {
       const taskItem = lodash.debounce(() => {
         history.push(nav.value);
         taskLists = [];
       }, 200);
       taskLists.push(taskItem);
-      console.log(taskLists.length);
       if (taskLists.length === 2) {
         lodash.map(taskLists, (task) => task.cancel());
         taskLists = [];

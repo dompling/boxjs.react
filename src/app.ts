@@ -1,5 +1,6 @@
+import { Toast } from "@/components/Notification";
 import { getAllData } from "@/services/boxjs.api";
-import { getMediaMode } from "@/utils";
+import { BACKEND_API, getMediaMode, TOKEN } from "@/utils";
 import { matchRoutes } from "@@/exports";
 import { RequestConfig } from "@@/plugin-request/request";
 
@@ -109,12 +110,14 @@ export function onRouteChange({ clientRoutes, location }: any) {
 }
 
 export const request: RequestConfig = {
-  timeout: 50000,
   // other axios options you want
   errorConfig: {
     errorHandler(error) {
-      console.log(error);
-      alert(error.message);
+      const msg =
+        typeof error.message == "object"
+          ? JSON.stringify(error.message)
+          : error.message;
+      Toast.current?.open({ message: msg, type: "error" });
     },
     errorThrower(res) {
       console.log(res);
@@ -128,8 +131,13 @@ export const request: RequestConfig = {
         options.headers["Content-Type"] = "application/json;charset=UTF-8";
       }
 
+      let domain = localStorage.getItem(BACKEND_API);
+      const token = localStorage.getItem(TOKEN);
+      if (!domain) domain = "//boxjs.com";
+      else options.headers["auth-token"] = token;
+
       return {
-        url: url.indexOf(`https`) > -1 ? url : `//boxjs.net${url}`,
+        url: url.indexOf(`https`) > -1 ? url : `${domain}${url}`,
         options,
       };
     },
